@@ -1,0 +1,242 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:sgi/core/core.dart';
+import 'package:sgi/core/uteis.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Widgets/app_bar_register_widget.dart';
+
+class Register extends StatefulWidget {
+  Register();
+
+  @override
+  _RegisterState createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
+  final TextEditingController _usuarioController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController =
+      TextEditingController();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  Endereco endereco = new Endereco();
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  bool _obscureText = true;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      resizeToAvoidBottomInset: false,
+      appBar: AppBarRegisterWidget(),
+      body: Container(
+          // alignment: Alignment.center,
+          // child: Column(
+          //   children: [
+          //     Expanded(
+          //       flex: 5,
+          //       child: Column(
+          //         children: [
+          //           Padding(
+          //             padding: EdgeInsets.fromLTRB(20, 0, 20, 40),
+          //             child: TextField(
+          //               controller: _usuarioController,
+          //               decoration: InputDecoration(
+          //                 prefixIcon: Icon(
+          //                   Icons.person_outline,
+          //                   color: AppColors.black,
+          //                 ),
+          //                 hintText: 'Usuário teste',
+          //                 border: OutlineInputBorder(
+          //                     borderRadius: BorderRadius.circular(10)),
+          //               ),
+          //               cursorColor: Colors.blue,
+          //               style: TextStyle(
+          //                 color: Colors.blue,
+          //                 fontSize: 16.0,
+          //                 fontWeight: FontWeight.w700,
+          //               ),
+          //               autocorrect: false,
+          //             ),
+          //           ),
+          //           Padding(
+          //             padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
+          //             child: TextField(
+          //               controller: _passwordController,
+          //               decoration: InputDecoration(
+          //                 prefixIcon: Icon(
+          //                   Icons.lock_outline,
+          //                   color: AppColors.black,
+          //                 ),
+          //                 suffixIcon: GestureDetector(
+          //                   onTap: displayPassword,
+          //                   child: _obscureText
+          //                       ? Icon(Icons.visibility)
+          //                       : Icon(Icons.visibility_off),
+          //                 ),
+          //                 hintText: 'Senha',
+          //                 border: OutlineInputBorder(
+          //                     borderRadius: BorderRadius.circular(10)),
+          //               ),
+          //               cursorColor: Colors.blue,
+          //               style: TextStyle(
+          //                 color: Colors.blue,
+          //                 fontSize: 16.0,
+          //                 fontWeight: FontWeight.w700,
+          //               ),
+          //               obscureText: _obscureText,
+          //               autocorrect: false,
+          //             ),
+          //           ),
+          //           Padding(
+          //             padding: const EdgeInsets.all(16.0),
+          //             child: SizedBox(
+          //               height: 55, //height of button
+          //               width: double.infinity, //width of button
+          //               child: ElevatedButton(
+          //                 onPressed: () {
+          //                   //logar();
+          //                 },
+          //                 style: ElevatedButton.styleFrom(
+          //                     elevation: 3,
+          //                     primary: AppColors.blue,
+          //                     shape: RoundedRectangleBorder(
+          //                       borderRadius: BorderRadius.circular(10),
+          //                     )),
+          //                 child: Text(
+          //                   "Login",
+          //                   style: TextStyle(color: Colors.white, fontSize: 16.9),
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //           SizedBox(
+          //             height: 20,
+          //           ),
+          //           GestureDetector(
+          //             onTap: () {
+          //             },
+          //             child: Text(
+          //               "Esqueci minha senha",
+          //               style: AppTextStyles.body15,
+          //             ),
+          //           ),
+          //           SizedBox(
+          //             height: 20,
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //     Expanded(
+          //         flex: 2,
+          //         child: Container(
+          //           padding: const EdgeInsets.only(top: 16.0),
+          //           width: double.infinity,
+          //           height: double.infinity,
+          //           decoration: BoxDecoration(gradient: AppGradients.rodape),
+          //           child: Column(children: [
+          //             GestureDetector(
+          //               onTap: () {
+          //               },
+          //               child: Text(
+          //                 "Ainda não possui cadastro?",
+          //                 style: AppTextStyles.body16White,
+          //               ),
+          //             ),
+          //             SizedBox(
+          //               height: 20,
+          //             ),
+          //             SizedBox(
+          //               height: 55, //height of button
+          //               width: 200, //width of button
+          //               child: ElevatedButton(
+          //                 onPressed: () {
+          //                 },
+          //                 style: ElevatedButton.styleFrom(
+          //                     primary: AppColors.white,
+          //                     shape: RoundedRectangleBorder(
+          //                       borderRadius: BorderRadius.circular(50),
+          //                     )),
+          //                 child: Text(
+          //                   "Cadastre-se",
+          //                   style: TextStyle(color: AppColors.blue, fontSize: 20),
+          //                 ),
+          //               ),
+          //             )
+          //           ]),
+          //         ))
+          //   ],
+          // ),
+          ),
+    );
+  }
+
+  void displayPassword() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  void logar() async {
+    await getLogin(_usuarioController.text, _passwordController.text);
+  }
+
+  Future<int> getLogin(String usuario, String senha) async {
+    WidgetsUteis.showLoadingDialog(
+        context, _keyLoader, "Carregando informações....");
+    await new Future.delayed(const Duration(seconds: 1));
+    try {
+      Response response;
+      Dio dio = new Dio();
+      response = await dio.post("${endereco.getEndereco}login",
+          data: {"usuario": usuario, "senha": senha});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Navigator.of(context).pop();
+        if (response.data["statusP"] == 'T' ||
+            response.data["statusG"] == 'T') {
+          if (response.data["statusP"] == 'SP') {
+            WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+                "Protheus não sincronizado, atualize suas credenciais!",
+                duracao: 4);
+            await new Future.delayed(const Duration(seconds: 4));
+          } else if (response.data["statusP"] == 'SG') {
+            WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+                "GNC não sincronizado, atualize suas credenciais!",
+                duracao: 4);
+            await new Future.delayed(const Duration(seconds: 4));
+          }
+          setState(() {
+            salvaUsuario(response.data["usuProt"], response.data["recno"]);
+            // Navigator.of(context).push(MaterialPageRoute(
+            //     builder: (BuildContext context) => new TelaPrincipal(
+            //         response.data["usuProt"], response.data["usuGnc"])));
+          });
+        } else if (response.data["status"] == 'F') {
+          WidgetsUteis.exibeSnackBar(
+              context, _scaffoldKey, "Usuário não existe");
+        } else if (response.data["status"] == 'FF') {
+          WidgetsUteis.exibeSnackBar(
+              context, _scaffoldKey, "Senha incorreta para este usuário");
+        }
+      } else {
+        Navigator.of(context).pop();
+        WidgetsUteis.exibeSnackBar(
+            context, _scaffoldKey, "Não foi possível conectar");
+      }
+
+      return response.statusCode;
+    } catch (e) {
+      Navigator.of(context).pop();
+      WidgetsUteis.exibeSnackBar(
+          context, _scaffoldKey, "Não foi possível conectar");
+      print(e);
+    }
+    return 0;
+  }
+
+  salvaUsuario(String valor, String valor2) async {
+    int rec = int.parse(valor2.trim());
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('usuario', valor);
+    prefs.setInt('usuApp', rec);
+  }
+}

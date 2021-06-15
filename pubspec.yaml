@@ -1,0 +1,37 @@
+name: sgi
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio: '4.0.0'
+  flutter_slidable: "^0.6.0"
+  async_loader: ^0.1.2
+  path_provider: ^2.0.2
+  http: ^0.13.3
+  charcode: ^1.1.2
+  shared_preferences: "2.0.6"
+  advance_pdf_viewer: any
+
+  cupertino_icons: ^1.0.2
+  sqflite: any
+  google_fonts: ^2.0.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/face.png
+    - assets/images/logo_asa.png
+    - assets/images/marca.png
+    - assets/images/CSC1.png
+    - assets/images/CSC2.png
+    - assets/images/logo_colorida.png
+    - assets/images/logo_branca.png
