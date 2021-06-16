@@ -96,9 +96,21 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  static final TextStyle body16Blue = GoogleFonts.roboto(
+    color: AppColors.blue,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
+
   static final TextStyle body16White = GoogleFonts.roboto(
     color: AppColors.white,
     fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
+
+  static final TextStyle body30Black = GoogleFonts.roboto(
+    color: AppColors.black,
+    fontSize: 30,
     fontWeight: FontWeight.w600,
   );
 }

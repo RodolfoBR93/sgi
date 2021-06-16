@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:email_validator/email_validator.dart';
-import 'Widgets/app_bar_register_widget.dart';
+import 'package:sgi/register/Widgets/app_bar_register_widget.dart';
 
-class Register extends StatefulWidget {
-  static const String routeName = "/register";
-  Register();
+class ManageAccess extends StatefulWidget {
+  ManageAccess();
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _ManageAccessState createState() => _ManageAccessState();
 }
 
-class _RegisterState extends State<Register> {
+class _ManageAccessState extends State<ManageAccess> {
   final TextEditingController _usuarioController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _passwordConfirmController =
@@ -200,8 +199,7 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  Future criaUsuario() async {
-    FocusScope.of(context).unfocus();
+  Future<List> criaUsuario() async {
     List retorno;
     if (_usuarioController.text.trim().length < 4) {
       WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
@@ -226,12 +224,30 @@ class _RegisterState extends State<Register> {
           "email": _emailController.text.trim()
         });
         if (response.statusCode == 200 || response.statusCode == 201) {
+          if (response.data['id'] == 1) {
+            // await db.inserirUsuario(new User(
+            //     response.data['recno'],
+            //     _usuarioController.text.trim(),
+            //     '',
+            //     '',
+            //     '',
+            //     '',
+            //     '',
+            //     '',
+            //     response.data['statusG'],
+            //     '',
+            //     '',
+            //     '',
+            //     '',
+            //     '',
+            //     ''));
+          }
           Navigator.of(context).pop();
           WidgetsUteis.exibeSnackBar(
               context, _scaffoldKey, response.data['mensagem']);
 
           if (response.data['id'] == 1) {
-            await new Future.delayed(const Duration(seconds: 2));
+            await new Future.delayed(const Duration(seconds: 1));
             Navigator.of(context).pushNamedAndRemoveUntil(
                 '/login', (Route<dynamic> route) => false);
           }

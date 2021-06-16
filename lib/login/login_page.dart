@@ -7,6 +7,7 @@ import 'package:sgi/register/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
+  static const String routeName = "/login";
   Login();
 
   @override

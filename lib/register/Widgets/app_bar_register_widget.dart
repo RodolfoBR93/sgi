@@ -9,7 +9,7 @@ import 'package:sgi/core/app_text_styles.dart';
 class AppBarRegisterWidget extends PreferredSize {
   AppBarRegisterWidget()
       : super(
-          preferredSize: Size.fromHeight(150),
+          preferredSize: Size.fromHeight(120),
           child: SafeArea(
             top: true,
             child: Column(
