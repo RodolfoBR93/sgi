@@ -28,7 +28,6 @@ class _LoginState extends State<Login> {
       resizeToAvoidBottomInset: false,
       appBar: AppBarLoginWidget(),
       body: Container(
-        //dmargin: const EdgeInsets.all(5.0),
         alignment: Alignment.center,
         child: Column(
           children: [
@@ -94,7 +93,7 @@ class _LoginState extends State<Login> {
                       width: double.infinity, //width of button
                       child: ElevatedButton(
                         onPressed: () {
-                          //logar();
+                          logar();
                         },
                         style: ElevatedButton.styleFrom(
                             elevation: 3,
@@ -150,26 +149,19 @@ class _LoginState extends State<Login> {
                       width: 200, //width of button
                       child: ElevatedButton(
                         onPressed: () {
-                          //logar();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Register()),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                             primary: AppColors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(50),
                             )),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Register()),
-                            );
-                          },
-                          child: Text(
-                            "Cadastre-se",
-                            style:
-                                TextStyle(color: AppColors.blue, fontSize: 20),
-                          ),
+                        child: Text(
+                          "Cadastre-se",
+                          style: TextStyle(color: AppColors.blue, fontSize: 20),
                         ),
                       ),
                     )
@@ -188,6 +180,7 @@ class _LoginState extends State<Login> {
   }
 
   void logar() async {
+    FocusScope.of(context).unfocus();
     await getLogin(_usuarioController.text, _passwordController.text);
   }
 

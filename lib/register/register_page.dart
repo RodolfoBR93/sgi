@@ -36,7 +36,6 @@ class _RegisterState extends State<Register> {
         child: Column(
           children: [
             Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
                   flex: 5,
@@ -48,13 +47,6 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                 ),
-                // Expanded(
-                //   flex: 1,
-                //   child: Text(
-                //     "Login",
-                //     style: AppTextStyles.body16Blue,
-                //   ),
-                // )
               ],
             ),
             Padding(
