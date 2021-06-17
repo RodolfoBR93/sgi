@@ -17,6 +17,7 @@ dependencies:
   charcode: ^1.1.2
   shared_preferences: "2.0.6"
   advance_pdf_viewer: any
+  pin_code_fields: ^7.2.0
 
   cupertino_icons: ^1.0.2
   sqflite: any
@@ -37,3 +38,5 @@ flutter:
     - assets/images/CSC2.png
     - assets/images/logo_colorida.png
     - assets/images/logo_branca.png
+    - assets/images/verify.png
+    - assets/images/otp.gif

@@ -6,13 +6,15 @@ import 'package:sgi/home/home_page.dart';
 import 'package:sgi/register/Widgets/app_bar_register_widget.dart';
 
 class ManageAccess extends StatefulWidget {
-  ManageAccess();
+  final String user;
+  ManageAccess(this.user);
 
   @override
-  _ManageAccessState createState() => _ManageAccessState();
+  _ManageAccessState createState() => _ManageAccessState(user);
 }
 
 class _ManageAccessState extends State<ManageAccess> {
+  final String user;
   final TextEditingController _userProtheusController = TextEditingController();
   final TextEditingController _passwordProtheusController =
       TextEditingController();
@@ -24,6 +26,9 @@ class _ManageAccessState extends State<ManageAccess> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   bool _obscureTextPasswordProtheus = true;
   bool _obscureTextConfirmPasswordGDI = true;
+
+  _ManageAccessState(this.user);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -226,10 +231,11 @@ class _ManageAccessState extends State<ManageAccess> {
       Response response;
       Dio dio = new Dio();
       response = await dio.post("${endereco.getEndereco}sinc_contas", data: {
-        "usuario": _userProtheusController.text,
-        "senha": _passwordProtheusController.text,
-        "usuario2": _userGdiController.text,
-        "senha2": _passwordGdiController.text
+        "usuarioProtheus": _userProtheusController.text,
+        "senhaProtheus": _passwordProtheusController.text,
+        "usuarioGdi": _userGdiController.text,
+        "senhaGdi": _passwordGdiController.text,
+        "opcao": "1",
       });
       if (response.statusCode == 200 || response.statusCode == 201) {
         retorno = [
@@ -255,7 +261,9 @@ class _ManageAccessState extends State<ManageAccess> {
             2,
             true,
             userProtheus: retorno[0] == '1' ? _userProtheusController.text : '',
+            passwordProtheus: retorno[0] == '1' ? _passwordProtheusController.text : '',
             userGdi: retorno[4] == '1' ? _userGdiController.text : '',
+            passwordGdi: retorno[4] == '1' ? _passwordGdiController.text : '',
           );
         }
       } else {
@@ -271,7 +279,10 @@ class _ManageAccessState extends State<ManageAccess> {
 
   Future statusSincronizacao(
       BuildContext context, mensagens, quantLogs, continua,
-      {userProtheus: '', userGdi: ''}) async {
+      {userProtheus: '',
+      passwordProtheus: '',
+      userGdi: '',
+      passwordGdi: ''}) async {
     WidgetsUteis.showLoadingDialog(
         context, _keyLoader, 'Sincronizando contas...');
     await new Future.delayed(const Duration(seconds: 2));
@@ -313,6 +324,8 @@ class _ManageAccessState extends State<ManageAccess> {
                   onPressed: () {
                     if (continua) {
                       Navigator.of(context).pop();
+                      enableUser(user, userProtheus, passwordProtheus, userGdi,
+                          passwordGdi);
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (BuildContext context) =>
                               new TelaPrincipal(userProtheus, userGdi)));
@@ -329,5 +342,33 @@ class _ManageAccessState extends State<ManageAccess> {
             ));
       },
     );
+  }
+
+  Future enableUser(
+      user, userProtheus, passwordProtheus, userGdi, passwordGdi) async {
+    WidgetsUteis.showLoadingDialog(
+        context, _keyLoader, 'Habilitando usuário...');
+    await new Future.delayed(const Duration(seconds: 2));
+    try {
+      Response response;
+      Dio dio = new Dio();
+      response = await dio.post("${endereco.getEndereco}ativa_usuario", data: {
+        "usuario": user,
+        "usuarioPro": userProtheus,
+        "senhaPro": passwordProtheus,
+        "usuarioGdi": userGdi,
+        "senhaGdi": passwordGdi,
+      });
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Usuário ativado!");
+      } else {
+        WidgetsUteis.exibeSnackBar(
+            context, _scaffoldKey, "Não foi possível conectar");
+      }
+    } catch (e) {
+      WidgetsUteis.exibeSnackBar(
+          context, _scaffoldKey, "Não foi possível conectar");
+      print(e);
+    }
   }
 }

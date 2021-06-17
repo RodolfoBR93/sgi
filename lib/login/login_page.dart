@@ -7,6 +7,8 @@ import 'package:sgi/manage_access/manage_access.dart';
 import 'package:sgi/register/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'access_code.dart';
+
 class Login extends StatefulWidget {
   static const String routeName = "/login";
   Login();
@@ -214,7 +216,7 @@ class _LoginState extends State<Login> {
           await new Future.delayed(const Duration(seconds: 3));
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ManageAccess()),
+            MaterialPageRoute(builder: (context) => AccessCode(usuario)),
           );
         } else if (response.data["status"] == 'F') {
           WidgetsUteis.exibeSnackBar(
