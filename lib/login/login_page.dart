@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sgi/login/widgets/app_bar_login_widget.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
+import 'package:sgi/manage_access/manage_access.dart';
 import 'package:sgi/register/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,12 +22,15 @@ class _LoginState extends State<Login> {
   Endereco endereco = new Endereco();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   bool _obscureText = true;
+  double screenHeight;
+
   @override
   Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: AppBarLoginWidget(),
+      appBar: AppBarLoginWidget(screenHeight),
       body: Container(
         alignment: Alignment.center,
         child: Column(
@@ -181,12 +185,21 @@ class _LoginState extends State<Login> {
 
   void logar() async {
     FocusScope.of(context).unfocus();
-    await getLogin(_usuarioController.text, _passwordController.text);
+    if (_usuarioController.text.length <= 3) {
+      WidgetsUteis.exibeSnackBar(
+          context, _scaffoldKey, "Insira um usuário válido!");
+      await new Future.delayed(const Duration(seconds: 2));
+    } else if (_passwordController.text.length <= 3) {
+      WidgetsUteis.exibeSnackBar(
+          context, _scaffoldKey, "Insira uma senha válida!");
+      await new Future.delayed(const Duration(seconds: 2));
+    } else {
+      await getLogin(_usuarioController.text, _passwordController.text);
+    }
   }
 
   Future<int> getLogin(String usuario, String senha) async {
-    WidgetsUteis.showLoadingDialog(
-        context, _keyLoader, "Carregando informações....");
+    WidgetsUteis.showLoadingDialog(context, _keyLoader, "Aguarde...");
     await new Future.delayed(const Duration(seconds: 1));
     try {
       Response response;
@@ -195,31 +208,20 @@ class _LoginState extends State<Login> {
           data: {"usuario": usuario, "senha": senha});
       if (response.statusCode == 200 || response.statusCode == 201) {
         Navigator.of(context).pop();
-        if (response.data["statusP"] == 'T' ||
-            response.data["statusG"] == 'T') {
-          if (response.data["statusP"] == 'SP') {
-            WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
-                "Protheus não sincronizado, atualize suas credenciais!",
-                duracao: 4);
-            await new Future.delayed(const Duration(seconds: 4));
-          } else if (response.data["statusP"] == 'SG') {
-            WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
-                "GNC não sincronizado, atualize suas credenciais!",
-                duracao: 4);
-            await new Future.delayed(const Duration(seconds: 4));
-          }
-          setState(() {
-            salvaUsuario(response.data["usuProt"], response.data["recno"]);
-            // Navigator.of(context).push(MaterialPageRoute(
-            //     builder: (BuildContext context) => new TelaPrincipal(
-            //         response.data["usuProt"], response.data["usuGnc"])));
-          });
+        if (response.data["status"] == 'FFF') {
+          WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+              "Primeiro acesso, será necessário conectar suas contas!");
+          await new Future.delayed(const Duration(seconds: 3));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ManageAccess()),
+          );
         } else if (response.data["status"] == 'F') {
           WidgetsUteis.exibeSnackBar(
-              context, _scaffoldKey, "Usuário não existe");
+              context, _scaffoldKey, "Usuário não encontrado!");
         } else if (response.data["status"] == 'FF') {
           WidgetsUteis.exibeSnackBar(
-              context, _scaffoldKey, "Senha incorreta para este usuário");
+              context, _scaffoldKey, "Senha incorreta para este usuário!");
         }
       } else {
         Navigator.of(context).pop();

@@ -5,9 +5,9 @@ import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/app_text_styles.dart';
 
 class AppBarLoginWidget extends PreferredSize {
-  AppBarLoginWidget()
+  AppBarLoginWidget(double screenHeight)
       : super(
-          preferredSize: Size.fromHeight(193),
+          preferredSize: Size.fromHeight(screenHeight * 30 / 100),
           child: SafeArea(
             top: true,
             child: Column(
@@ -21,6 +21,7 @@ class AppBarLoginWidget extends PreferredSize {
                   //Container(
                   padding: const EdgeInsets.only(left: 16, right: 16),
                   width: double.maxFinite,
+
                   //decoration: BoxDecoration(gradient: AppGradients.linear),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -52,6 +53,9 @@ class AppBarLoginWidget extends PreferredSize {
                       ),
                     ],
                   ),
+                ),
+                SizedBox(
+                  height: 44,
                 ),
               ],
             ),

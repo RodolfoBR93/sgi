@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sgi/core/app_colors.dart';
+import 'package:sgi/gdi/gdi_home.dart';
 import 'package:sgi/login/login_page.dart';
 
 import 'register/register_page.dart';
@@ -17,8 +18,7 @@ void main() async {
       // AprovacaoDigital.routeName: (BuildContext context) =>
       //     new AprovacaoDigital(),
       Login.routeName: (BuildContext context) => new Login(),
-      // NaoConformidade.routeName: (BuildContext context) =>
-      //     new NaoConformidade(),
+      Gdi.routeName: (BuildContext context) => new Gdi(),
       Register.routeName: (BuildContext context) => new Register(),
     },
   ));

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
-import 'package:email_validator/email_validator.dart';
+import 'package:sgi/home/home_page.dart';
 import 'package:sgi/register/Widgets/app_bar_register_widget.dart';
 
 class ManageAccess extends StatefulWidget {
@@ -13,17 +13,17 @@ class ManageAccess extends StatefulWidget {
 }
 
 class _ManageAccessState extends State<ManageAccess> {
-  final TextEditingController _usuarioController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _passwordConfirmController =
+  final TextEditingController _userProtheusController = TextEditingController();
+  final TextEditingController _passwordProtheusController =
       TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userGdiController = TextEditingController();
+  final TextEditingController _passwordGdiController = TextEditingController();
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Endereco endereco = new Endereco();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  bool _obscureTextPassword = true;
-  bool _obscureTextConfirmPassword = true;
+  bool _obscureTextPasswordProtheus = true;
+  bool _obscureTextConfirmPasswordGDI = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +42,7 @@ class _ManageAccessState extends State<ManageAccess> {
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      "Cadastro",
+                      "Gerenciar Acessos",
                       style: AppTextStyles.body30Black,
                     ),
                   ),
@@ -57,32 +57,19 @@ class _ManageAccessState extends State<ManageAccess> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
-              child: TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.alternate_email,
-                    color: AppColors.black,
-                  ),
-                  hintText: 'E-mail',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
+              padding: const EdgeInsets.fromLTRB(25, 30, 20, 0),
+              child: Container(
+                width: double.infinity,
+                child: Text(
+                  "Protheus",
+                  style: AppTextStyles.body24Blue,
                 ),
-                cursorColor: Colors.blue,
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w700,
-                ),
-                autocorrect: false,
-                keyboardType: TextInputType.emailAddress,
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+              padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
               child: TextField(
-                controller: _usuarioController,
+                controller: _userProtheusController,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.person_outline,
@@ -104,15 +91,15 @@ class _ManageAccessState extends State<ManageAccess> {
             Padding(
               padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
               child: TextField(
-                controller: _passwordController,
+                controller: _passwordProtheusController,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.lock_outline,
                     color: AppColors.black,
                   ),
                   suffixIcon: GestureDetector(
-                    onTap: displayPassword,
-                    child: _obscureTextPassword
+                    onTap: displayPasswordProtheus,
+                    child: _obscureTextPasswordProtheus
                         ? Icon(Icons.visibility)
                         : Icon(Icons.visibility_off),
                   ),
@@ -126,26 +113,30 @@ class _ManageAccessState extends State<ManageAccess> {
                   fontSize: 16.0,
                   fontWeight: FontWeight.w700,
                 ),
-                obscureText: _obscureTextPassword,
+                obscureText: _obscureTextPasswordProtheus,
                 autocorrect: false,
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+              padding: const EdgeInsets.fromLTRB(25, 30, 20, 0),
+              child: Container(
+                width: double.infinity,
+                child: Text(
+                  "GDI",
+                  style: AppTextStyles.body24Blue,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
               child: TextField(
-                controller: _passwordConfirmController,
+                controller: _userGdiController,
                 decoration: InputDecoration(
                   prefixIcon: Icon(
-                    Icons.lock_outline,
+                    Icons.person_outline,
                     color: AppColors.black,
                   ),
-                  suffixIcon: GestureDetector(
-                    onTap: displayConfirmPassword,
-                    child: _obscureTextConfirmPassword
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
-                  ),
-                  hintText: 'Confirmar Senha',
+                  hintText: 'Usuário',
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),
@@ -155,7 +146,36 @@ class _ManageAccessState extends State<ManageAccess> {
                   fontSize: 16.0,
                   fontWeight: FontWeight.w700,
                 ),
-                obscureText: _obscureTextConfirmPassword,
+                autocorrect: false,
+                keyboardType: TextInputType.number,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+              child: TextField(
+                controller: _passwordGdiController,
+                decoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.lock_outline,
+                    color: AppColors.black,
+                  ),
+                  suffixIcon: GestureDetector(
+                    onTap: displayConfirmPasswordGDI,
+                    child: _obscureTextConfirmPasswordGDI
+                        ? Icon(Icons.visibility)
+                        : Icon(Icons.visibility_off),
+                  ),
+                  hintText: 'Senha',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                cursorColor: Colors.blue,
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w700,
+                ),
+                obscureText: _obscureTextConfirmPasswordGDI,
                 autocorrect: false,
               ),
             ),
@@ -166,7 +186,7 @@ class _ManageAccessState extends State<ManageAccess> {
                 width: double.infinity, //width of button
                 child: ElevatedButton(
                   onPressed: () {
-                    criaUsuario();
+                    sincronizarAcessos();
                   },
                   style: ElevatedButton.styleFrom(
                       elevation: 3,
@@ -175,7 +195,7 @@ class _ManageAccessState extends State<ManageAccess> {
                         borderRadius: BorderRadius.circular(10),
                       )),
                   child: Text(
-                    "Cadastrar",
+                    "Salvar",
                     style: TextStyle(color: Colors.white, fontSize: 16.9),
                   ),
                 ),
@@ -187,83 +207,127 @@ class _ManageAccessState extends State<ManageAccess> {
     );
   }
 
-  void displayPassword() {
+  void displayPasswordProtheus() {
     setState(() {
-      _obscureTextPassword = !_obscureTextPassword;
+      _obscureTextPasswordProtheus = !_obscureTextPasswordProtheus;
     });
   }
 
-  void displayConfirmPassword() {
+  void displayConfirmPasswordGDI() {
     setState(() {
-      _obscureTextConfirmPassword = !_obscureTextConfirmPassword;
+      _obscureTextConfirmPasswordGDI = !_obscureTextConfirmPasswordGDI;
     });
   }
 
-  Future<List> criaUsuario() async {
+  Future sincronizarAcessos() async {
+    FocusScope.of(context).unfocus();
     List retorno;
-    if (_usuarioController.text.trim().length < 4) {
-      WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
-          'Usuário deve possuir no mínimo 4 caracteres!');
-    } else if (!EmailValidator.validate(_emailController.text.trim())) {
-      WidgetsUteis.exibeSnackBar(context, _scaffoldKey, 'E-mail inválido!');
-    } else if (_passwordController.text.trim().length < 4) {
-      WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, 'Senha deve possuir no mínimo 4 caracteres!');
-    } else if (_passwordController.text.trim() !=
-        _passwordConfirmController.text.trim()) {
-      WidgetsUteis.exibeSnackBar(context, _scaffoldKey, 'Senhas não conferem!');
-    } else {
-      WidgetsUteis.showLoadingDialog(context, _keyLoader, 'Aguarde...');
-      await new Future.delayed(const Duration(seconds: 1));
-      try {
-        Response response;
-        Dio dio = new Dio();
-        response = await dio.post("${endereco.getEndereco}cria_usuario", data: {
-          "usuario": _usuarioController.text.trim(),
-          "senha": _passwordController.text.trim(),
-          "email": _emailController.text.trim()
-        });
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          if (response.data['id'] == 1) {
-            // await db.inserirUsuario(new User(
-            //     response.data['recno'],
-            //     _usuarioController.text.trim(),
-            //     '',
-            //     '',
-            //     '',
-            //     '',
-            //     '',
-            //     '',
-            //     response.data['statusG'],
-            //     '',
-            //     '',
-            //     '',
-            //     '',
-            //     '',
-            //     ''));
-          }
-          Navigator.of(context).pop();
-          WidgetsUteis.exibeSnackBar(
-              context, _scaffoldKey, response.data['mensagem']);
-
-          if (response.data['id'] == 1) {
-            await new Future.delayed(const Duration(seconds: 1));
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/login', (Route<dynamic> route) => false);
-          }
-          return retorno;
+    try {
+      Response response;
+      Dio dio = new Dio();
+      response = await dio.post("${endereco.getEndereco}sinc_contas", data: {
+        "usuario": _userProtheusController.text,
+        "senha": _passwordProtheusController.text,
+        "usuario2": _userGdiController.text,
+        "senha2": _passwordGdiController.text
+      });
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        retorno = [
+          "${response.data['idP']}",
+          response.data['usuarioP'],
+          response.data['senhaP'],
+          response.data['mensagemP'],
+          "${response.data['idG']}",
+          response.data['usuarioG'],
+          response.data['senhaG'],
+          response.data['mensagemG']
+        ];
+        var mensagens = [
+          [retorno[0], retorno[3]],
+          [retorno[4], retorno[7]]
+        ];
+        if (retorno[0] != '1' && retorno[4] != '1') {
+          statusSincronizacao(context, mensagens, 2, false);
         } else {
-          //If that response was not OK, throw an error.
-          retorno = ['Falha ao conectar'];
+          statusSincronizacao(
+            context,
+            mensagens,
+            2,
+            true,
+            userProtheus: retorno[0] == '1' ? _userProtheusController.text : '',
+            userGdi: retorno[4] == '1' ? _userGdiController.text : '',
+          );
         }
-      } catch (e) {
+      } else {
         WidgetsUteis.exibeSnackBar(
             context, _scaffoldKey, "Não foi possível conectar");
-        print(e);
       }
+    } catch (e) {
+      WidgetsUteis.exibeSnackBar(
+          context, _scaffoldKey, "Não foi possível conectar");
+      print(e);
     }
-    return retorno;
+  }
+
+  Future statusSincronizacao(
+      BuildContext context, mensagens, quantLogs, continua,
+      {userProtheus: '', userGdi: ''}) async {
+    WidgetsUteis.showLoadingDialog(
+        context, _keyLoader, 'Sincronizando contas...');
+    await new Future.delayed(const Duration(seconds: 2));
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return new WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              title: Text('Status sincronização',
+                  style: TextStyle(fontSize: 16.9)),
+              content: Container(
+                  width: double.maxFinite,
+                  height: 300.0,
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(top: 10.0),
+                    itemCount: quantLogs,
+                    itemBuilder: (context, index) {
+                      return Card(
+                          color: Colors.white,
+                          child: ListTile(
+                            leading: mensagens[index][0] == '1'
+                                ? Icon(Icons.done, color: Colors.green)
+                                : Icon(Icons.highlight_off, color: Colors.red),
+                            title: Text(mensagens[index][1]),
+                          ));
+                    },
+                  )),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("Voltar"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text("Continuar"),
+                  onPressed: () {
+                    if (continua) {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new TelaPrincipal(userProtheus, userGdi)));
+                    } else {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                      WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+                          'Ao menos um sistema deve ser sincronizado para continuar!',
+                          duracao: 3);
+                    }
+                  },
+                )
+              ],
+            ));
+      },
+    );
   }
 }
-
-//^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$

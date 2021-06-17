@@ -113,4 +113,10 @@ class AppTextStyles {
     fontSize: 30,
     fontWeight: FontWeight.w600,
   );
+
+  static final TextStyle body24Blue = GoogleFonts.roboto(
+    color: AppColors.blue,
+    fontSize: 24,
+    fontWeight: FontWeight.w700,
+  );
 }
