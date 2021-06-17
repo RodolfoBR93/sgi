@@ -168,7 +168,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
             color: Colors.red,
             icon: Icons.delete,
             onTap: () {
-              motivoRejeicao(context, index, "Título Rejeitado", _formKey,
+              reasonRejection(context, index, "Título Rejeitado", _formKey,
                   _motivoRejeicao);
               Scaffold.of(context).showSnackBar(SnackBar(
                 content: new Text('Título Rejeitado'),
@@ -261,7 +261,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
     });
   }
 
-  Future motivoRejeicao(BuildContext context, int index, String mensagem,
+  Future reasonRejection(BuildContext context, int index, String mensagem,
       GlobalKey<FormState> _formKey, TextEditingController motivo_rejeicao) {
     return showDialog(
         context: context,
