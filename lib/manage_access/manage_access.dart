@@ -43,7 +43,7 @@ class _ManageAccessState extends State<ManageAccess> {
               //mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
-                  flex: 5,
+                  flex: 4,
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
@@ -62,7 +62,7 @@ class _ManageAccessState extends State<ManageAccess> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(25, 30, 20, 0),
+              padding: const EdgeInsets.fromLTRB(25, 16, 20, 0),
               child: Container(
                 width: double.infinity,
                 child: Text(
@@ -261,7 +261,8 @@ class _ManageAccessState extends State<ManageAccess> {
             2,
             true,
             userProtheus: retorno[0] == '1' ? _userProtheusController.text : '',
-            passwordProtheus: retorno[0] == '1' ? _passwordProtheusController.text : '',
+            passwordProtheus:
+                retorno[0] == '1' ? _passwordProtheusController.text : '',
             userGdi: retorno[4] == '1' ? _userGdiController.text : '',
             passwordGdi: retorno[4] == '1' ? _passwordGdiController.text : '',
           );

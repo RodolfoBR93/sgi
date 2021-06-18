@@ -183,9 +183,9 @@ class _AccessCodeState extends State<AccessCode> {
                       fontWeight: FontWeight.w400),
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              // SizedBox(
+              //   height: 16,
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -292,7 +292,7 @@ class _AccessCodeState extends State<AccessCode> {
         Navigator.of(context).pop();
         if (response.data["id"] == 1) {
           WidgetsUteis.exibeSnackBar(
-              context, _scaffoldKey, "Código verificado com sucesso");
+              context, _scaffoldKey, "Código verificado com sucesso.");
           await new Future.delayed(const Duration(seconds: 2));
           Navigator.push(
             context,

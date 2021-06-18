@@ -95,7 +95,7 @@ class _LoginState extends State<Login> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SizedBox(
-                      height: 55, //height of button
+                      height: 50, //height of button
                       width: double.infinity, //width of button
                       child: ElevatedButton(
                         onPressed: () {
