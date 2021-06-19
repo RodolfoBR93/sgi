@@ -6,13 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'getPayments.dart';
 
-class AprovacaoDigital extends StatefulWidget {
-  static const String routeName = "/aprovacaodigital";
+class PaymentApproval extends StatefulWidget {
+  static const String routeName = "/paymentapproval";
   @override
-  AprovacaoDigitalState createState() => new AprovacaoDigitalState();
+  PaymentApprovalState createState() => new PaymentApprovalState();
 }
 
-class AprovacaoDigitalState extends State<AprovacaoDigital>
+class PaymentApprovalState extends State<PaymentApproval>
     with SingleTickerProviderStateMixin {
   TabController controller;
   Endereco endereco = new Endereco();

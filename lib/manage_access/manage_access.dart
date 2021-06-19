@@ -260,7 +260,7 @@ class _ManageAccessState extends State<ManageAccess> {
             mensagens,
             2,
             true,
-            userProtheus: retorno[0] == '1' ? _userProtheusController.text : '',
+            userProth: retorno[0] == '1' ? retorno[1] : '',
             passwordProtheus:
                 retorno[0] == '1' ? _passwordProtheusController.text : '',
             userGdi: retorno[4] == '1' ? _userGdiController.text : '',
@@ -280,7 +280,7 @@ class _ManageAccessState extends State<ManageAccess> {
 
   Future statusSincronizacao(
       BuildContext context, mensagens, quantLogs, continua,
-      {userProtheus: '',
+      {userProth: '',
       passwordProtheus: '',
       userGdi: '',
       passwordGdi: ''}) async {
@@ -325,11 +325,8 @@ class _ManageAccessState extends State<ManageAccess> {
                   onPressed: () {
                     if (continua) {
                       Navigator.of(context).pop();
-                      enableUser(user, userProtheus, passwordProtheus, userGdi,
+                      enableUser(user, userProth, passwordProtheus, userGdi,
                           passwordGdi);
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              new TelaPrincipal(userProtheus, userGdi)));
                     } else {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
@@ -361,14 +358,22 @@ class _ManageAccessState extends State<ManageAccess> {
         "senhaGdi": passwordGdi,
       });
       if (response.statusCode == 200 || response.statusCode == 201) {
-        WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Usuário ativado!");
+        WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Usuário ativado!",
+            duracao: 2);
+        if (response.data["id"] == 1) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  new HomePage(userProtheus, userGdi)));
+        }
       } else {
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar",
+            duracao: 2);
       }
     } catch (e) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar",
+          duracao: 2);
       print(e);
     }
   }

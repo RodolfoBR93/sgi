@@ -1,23 +1,25 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sgi/approvals/paymentApprovals/paymentApproval.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/gdi/gdi_home.dart';
 
-class TelaPrincipal extends StatefulWidget {
+class HomePage extends StatefulWidget {
   final String _usuProt;
   final String _usuGnc;
-  TelaPrincipal(this._usuProt, this._usuGnc);
+  HomePage(this._usuProt, this._usuGnc);
   @override
-  TelaPrincipalState createState() => new TelaPrincipalState(_usuProt, _usuGnc);
+  HomePageState createState() => new HomePageState(_usuProt, _usuGnc);
 }
 
-class TelaPrincipalState extends State<TelaPrincipal> {
+class HomePageState extends State<HomePage> {
   final String _usuProt;
   final String _usuGnc;
   Endereco endereco = new Endereco();
   String retAprovacao;
   String retGnc;
-  TelaPrincipalState(this._usuProt, this._usuGnc);
+  HomePageState(this._usuProt, this._usuGnc);
 
   void acesso(int id) async {
     if (id == 1) {
@@ -67,10 +69,10 @@ class TelaPrincipalState extends State<TelaPrincipal> {
       acesso(2);
     }
 
-    // if (retAprovacao == 'T') {
-    //   itens.add(getNavItem(
-    //       Icons.assignment, "Aprovação Digital", AprovacaoDigital.routeName));
-    // }
+    if (retAprovacao == 'T') {
+      itens.add(getNavItem(
+          Icons.assignment, "Aprovação de Títulos", PaymentApproval.routeName));
+    }
 
     if (retGnc == 'T') {
       itens.add(getNavItem(Icons.message, "Não Conformidades", Gdi.routeName));
@@ -88,22 +90,24 @@ class TelaPrincipalState extends State<TelaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(
-          "Sistema de Gestão Integrada",
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-      ),
-      backgroundColor: Colors.white,
-      body: new Container(
-          child: new Center(
-        child: new Text("Tela Principal"),
-      )),
-      drawer: getNavDrawer(context),
-    );
+    return new WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+          appBar: new AppBar(
+            title: new Text(
+              "Sistema de Gestão Integrada",
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.blue,
+            centerTitle: true,
+          ),
+          backgroundColor: Colors.white,
+          body: new Container(
+              child: new Center(
+            child: new Text("Tela Principal"),
+          )),
+          drawer: getNavDrawer(context),
+        ));
   }
 
   Future<String> acessoAprovacao(String usuario) async {
@@ -138,5 +142,26 @@ class TelaPrincipalState extends State<TelaPrincipal> {
       print(e);
       return 'F';
     }
+  }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Você tem certeza??'),
+            content: new Text('Você quer fechar aplicativo?'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('Não'),
+              ),
+              TextButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: new Text('Sim'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
   }
 }

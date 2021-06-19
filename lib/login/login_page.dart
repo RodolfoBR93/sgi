@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:sgi/home/home_page.dart';
 import 'package:sgi/login/widgets/app_bar_login_widget.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
@@ -224,6 +225,11 @@ class _LoginState extends State<Login> {
         } else if (response.data["status"] == 'FF') {
           WidgetsUteis.exibeSnackBar(
               context, _scaffoldKey, "Senha incorreta para este usuário!");
+        } else {
+          //salvaUsuario(response.data["usuProt"], response.data["recno"]);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (BuildContext context) => new HomePage(
+                  response.data["usuProt"], response.data["usuGnc"])));
         }
       } else {
         Navigator.of(context).pop();
@@ -241,10 +247,11 @@ class _LoginState extends State<Login> {
     return 0;
   }
 
-  salvaUsuario(String valor, String valor2) async {
-    int rec = int.parse(valor2.trim());
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('usuario', valor);
-    prefs.setInt('usuApp', rec);
-  }
+  // salvaUsuario(String valor, String valor2) async {
+  //   int rec = int.parse(valor2.trim());
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   prefs.setString('usuario', valor);
+  //   prefs.setInt('usuApp', rec);
+  // }
+
 }

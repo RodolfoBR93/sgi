@@ -194,7 +194,12 @@ class _AccessCodeState extends State<AccessCode> {
                     style: TextStyle(color: Colors.black54, fontSize: 15),
                   ),
                   TextButton(
-                      onPressed: () => snackBar("Código reenviado!!"),
+                      onPressed: () {
+                        WidgetsUteis.exibeSnackBar(
+                            context, _scaffoldKey, "Código reenviado!!",
+                            duracao: 2);
+                        //snackBar("Código reenviado!!");
+                      },
                       child: Text(
                         "Reenviar",
                         style: TextStyle(
