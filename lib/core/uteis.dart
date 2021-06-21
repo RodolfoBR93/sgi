@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class Endereco {
   String endereco =
-      'http://192.168.0.254:8084/html-protheus/rest/WEB_ASABRANCA/';
-  String enderecoIni = '192.168.0.254:8084';
+      'http://192.168.1.241:8084/html-protheus/rest/WEB_ASABRANCA/';
+  String enderecoIni = '192.168.1.241:8084';
   String rota = '/html-protheus/rest/WEB_ASABRANCA/';
   String get getEndereco => endereco;
   String get getEnderecoIni => enderecoIni;

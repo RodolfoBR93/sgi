@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
+import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/home/home_page.dart';
+import 'package:sgi/models/user.dart';
 import 'package:sgi/register/Widgets/app_bar_register_widget.dart';
 
 class ManageAccess extends StatefulWidget {
@@ -26,7 +28,7 @@ class _ManageAccessState extends State<ManageAccess> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   bool _obscureTextPasswordProtheus = true;
   bool _obscureTextConfirmPasswordGDI = true;
-
+  final UserDao _dao = UserDao();
   _ManageAccessState(this.user);
 
   @override
@@ -361,9 +363,13 @@ class _ManageAccessState extends State<ManageAccess> {
         WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Usuário ativado!",
             duracao: 2);
         if (response.data["id"] == 1) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  new HomePage(userProtheus, userGdi)));
+          final User newUser = User(0, user, userProtheus, userGdi);
+          setState(() {
+            _dao.save(newUser).then((id) => Navigator.of(context)
+                .pushReplacement(MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        new HomePage(userProtheus, userGdi))));
+          });
         }
       } else {
         WidgetsUteis.exibeSnackBar(

@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/approvals/paymentApprovals/Widgets/paymentApprovalWidget.dart';
 import 'package:sgi/core/uteis.dart';
+import 'package:sgi/database/dao/user_dao.dart';
+import 'package:sgi/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'getPayments.dart';
@@ -33,6 +35,8 @@ class PaymentApprovalState extends State<PaymentApproval>
   int itemAtual = 0;
   var tabsWidgets = [];
   List _listaEmpresas = [];
+  final UserDao _dao = UserDao();
+  //List<User> user = [] as Future<List<User>;
 
   List<DropdownMenuItem<String>> _menuSuspenso;
   String _itemSelecionado;
@@ -73,16 +77,16 @@ class PaymentApprovalState extends State<PaymentApproval>
 
   @override
   void initState() {
-    getAcessos();
+    //getAcessos();
+    getDireitos();
     super.initState();
     //controller = new TabController(length: qtdtabs, vsync: this);
   }
 
   getAcessos() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _codigoUsuario = prefs.getString('usuario');
+    List<User> user = await _dao.findAll();
     getDireitos();
-    empresas = await getEmpresas(_codigoUsuario);
+    empresas = await getEmpresas(user[0].getUser);
     setState(() {
       _codigoUsuario = _codigoUsuario;
       empresas = empresas;
@@ -103,7 +107,8 @@ class PaymentApprovalState extends State<PaymentApproval>
   }
 
   void getDireitos() async {
-    List direitos = await getRights(_codigoUsuario);
+    List<User> user = await _dao.findAll();
+    List direitos = await getRights(user[0].getUser.toString());
     setState(() {
       gerente = direitos[0];
       superi = direitos[1];
@@ -112,6 +117,7 @@ class PaymentApprovalState extends State<PaymentApproval>
       nomeGer = 'Gerente';
       nomeSup = 'Super.';
       nomeDir = 'Diretor';
+      _codigoUsuario = user[0].getUser.toString();
     });
   }
 
@@ -392,7 +398,7 @@ class PaymentApprovalState extends State<PaymentApproval>
   }
 
   Widget criaTela(BuildContext context) {
-    return _codigoUsuario == '' || (empresaAtual == null || empresaAtual == '')
+    return _codigoUsuario == ''
         ? new Scaffold(
             appBar: new AppBar(
               backgroundColor: Colors.blue,
@@ -400,45 +406,32 @@ class PaymentApprovalState extends State<PaymentApproval>
                 "Aprovação Digital",
                 style: TextStyle(color: Colors.white),
               ),
-              actions: <Widget>[
-                dropdownWidget(),
-              ],
+              // actions: <Widget>[
+              //   dropdownWidget(),
+              // ],
             ),
             body: new Container(
                 child: Center(child: CircularProgressIndicator())),
           )
-        : nomeEmpresaAtual != empresaAtual
-            ? new Scaffold(
-                appBar: new AppBar(
-                  backgroundColor: Colors.blue,
-                  actions: <Widget>[
-                    dropdownWidget(),
-                  ],
-                ),
-                body: new Container(
-                    child: new Center(
-                  child: new Text(mudaEmpresa()),
-                )),
-              )
-            : new Scaffold(
-                appBar: new AppBar(
-                  backgroundColor: Colors.blue,
-                  actions: <Widget>[
-                    dropdownWidget(),
-                  ],
-                ),
-                body: new TabBarView(
-                  children: botoes(),
-                  controller: controller,
-                ),
-                bottomNavigationBar: new Material(
-                  color: Colors.blue,
-                  child: new TabBar(
-                    tabs: tabs(),
-                    controller: controller,
-                  ),
-                ),
-              );
+        : new Scaffold(
+            appBar: new AppBar(
+              backgroundColor: Colors.blue,
+              // actions: <Widget>[
+              //   dropdownWidget(),
+              // ],
+            ),
+            body: new TabBarView(
+              children: botoes(),
+              controller: controller,
+            ),
+            bottomNavigationBar: new Material(
+              color: Colors.blue,
+              child: new TabBar(
+                tabs: tabs(),
+                controller: controller,
+              ),
+            ),
+          );
   }
 
   String mudaEmpresa() {
