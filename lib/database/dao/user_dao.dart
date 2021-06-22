@@ -25,6 +25,7 @@ class UserDao {
     final Database db = await getDatabase();
     final List<Map<String, dynamic>> result = await db.query('$_tableName');
     List<User> user = _toList(result);
+    result.first;
     return user;
   }
 

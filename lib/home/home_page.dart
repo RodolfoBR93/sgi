@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sgi/approvals/paymentApprovals/paymentApproval.dart';
 import 'package:sgi/core/uteis.dart';
-import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/gdi/gdi_home.dart';
 
 class HomePage extends StatefulWidget {
@@ -43,7 +42,7 @@ class HomePageState extends State<HomePage> {
     List<StatelessWidget> itens = [];
     var sobre = new AboutListTile(
       child: new Text("Sobre"),
-      applicationName: "CSC Digital",
+      applicationName: "SGI",
       applicationVersion: "v2.0.0",
       applicationIcon: new Icon(Icons.adb),
       icon: new Icon(Icons.info),

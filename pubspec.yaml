@@ -24,6 +24,7 @@ dependencies:
   email_validator: '^1.0.6'
   
   google_fonts: ^2.0.0
+  expandable: ^5.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -40,3 +41,7 @@ flutter:
     - assets/images/logo_branca.png
     - assets/images/verify.png
     - assets/images/otp.gif
+    - assets/images/LogoCircular_Asa.png
+    - assets/images/LogoCircular_MaceioDistribuidora.png
+    - assets/images/LogoCircular_MsLog.png
+    - assets/images/LogoCircular_Cose.png

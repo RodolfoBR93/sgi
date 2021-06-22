@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:expandable/expandable.dart';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/uteis.dart';
 
 import '../ViewAttachment.dart';
@@ -11,25 +13,23 @@ import '../getPayments.dart';
 
 class PaymentApprovalWidget extends StatefulWidget {
   final String _user;
-  final String _company;
-  final String _nameCompany;
+  final List _companies;
   final String _occupation;
   final String _occupationAcronym;
-  PaymentApprovalWidget(this._user, this._company, this._nameCompany,
-      this._occupation, this._occupationAcronym);
+  PaymentApprovalWidget(
+      this._user, this._companies, this._occupationAcronym, this._occupation);
   @override
   PaymentApprovalWidgetState createState() => new PaymentApprovalWidgetState(
-      _user, _company, _nameCompany, _occupation, _occupationAcronym);
+      _user, _companies, _occupationAcronym, _occupation);
 }
 
 class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   final String _user;
-  final String _company;
-  final String _nameCompany;
+  final List _companies;
   final String _occupation;
   final String _occupationAcronym;
-  PaymentApprovalWidgetState(this._user, this._company, this._nameCompany,
-      this._occupation, this._occupationAcronym);
+  PaymentApprovalWidgetState(
+      this._user, this._companies, this._occupationAcronym, this._occupation);
   List _titulos = [];
   List _dadosAdc = [];
   List retorno = [];
@@ -42,6 +42,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   String path;
   PDFDocument document;
   bool _isLoading = true;
+  String _companyName;
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   @override
@@ -51,7 +52,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
 
   void buscaTitulos() async {
     retorno = await getPayments(
-        _user, _occupationAcronym, _occupation, "1", _company);
+        _user, _occupation,_occupationAcronym , "1", _companies);
     if (this.mounted) {
       setState(() {
         _titulos = retorno[0];
@@ -103,13 +104,22 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                   : Colors.white,
               child: ListTile(
                 onTap: () {
+                  for (int i = 0; i < _companies.length; i++) {
+                    if (_companies[i][0] == _titulos[index][5]) {
+                      _companyName = _companies[i][1];
+                      break;
+                    }
+                  }
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) => new DetailedPayment(
-                          [_nameCompany, index, _titulos, _dadosAdc])));
+                          [_companyName, index, _titulos, _dadosAdc])));
                 },
                 title: Text(
                   _titulos[index][1],
                 ),
+                leading: CircleAvatar(
+                    backgroundImage:
+                        AssetImage(AppImages.getImage(_titulos[index][5]))),
                 subtitle: Column(
                   children: <Widget>[
                     Row(
@@ -181,7 +191,8 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
 
   void visualizarAnexo(BuildContext context, int index) async {
     WidgetsUteis.showLoadingDialog(context, _keyLoader, "Baixando anexos...");
-    _retorno = await _BuscaAnexos("${_titulos[index][0]}", _company);
+    _retorno =
+        await _BuscaAnexos("${_titulos[index][0]}", "${_titulos[index][5]}");
     Navigator.of(context).pop();
     selecionaAnexo(context, index, _formKey, _retorno);
   }
@@ -211,8 +222,8 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                           //leading: Icon(Icons.attach_file),
                           trailing: Icon(Icons.keyboard_arrow_right),
                           title: Text(anexos[index]),
-                          onTap: () => buscaAnexo(
-                              "${_titulos[recno][0]}", _company, anexos[index]),
+                          onTap: () => buscaAnexo("${_titulos[recno][0]}",
+                              "${_titulos[recno][5]}", anexos[index]),
                         ),
                       );
                     },
@@ -233,15 +244,18 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   void _Aprovacao(BuildContext context, int index, String mensagem) async {
     WidgetsUteis.showLoadingDialog(
         context, _keyLoader, "Concluindo aprovação...");
-    List _retAnexos = await _BuscaAnexos("${_titulos[index][0]}", _company);
+    List _retAnexos =
+        await _BuscaAnexos("${_titulos[index][0]}", "${_titulos[index][5]}");
 
     if (_retAnexos.length > 0) {
-      _retorno = await _AprovaTitulo(
-          "${_titulos[index][0]}", _user, _occupationAcronym, _company);
+      _retorno = await _AprovaTitulo("${_titulos[index][0]}", _user,
+          _occupationAcronym, "${_titulos[index][5]}");
       setState(() {
         _titulos.removeAt(index);
         _dadosAdc.removeAt(index);
       });
+    } else {
+      mensagem = 'Título não possui anexo!';
     }
     Navigator.of(context).pop();
     Scaffold.of(context).showSnackBar(SnackBar(
@@ -252,8 +266,8 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
 
   void _Rejeicao(
       int index, String mensagem, String motivo, BuildContext context) async {
-    _retorno = await _RejeitaTitulo(
-        "${_titulos[index][0]}", _user, _occupationAcronym, _company, motivo);
+    _retorno = await _RejeitaTitulo("${_titulos[index][0]}", _user,
+        _occupationAcronym, "${_titulos[index][5]}", motivo);
     Navigator.of(context).pop();
     setState(() {
       _titulos.removeAt(index);

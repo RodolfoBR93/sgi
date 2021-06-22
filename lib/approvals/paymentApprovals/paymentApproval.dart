@@ -4,7 +4,6 @@ import 'package:sgi/approvals/paymentApprovals/Widgets/paymentApprovalWidget.dar
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'getPayments.dart';
 
@@ -36,9 +35,6 @@ class PaymentApprovalState extends State<PaymentApproval>
   var tabsWidgets = [];
   List _listaEmpresas = [];
   final UserDao _dao = UserDao();
-  //List<User> user = [] as Future<List<User>;
-
-  List<DropdownMenuItem<String>> _menuSuspenso;
   String _itemSelecionado;
 
   List<DropdownMenuItem<String>> constroiMenuSuspenso(List itens) {
@@ -56,59 +52,16 @@ class PaymentApprovalState extends State<PaymentApproval>
     return items;
   }
 
-  void mudaItem(String itemSelecionado) {
-    setState(() {
-      _itemSelecionado = itemSelecionado;
-      for (int i = 0; i < empresas.length; i++) {
-        if (empresas[i][1] == itemSelecionado) {
-          empresaAtual = empresas[i][0];
-        }
-      }
-    });
-  }
-
-  Widget dropdownWidget() {
-    return DropdownButton(
-      value: _itemSelecionado,
-      items: _menuSuspenso,
-      onChanged: mudaItem,
-    );
-  }
-
   @override
   void initState() {
-    //getAcessos();
     getDireitos();
     super.initState();
-    //controller = new TabController(length: qtdtabs, vsync: this);
-  }
-
-  getAcessos() async {
-    List<User> user = await _dao.findAll();
-    getDireitos();
-    empresas = await getEmpresas(user[0].getUser);
-    setState(() {
-      _codigoUsuario = _codigoUsuario;
-      empresas = empresas;
-      for (int i = 0; i < empresas.length; i++) {
-        _listaEmpresas.add(empresas[i][1]);
-      }
-      _menuSuspenso = constroiMenuSuspenso(_listaEmpresas);
-      _itemSelecionado = _menuSuspenso[0].value;
-
-      int tam = empresas == null ? 0 : empresas.length;
-      for (int i = 0; i < tam; i++) {
-        if (empresas[i][1] == _itemSelecionado) {
-          empresaAtual = empresas[i][0];
-          nomeEmpresaAtual = empresaAtual;
-        }
-      }
-    });
   }
 
   void getDireitos() async {
     List<User> user = await _dao.findAll();
-    List direitos = await getRights(user[0].getUser.toString());
+    List direitos = await getRights(user[0].getuserProtheus.toString());
+    empresas = await getEmpresas(user[0].getuserProtheus.toString());
     setState(() {
       gerente = direitos[0];
       superi = direitos[1];
@@ -117,7 +70,10 @@ class PaymentApprovalState extends State<PaymentApproval>
       nomeGer = 'Gerente';
       nomeSup = 'Super.';
       nomeDir = 'Diretor';
-      _codigoUsuario = user[0].getUser.toString();
+      _codigoUsuario = user[0].getuserProtheus.toString();
+      for (int i = 0; i < empresas.length; i++) {
+        _listaEmpresas.add(empresas[i][1]);
+      }
     });
   }
 
@@ -142,12 +98,9 @@ class PaymentApprovalState extends State<PaymentApproval>
       });
 
       return <Widget>[
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'G', 'gerente'),
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'S', 'super'),
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'D', 'diretor')
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'G', 'gerente'),
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'S', 'super'),
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'D', 'diretor')
       ];
     } else if (gerente != "nok" && superi != "nok" && diretor == "nok") {
       setState(() {
@@ -157,10 +110,8 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'G', 'gerente'),
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'S', 'super')
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'G', 'gerente'),
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'S', 'super')
       ];
     } else if (gerente != "nok" && superi == "nok" && diretor != "nok") {
       setState(() {
@@ -170,10 +121,8 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'G', 'gerente'),
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'D', 'diretor')
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'G', 'gerente'),
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'D', 'diretor')
       ];
     } else if (gerente == "nok" && superi != "nok" && diretor != "nok") {
       setState(() {
@@ -183,10 +132,8 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'S', 'super'),
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'D', 'diretor')
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'S', 'super'),
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'D', 'diretor')
       ];
     } else if (gerente != "nok" && superi == "nok" && diretor == "nok") {
       setState(() {
@@ -196,8 +143,7 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'G', 'gerente')
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'G', 'gerente')
       ];
     } else if (gerente == "nok" && superi != "nok" && diretor == "nok") {
       setState(() {
@@ -207,8 +153,7 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'S', 'super')
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'S', 'super')
       ];
     } else if (gerente == "nok" && superi == "nok" && diretor != "nok") {
       setState(() {
@@ -218,8 +163,7 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(
-            _codigoUsuario, empresaAtual, _itemSelecionado, 'D', 'diretor')
+        new PaymentApprovalWidget(_codigoUsuario, empresas, 'D', 'diretor')
       ];
     }
 
@@ -403,7 +347,7 @@ class PaymentApprovalState extends State<PaymentApproval>
             appBar: new AppBar(
               backgroundColor: Colors.blue,
               title: new Text(
-                "Aprovação Digital",
+                "Aprovação de Títulos",
                 style: TextStyle(color: Colors.white),
               ),
               // actions: <Widget>[
@@ -416,6 +360,10 @@ class PaymentApprovalState extends State<PaymentApproval>
         : new Scaffold(
             appBar: new AppBar(
               backgroundColor: Colors.blue,
+              title: new Text(
+                "Aprovação de Títulos",
+                style: TextStyle(color: Colors.white),
+              ),
               // actions: <Widget>[
               //   dropdownWidget(),
               // ],
