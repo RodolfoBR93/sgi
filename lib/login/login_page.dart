@@ -4,11 +4,11 @@ import 'package:sgi/home/home_page.dart';
 import 'package:sgi/login/widgets/app_bar_login_widget.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
-import 'package:sgi/manage_access/manage_access.dart';
+import 'package:sgi/manage_access/manage_access_page.dart';
 import 'package:sgi/register/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'access_code.dart';
+import 'access_code_page.dart';
 
 class Login extends StatefulWidget {
   static const String routeName = "/login";

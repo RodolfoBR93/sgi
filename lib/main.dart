@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sgi/core/app_colors.dart';
-import 'package:sgi/gdi/gdi_home.dart';
+import 'package:sgi/gdi/gdi_home_page.dart';
 import 'package:sgi/login/login_page.dart';
 
-import 'approvals/paymentApprovals/paymentApproval.dart';
+import 'approvals/paymentApprovals/payment_approval_page.dart';
 import 'register/register_page.dart';
 
 void main() async {

@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
-import 'package:sgi/manage_access/manage_access.dart';
+import 'package:sgi/manage_access/manage_access_page.dart';
 import 'package:sgi/register/Widgets/app_bar_register_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 

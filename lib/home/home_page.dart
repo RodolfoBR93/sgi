@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sgi/approvals/paymentApprovals/paymentApproval.dart';
+import 'package:sgi/approvals/paymentApprovals/payment_approval_page.dart';
 import 'package:sgi/core/uteis.dart';
-import 'package:sgi/gdi/gdi_home.dart';
+import 'package:sgi/gdi/gdi_home_page.dart';
 
 class HomePage extends StatefulWidget {
   final String _usuProt;

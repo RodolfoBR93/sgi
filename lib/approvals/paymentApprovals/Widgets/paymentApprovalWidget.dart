@@ -8,7 +8,7 @@ import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/uteis.dart';
 
 import '../ViewAttachment.dart';
-import '../detailedPayment.dart';
+import '../detailed_payment_page.dart';
 import '../getPayments.dart';
 
 class PaymentApprovalWidget extends StatefulWidget {
