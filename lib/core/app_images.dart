@@ -3,7 +3,7 @@ class AppImages {
   static String get logoBranca => "assets/images/logo_branca.png";
   static String get verify => "assets/images/verify.png";
   static String get email => "assets/images/email.png";
-  static String get email_sent => "assets/images/email_sent.jpg";
+  static String get email_sent => "assets/images/email_sent2.jpg";
   static String get otp => "assets/images/otp.gif";
   static String get asa_circular => "assets/images/LogoCircular_Asa.png";
   static String get mcd_circular =>

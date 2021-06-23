@@ -77,7 +77,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
             )),
           )
         : Scaffold(
-            key: _formKey,
+            key: _scaffoldKey,
             body: Column(
               children: <Widget>[
                 Expanded(
@@ -180,10 +180,6 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
             onTap: () {
               reasonRejection(context, index, "Título Rejeitado", _formKey,
                   _motivoRejeicao);
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: new Text('Título Rejeitado'),
-                duration: Duration(seconds: 1),
-              ));
             }),
       ],
     );
@@ -266,6 +262,9 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
 
   void _Rejeicao(
       int index, String mensagem, String motivo, BuildContext context) async {
+    WidgetsUteis.showLoadingDialog(
+        context, _keyLoader, "Concluindo rejeição...");
+
     _retorno = await _RejeitaTitulo("${_titulos[index][0]}", _user,
         _occupationAcronym, "${_titulos[index][5]}", motivo);
     Navigator.of(context).pop();
@@ -306,10 +305,9 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                           if (_formKey.currentState.validate()) {
                             _formKey.currentState.save();
                             Navigator.of(context).pop();
-                            WidgetsUteis.showLoadingDialog(
-                                context, _keyLoader, "Concluindo rejeição...");
                             _Rejeicao(index, mensagem, motivo_rejeicao.text,
                                 _scaffoldKey.currentContext);
+
                             motivo_rejeicao.text = "";
                           }
                         }
