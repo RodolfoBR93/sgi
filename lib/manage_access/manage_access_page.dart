@@ -363,12 +363,11 @@ class _ManageAccessState extends State<ManageAccess> {
         WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Usuário ativado!",
             duracao: 2);
         if (response.data["id"] == 1) {
-          final User newUser = User(0, user, userProtheus, userGdi);
+          _dao.delete();
           setState(() {
-            _dao.save(newUser).then((id) => Navigator.of(context)
-                .pushReplacement(MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        new HomePage(userProtheus, userGdi))));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    new HomePage(user, userProtheus, userGdi)));
           });
         }
       } else {

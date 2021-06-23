@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/home/home_page.dart';
 import 'package:sgi/login/widgets/app_bar_login_widget.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/manage_access/manage_access_page.dart';
+import 'package:sgi/models/user.dart';
 import 'package:sgi/register/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,6 +28,7 @@ class _LoginState extends State<Login> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   bool _obscureText = true;
   double screenHeight;
+  final UserDao _dao = UserDao();
 
   @override
   Widget build(BuildContext context) {
@@ -226,10 +229,10 @@ class _LoginState extends State<Login> {
           WidgetsUteis.exibeSnackBar(
               context, _scaffoldKey, "Senha incorreta para este usuário!");
         } else {
-          //salvaUsuario(response.data["usuProt"], response.data["recno"]);
+          _dao.delete();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) => new HomePage(
-                  response.data["usuProt"], response.data["usuGnc"])));
+                  usuario, response.data["usuProt"], response.data["usuGnc"])));
         }
       } else {
         Navigator.of(context).pop();

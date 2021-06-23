@@ -29,6 +29,11 @@ class UserDao {
     return user;
   }
 
+  Future delete() async {
+    final Database db = await getDatabase();
+    await db.rawDelete('DELETE FROM $_tableName');
+  }
+
   Map<String, dynamic> _toMap(User user) {
     final Map<String, dynamic> userMap = Map();
     userMap[_user] = user.user;

@@ -3,23 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sgi/approvals/paymentApprovals/payment_approval_page.dart';
 import 'package:sgi/core/uteis.dart';
+import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/gdi/gdi_home_page.dart';
+import 'package:sgi/models/user.dart';
 
 class HomePage extends StatefulWidget {
+  final String _user;
   final String _usuProt;
   final String _usuGnc;
-  HomePage(this._usuProt, this._usuGnc);
+  HomePage(this._user, this._usuProt, this._usuGnc);
   @override
-  HomePageState createState() => new HomePageState(_usuProt, _usuGnc);
+  HomePageState createState() => new HomePageState(_user, _usuProt, _usuGnc);
 }
 
 class HomePageState extends State<HomePage> {
+  final String _user;
   final String _usuProt;
   final String _usuGnc;
   Endereco endereco = new Endereco();
   String retAprovacao;
   String retGnc;
-  HomePageState(this._usuProt, this._usuGnc);
+  final UserDao _dao = UserDao();
+  HomePageState(this._user, this._usuProt, this._usuGnc);
+
+  @override
+  void initState() {
+    final User newUser = User(0, _user, _usuProt, _usuGnc);
+    _dao.save(newUser);
+    super.initState();
+  }
 
   void acesso(int id) async {
     if (id == 1) {
