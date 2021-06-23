@@ -148,7 +148,7 @@ class HomePageState extends State<HomePage> {
     return (await showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-            title: new Text('Você tem certeza??'),
+            title: new Text('Você tem certeza?'),
             content: new Text('Você quer fechar aplicativo?'),
             actions: <Widget>[
               TextButton(

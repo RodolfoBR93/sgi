@@ -40,8 +40,10 @@ flutter:
     - assets/images/logo_colorida.png
     - assets/images/logo_branca.png
     - assets/images/verify.png
+    - assets/images/email.png
     - assets/images/otp.gif
     - assets/images/LogoCircular_Asa.png
     - assets/images/LogoCircular_MaceioDistribuidora.png
     - assets/images/LogoCircular_MsLog.png
     - assets/images/LogoCircular_Cose.png
+    - assets/images/email_sent.jpg

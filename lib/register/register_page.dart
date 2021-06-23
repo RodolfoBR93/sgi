@@ -4,6 +4,7 @@ import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:email_validator/email_validator.dart';
 import 'Widgets/app_bar_register_widget.dart';
+import 'send_mail_page.dart';
 
 class Register extends StatefulWidget {
   static const String routeName = "/register";
@@ -38,12 +39,38 @@ class _RegisterState extends State<Register> {
             Row(
               children: [
                 Expanded(
-                  flex: 5,
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "",
+                      style: AppTextStyles.body15,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 4,
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
                       "Cadastro",
                       style: AppTextStyles.body30Black,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/login', (Route<dynamic> route) => false);
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Login",
+                        style: AppTextStyles.body15,
+                      ),
                     ),
                   ),
                 ),
@@ -224,8 +251,13 @@ class _RegisterState extends State<Register> {
 
           if (response.data['id'] == 1) {
             await new Future.delayed(const Duration(seconds: 2));
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                '/login', (Route<dynamic> route) => false);
+            // Navigator.of(context).pushNamedAndRemoveUntil(
+            //     '/login', (Route<dynamic> route) => false);
+            //SendMail('rodo***o93@g***.com')
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => SendMail(_emailController.text.trim())),
+            );
           }
           return retorno;
         } else {

@@ -5,6 +5,7 @@ import 'package:sgi/login/login_page.dart';
 
 import 'approvals/paymentApprovals/payment_approval_page.dart';
 import 'register/register_page.dart';
+import 'register/send_mail_page.dart';
 
 void main() async {
   runApp(new MaterialApp(

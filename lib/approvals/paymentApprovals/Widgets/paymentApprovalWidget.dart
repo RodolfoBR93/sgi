@@ -7,9 +7,9 @@ import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/uteis.dart';
 
-import '../ViewAttachment.dart';
 import '../detailed_payment_page.dart';
 import '../getPayments.dart';
+import '../view_attachment_page.dart';
 
 class PaymentApprovalWidget extends StatefulWidget {
   final String _user;
@@ -52,7 +52,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
 
   void buscaTitulos() async {
     retorno = await getPayments(
-        _user, _occupation,_occupationAcronym , "1", _companies);
+        _user, _occupation, _occupationAcronym, "1", _companies);
     if (this.mounted) {
       setState(() {
         _titulos = retorno[0];
