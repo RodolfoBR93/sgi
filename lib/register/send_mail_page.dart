@@ -4,25 +4,31 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
+import 'package:sgi/database/dao/user_dao.dart';
+import 'package:sgi/models/user.dart';
 
 import 'Widgets/app_bar_register_widget.dart';
 
 class SendMail extends StatefulWidget {
+  final String user;
   final String email;
-  SendMail(this.email);
+  SendMail(this.user, this.email);
 
   @override
-  _SendMailState createState() => _SendMailState(email);
+  _SendMailState createState() => _SendMailState(user, email);
 }
 
 class _SendMailState extends State<SendMail> {
+  final String user;
   final String email;
+  final UserDao _dao = UserDao();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  _SendMailState(this.email);
+  _SendMailState(this.user, this.email);
 
   @override
   void initState() {
+    _dao.delete();
     super.initState();
   }
 
@@ -74,7 +80,7 @@ class _SendMailState extends State<SendMail> {
                     width: double.infinity, //width of button
                     child: ElevatedButton(
                       onPressed: () {
-                        _onWillPop();
+                        _onWillPop(user);
                       },
                       style: ElevatedButton.styleFrom(
                           elevation: 3,
@@ -95,8 +101,10 @@ class _SendMailState extends State<SendMail> {
     );
   }
 
-  _onWillPop() {
+  _onWillPop(String _user) {
+    final User newUser = User(0, _user, '', '');
+    _dao.save(newUser);
     Navigator.of(context)
-        .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);
+        .pushNamedAndRemoveUntil('/accescode', (Route<dynamic> route) => false);
   }
 }

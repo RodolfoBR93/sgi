@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'access_code_page.dart';
 
 class Login extends StatefulWidget {
-  static const String routeName = "/login";
+  static const String routeName = "/accescode";
   Login();
 
   @override
@@ -220,7 +220,7 @@ class _LoginState extends State<Login> {
           await new Future.delayed(const Duration(seconds: 3));
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AccessCode(usuario)),
+            MaterialPageRoute(builder: (context) => AccessCode()),
           );
         } else if (response.data["status"] == 'F') {
           WidgetsUteis.exibeSnackBar(

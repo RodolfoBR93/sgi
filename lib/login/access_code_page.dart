@@ -4,16 +4,19 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
+import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/manage_access/manage_access_page.dart';
+import 'package:sgi/models/user.dart';
 import 'package:sgi/register/Widgets/app_bar_register_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class AccessCode extends StatefulWidget {
-  final String user;
-  AccessCode(this.user);
+  static const String routeName = "/login";
+  //String user;
+  AccessCode();
 
   @override
-  _AccessCodeState createState() => _AccessCodeState(this.user);
+  _AccessCodeState createState() => _AccessCodeState();
 }
 
 class _AccessCodeState extends State<AccessCode> {
@@ -25,12 +28,14 @@ class _AccessCodeState extends State<AccessCode> {
   String currentText = "";
   final formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final String user;
-
-  _AccessCodeState(this.user);
+  String user;
+  final UserDao _dao = UserDao();
+  _AccessCodeState();
 
   @override
-  void initState() {
+  Future<void> initState() async {
+    List<User> users = await _dao.findAll();
+    user = users[0].getuserProtheus.toString();
     errorController = StreamController<ErrorAnimationType>();
     super.initState();
   }

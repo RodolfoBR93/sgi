@@ -251,12 +251,9 @@ class _RegisterState extends State<Register> {
 
           if (response.data['id'] == 1) {
             await new Future.delayed(const Duration(seconds: 2));
-            // Navigator.of(context).pushNamedAndRemoveUntil(
-            //     '/login', (Route<dynamic> route) => false);
-            //SendMail('rodo***o93@g***.com')
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => SendMail(_emailController.text.trim())),
+                  builder: (context) => SendMail(_usuarioController.text.trim(),_emailController.text.trim())),
             );
           }
           return retorno;
