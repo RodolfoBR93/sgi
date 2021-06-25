@@ -11,7 +11,7 @@ import 'package:sgi/register/Widgets/app_bar_register_widget.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class AccessCode extends StatefulWidget {
-  static const String routeName = "/login";
+  static const String routeName = "/accescode";
   //String user;
   AccessCode();
 
@@ -33,11 +33,15 @@ class _AccessCodeState extends State<AccessCode> {
   _AccessCodeState();
 
   @override
-  Future<void> initState() async {
-    List<User> users = await _dao.findAll();
-    user = users[0].getuserProtheus.toString();
+  void initState() {
+    getUser();
     errorController = StreamController<ErrorAnimationType>();
     super.initState();
+  }
+
+  void getUser() async {
+    List<User> users = await _dao.findAll();
+    user = users[0].getUser.toString();
   }
 
   @override

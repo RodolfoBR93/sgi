@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'access_code_page.dart';
 
 class Login extends StatefulWidget {
-  static const String routeName = "/accescode";
+  static const String routeName = "/login";
   Login();
 
   @override

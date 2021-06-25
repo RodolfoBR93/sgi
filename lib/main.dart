@@ -22,7 +22,7 @@ void main() async {
       Login.routeName: (BuildContext context) => new Login(),
       Gdi.routeName: (BuildContext context) => new Gdi(),
       Register.routeName: (BuildContext context) => new Register(),
-      Register.routeName: (BuildContext context) => new AccessCode(),
+      AccessCode.routeName: (BuildContext context) => new AccessCode(),
     },
   ));
 }
