@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:sgi/core/uteis.dart';
+import 'package:money2/money2.dart';
+import 'package:intl/intl.dart';
 
 Future<List> getPayments(String usuario, String cargo, String autocomo,
     String bPendente, List empresa) async {
@@ -71,7 +73,7 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
         });
         if (response.statusCode == 200 || response.statusCode == 201) {
           nQtdTit = response.data["qtdtit"];
-          debugPrint(response.data.toString());
+          //debugPrint(response.data.toString());
           for (int i = 0; i < nQtdTit; i++) {
             vencimento = response.data["titulos"][i]["vencimento"];
             vencimento = vencimento.substring(6, 8) +
@@ -166,7 +168,6 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
             // if(endfor == 'End.: -      /'){
             //   endfor = 'End.: Avenida Pedro Cícero, 605 - Centro     Taquarana/AL';
             // }
-
             if (titpai == '') {
               titulos.add([
                 recno,
@@ -176,12 +177,21 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
                 prefixo + numero + parcela + tipo + fornece + loja,
                 response.data["empresa"]
               ]);
-              dadosAdicionais.add([
+              // DateTime dueDate =
+              //     new DateFormat("dd/MM/yyyy").parse(vencimento);
+              //     //DateTime dueDate =
+              //     new DateFormat("dd/MM/yyyy").parse(vencimento);
+              //     Duration days = new Duration(days: 3);
+                  
+              //     dueDate.add(days);
+              //     //dueDate.difference(other)
+              dadosAdicionais.add([ 
                 tipo,
                 prefixo,
                 numero,
                 parcela,
-                " R\$${response.data["titulos"][i]["saldo"]}",
+                " R\$ " +
+                    formatMoney("${response.data["titulos"][i]["saldo"]}"),
                 vencimento,
                 codfil,
                 nomefil,
@@ -209,7 +219,10 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
                 quantsup,
                 quantdir,
                 quantgerfin,
-                quantsupfin
+                quantsupfin,
+                response.data["titulos"][i]["statusVenc"],
+                response.data["titulos"][i]["statusMensagem"],
+                response.data["titulos"][i]["diasVenc"],
               ]);
             } else {
               impostos.add(titpai);
@@ -220,13 +233,13 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
               if (impostos[i] == titulos[j][4]) {
                 titulos[j][4] = "impostos";
               } else {
-                debugPrint(impostos[i]);
-                debugPrint(titulos[j][4]);
+                //debugPrint(impostos[i]);
+                //debugPrint(titulos[j][4]);
               }
             }
           }
         } else {
-          debugPrint('Failed to load post');
+          //debugPrint('Failed to load post');
         }
       }
       retorno.add(titulos);
@@ -268,4 +281,35 @@ Future<List> getRights(String usuario) async {
     print(e);
   }
   return dados;
+}
+
+String formatMoney(String val) {
+  double saldo = double.parse(val);
+  String ret = formatValue(saldo);
+  String aux;
+  int len;
+  String accumulator = '';
+  int start;
+  if (ret.contains('.')) {
+    ret = ret.replaceAll(".", ",");
+  } else {
+    ret = ret + ',00';
+  }
+  aux = ret.substring(0, ret.length - 3);
+  len = aux.length;
+  start = aux.length;
+  while (start > 3) {
+    accumulator = '.' + aux.substring(start - 3, start) + accumulator;
+    start -= 3;
+  }
+  accumulator = aux.substring(0, start) + accumulator;
+  debugPrint(accumulator + ret.substring(ret.length - 3, ret.length));
+  return accumulator + ret.substring(ret.length - 3, ret.length);
+}
+
+String formatValue(double n) {
+  String ret;
+  ret = n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
+
+  return ret;
 }

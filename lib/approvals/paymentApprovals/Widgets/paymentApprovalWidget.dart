@@ -4,7 +4,9 @@ import 'package:expandable/expandable.dart';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:sgi/core/app_colors.dart';
 import 'package:sgi/core/app_images.dart';
+import 'package:sgi/core/app_text_styles.dart';
 import 'package:sgi/core/uteis.dart';
 
 import '../detailed_payment_page.dart';
@@ -35,7 +37,9 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   List retorno = [];
   List _retorno = [];
   final _formKey = GlobalKey<FormState>();
+  final _formKeyApr = GlobalKey<FormState>();
   final TextEditingController _motivoRejeicao = new TextEditingController();
+  final TextEditingController _diForaDoPrazo = new TextEditingController();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Endereco endereco = new Endereco();
   bool pdfAtivo = false;
@@ -114,47 +118,61 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                       builder: (BuildContext context) => new DetailedPayment(
                           [_companyName, index, _titulos, _dadosAdc])));
                 },
-                title: Text(
-                  _titulos[index][1],
+                title:
+                    Text(_titulos[index][1], style: AppTextStyles.title15Black),
+                trailing: GestureDetector(
+                  onTap: () {
+                    WidgetsUteis.exibeSnackBar(
+                        context, _scaffoldKey, _dadosAdc[index][34]);
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    child: getInfo(
+                      _dadosAdc[index][33],
+                    ),
+                  ),
                 ),
                 leading: CircleAvatar(
                     backgroundImage:
                         AssetImage(AppImages.getImage(_titulos[index][5]))),
                 subtitle: Column(
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 3,
-                          child: Container(
-                            child: Text(
-                              "Título: " +
-                                  _dadosAdc[index][0] +
-                                  " " +
-                                  _dadosAdc[index][1] +
-                                  " " +
-                                  _dadosAdc[index][2] +
-                                  " " +
-                                  _dadosAdc[index][3],
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            child: Text(
-                              "Valor: " + _dadosAdc[index][4],
-                            ),
-                          ),
-                        ),
-                      ],
+                    Container(
+                      width: double.infinity,
+                      child: Text(
+                        "Título: " +
+                            _dadosAdc[index][0] +
+                            " " +
+                            _dadosAdc[index][1] +
+                            " " +
+                            _dadosAdc[index][2] +
+                            " " +
+                            _dadosAdc[index][3],
+                        style: AppTextStyles.title13Grey,
+                      ),
                     ),
                     Container(
-                        width: double.infinity,
-                        child: Text(
-                          "Vencimento: " + _dadosAdc[index][5],
-                        )),
+                      width: double.infinity,
+                      child: Text(
+                        "Valor: " + _dadosAdc[index][4],
+                        style: AppTextStyles.title13Grey,
+                      ),
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: Text.rich(TextSpan(
+                          text: "Vencimento: ",
+                          style: AppTextStyles.title13Grey,
+                          children: [
+                            TextSpan(
+                              text: _dadosAdc[index][5],
+                              style: _dadosAdc[index][35] < 0
+                                  ? AppTextStyles.title13Red
+                                  : AppTextStyles.title13Green,
+                            )
+                          ])),
+                    ),
                   ],
                 ),
               ))),
@@ -163,7 +181,8 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
           caption: 'Aprovar',
           color: Colors.green,
           icon: Icons.check,
-          onTap: () => _Aprovacao(context, index, "Título Aprovado"),
+          onTap: () async =>
+              await _Aprovacao(context, index, "Título Aprovado"),
         ),
         new IconSlideAction(
           caption: 'Anexos',
@@ -244,20 +263,39 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
         await _BuscaAnexos("${_titulos[index][0]}", "${_titulos[index][5]}");
 
     if (_retAnexos.length > 0) {
-      _retorno = await _AprovaTitulo("${_titulos[index][0]}", _user,
-          _occupationAcronym, "${_titulos[index][5]}");
-      setState(() {
-        _titulos.removeAt(index);
-        _dadosAdc.removeAt(index);
-      });
+      if (_dadosAdc[index][35] < 0) {
+        Navigator.of(context).pop();
+        await autorizationDI(context, index, _formKeyApr, _diForaDoPrazo);
+      } else {
+        Navigator.of(context).pop();
+        WidgetsUteis.showLoadingDialog(
+            context, _keyLoader, "Concluindo aprovação...");
+        _retorno = await _AprovaTitulo("${_titulos[index][0]}", _user,
+            _occupationAcronym, "${_titulos[index][5]}");
+
+        setState(() {
+          _titulos.removeAt(index);
+          _dadosAdc.removeAt(index);
+          if (_titulos.isEmpty) {
+            _isLoading = true;
+            buscaTitulos();
+          }
+        });
+        Navigator.of(context).pop();
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: new Text(mensagem),
+          duration: Duration(seconds: 1),
+        ));
+      }
     } else {
       mensagem = 'Título não possui anexo!';
+      Navigator.of(context).pop();
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: new Text(mensagem),
+        duration: Duration(seconds: 1),
+      ));
     }
-    Navigator.of(context).pop();
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: new Text(mensagem),
-      duration: Duration(seconds: 1),
-    ));
+    //_retorno[0] == 1
   }
 
   void _Rejeicao(
@@ -271,7 +309,20 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
     setState(() {
       _titulos.removeAt(index);
       _dadosAdc.removeAt(index);
+      if (_titulos.isEmpty) {
+        _isLoading = true;
+        buscaTitulos();
+      }
     });
+    WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Título rejeitado!");
+  }
+
+  Future<List> _DiAutorizacao(
+      int index, String numeroDI, BuildContext context) async {
+    WidgetsUteis.showLoadingDialog(context, _keyLoader, "aguarde...");
+    _retorno = await _StatusDIAutorizacao("${_titulos[index][0]}", _user,
+        _occupationAcronym, "${_titulos[index][5]}", numeroDI, index);
+    Navigator.of(context).pop();
   }
 
   Future reasonRejection(BuildContext context, int index, String mensagem,
@@ -291,7 +342,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                     child: TextFormField(
                       controller: motivo_rejeicao,
                       decoration: InputDecoration(
-                          labelText: 'Informe o motivo da rejeição',
+                          labelText: 'Motivo da rejeição',
                           hintStyle:
                               TextStyle(fontSize: 16.9, color: Colors.blue)),
                     ),
@@ -309,6 +360,57 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                                 _scaffoldKey.currentContext);
 
                             motivo_rejeicao.text = "";
+                          }
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future autorizationDI(
+      BuildContext context,
+      int index,
+      GlobalKey<FormState> _formKey,
+      TextEditingController diForaDoPrazo) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Informe a DI de autorização',
+                style: TextStyle(fontSize: 16.9)),
+            content: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      controller: diForaDoPrazo,
+                      decoration: InputDecoration(
+                          labelText: 'Número DI',
+                          hintStyle:
+                              TextStyle(fontSize: 16.9, color: Colors.blue)),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      child: Text("Enviar"),
+                      onPressed: () async {
+                        if (diForaDoPrazo.text != "") {
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                            Navigator.of(context).pop();
+                            await _DiAutorizacao(index, diForaDoPrazo.text,
+                                _scaffoldKey.currentContext);
+
+                            diForaDoPrazo.text = "";
                           }
                         }
                       },
@@ -354,11 +456,55 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
     }
   }
 
+  Future _StatusDIAutorizacao(String _recno, String usuario, String _autcomo,
+      String empresa, String numeroDI, int index) async {
+    Response response;
+    Dio dio = new Dio();
+    List dados = [];
+    try {
+      response =
+          await dio.post("${endereco.getEndereco}status_di_autorizacao", data: {
+        "empresa": empresa,
+        "arecno": _recno,
+        "usuario": usuario,
+        "autocomo": _autcomo,
+        "numeroDI": numeroDI
+      });
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (response.data["status"] == '1') {
+          WidgetsUteis.showLoadingDialog(
+              context, _keyLoader, "Concluindo aprovação...");
+          _retorno = await _AprovaTitulo("${_titulos[index][0]}", _user,
+              _occupationAcronym, "${_titulos[index][5]}");
+          Navigator.of(context).pop();
+          setState(() {
+            _titulos.removeAt(index);
+            _dadosAdc.removeAt(index);
+            if (_titulos.isEmpty) {
+              _isLoading = true;
+              buscaTitulos();
+            }
+          });
+          WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Título aprovado!");
+        } else {
+          WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "DI incorreta!");
+        }
+      } else {
+        WidgetsUteis.exibeSnackBar(
+            context, _scaffoldKey, "Não foi possível conectar");
+      }
+    } catch (e) {
+      WidgetsUteis.exibeSnackBar(
+          context, _scaffoldKey, "Não foi possível conectar");
+      print(e);
+    }
+  }
+
   Future<List> _RejeitaTitulo(String _recno, String usuario, String _autcomo,
       String empresa, String motivo) async {
     Response response;
     Dio dio = new Dio();
-    List dados = new List(); //_empresa, _recno, usuario, autcomo
+    List dados = []; //_empresa, _recno, usuario, autcomo
     try {
       response = await dio.post("${endereco.getEndereco}rejeicao", data: {
         "empresa": empresa,
@@ -414,5 +560,26 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
           context, _scaffoldKey, "Não foi possível conectar");
       print(e);
     }
+  }
+
+  Icon getInfo(String status) {
+    if (status == 'GV' || status == 'SV' || status == 'DV') {
+      return Icon(
+        Icons.error,
+        color: AppColors.orange,
+      );
+    }
+
+    if (status == 'GR' || status == 'SR' || status == 'DR') {
+      return Icon(
+        Icons.error,
+        color: AppColors.red,
+      );
+    }
+
+    return Icon(
+      Icons.check_circle,
+      color: AppColors.darkGreen,
+    );
   }
 }

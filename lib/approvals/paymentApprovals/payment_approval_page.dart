@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/approvals/paymentApprovals/Widgets/paymentApprovalWidget.dart';
+import 'package:sgi/core/app_colors.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/models/user.dart';
@@ -345,7 +346,7 @@ class PaymentApprovalState extends State<PaymentApproval>
     return _codigoUsuario == ''
         ? new Scaffold(
             appBar: new AppBar(
-              backgroundColor: Colors.blue,
+              backgroundColor: AppColors.blue,
               title: new Text(
                 "Aprovação de Títulos",
                 style: TextStyle(color: Colors.white),
@@ -353,13 +354,25 @@ class PaymentApprovalState extends State<PaymentApproval>
               // actions: <Widget>[
               //   dropdownWidget(),
               // ],
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: <Color>[
+                      Color(0xFF4FACFE),
+                      Color(0xFF00F2FE),
+                    ],
+                  ),
+                ),
+              ),
             ),
             body: new Container(
                 child: Center(child: CircularProgressIndicator())),
           )
         : new Scaffold(
             appBar: new AppBar(
-              backgroundColor: Colors.blue,
+              backgroundColor: AppColors.blue,
               title: new Text(
                 "Aprovação de Títulos",
                 style: TextStyle(color: Colors.white),
@@ -367,13 +380,25 @@ class PaymentApprovalState extends State<PaymentApproval>
               // actions: <Widget>[
               //   dropdownWidget(),
               // ],
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: <Color>[
+                      Color(0xFF4FACFE),
+                      Color(0xFF00F2FE),
+                    ],
+                  ),
+                ),
+              ),
             ),
             body: new TabBarView(
               children: botoes(),
               controller: controller,
             ),
             bottomNavigationBar: new Material(
-              color: Colors.blue,
+              color: Color(0xFF1890FF),
               child: new TabBar(
                 tabs: tabs(),
                 controller: controller,

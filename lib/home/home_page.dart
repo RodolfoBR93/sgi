@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sgi/approvals/paymentApprovals/payment_approval_page.dart';
+import 'package:sgi/core/app_colors.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/gdi/gdi_home_page.dart';
@@ -110,8 +111,20 @@ class HomePageState extends State<HomePage> {
               "Sistema de Gestão Integrada",
               style: TextStyle(color: Colors.white),
             ),
-            backgroundColor: Colors.blue,
+            backgroundColor: AppColors.blue,
             centerTitle: true,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: <Color>[
+                    Color(0xFF4FACFE),
+                    Color(0xFF00F2FE),
+                  ],
+                ),
+              ),
+            ),
           ),
           backgroundColor: Colors.white,
           body: new Container(

@@ -25,6 +25,8 @@ dependencies:
   
   google_fonts: ^2.0.0
   expandable: ^5.0.1
+  money2: ^2.2.1
+  intl: ^0.17.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
