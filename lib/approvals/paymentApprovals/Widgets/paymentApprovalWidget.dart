@@ -17,21 +17,23 @@ class PaymentApprovalWidget extends StatefulWidget {
   final String _user;
   final List _companies;
   final String _occupation;
+  final String _occupationT;
   final String _occupationAcronym;
-  PaymentApprovalWidget(
-      this._user, this._companies, this._occupationAcronym, this._occupation);
+  PaymentApprovalWidget(this._user, this._companies, this._occupationAcronym,
+      this._occupation, this._occupationT);
   @override
   PaymentApprovalWidgetState createState() => new PaymentApprovalWidgetState(
-      _user, _companies, _occupationAcronym, _occupation);
+      _user, _companies, _occupationAcronym, _occupation, _occupationT);
 }
 
 class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   final String _user;
   final List _companies;
   final String _occupation;
+  final String _occupationT;
   final String _occupationAcronym;
-  PaymentApprovalWidgetState(
-      this._user, this._companies, this._occupationAcronym, this._occupation);
+  PaymentApprovalWidgetState(this._user, this._companies,
+      this._occupationAcronym, this._occupation, this._occupationT);
   List _titulos = [];
   List _dadosAdc = [];
   List retorno = [];
@@ -81,12 +83,17 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
             )),
           )
         : Scaffold(
+            backgroundColor: AppColors.white,
             key: _scaffoldKey,
             body: Column(
               children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(_occupationT, style: AppTextStyles.title15Black),
+                ),
                 Expanded(
                   child: ListView.builder(
-                    padding: EdgeInsets.only(top: 10.0),
+                    padding: EdgeInsets.only(top: 10.0, left: 8.0, right: 8.0),
                     itemCount: _titulos.length,
                     itemBuilder: buildItem,
                   ),
@@ -96,13 +103,30 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
           );
   }
 
+  void waitApproval(
+      BuildContext context, _companyName, index, _titulos, _dadosAdc) async {
+    final result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) =>
+            new DetailedPayment([_companyName, index, _titulos, _dadosAdc])));
+
+    if (result != null) {
+      if (result == '1') {
+        await _Aprovacao(context, index, "Título Aprovado");
+      } else if (result == '0') {
+        reasonRejection(
+            context, index, "Título Rejeitado", _formKey, _motivoRejeicao);
+      }
+    }
+  }
+
   Widget buildItem(BuildContext context, int index) {
     return new Slidable(
       actionPane: new SlidableDrawerActionPane(),
       actionExtentRatio: 0.25,
       child: new Container(
-          color: Colors.white,
+          color: AppColors.white,
           child: Card(
+              elevation: 3.0,
               color: _titulos[index][4] == 'impostos'
                   ? Colors.yellow[100]
                   : Colors.white,
@@ -114,9 +138,8 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                       break;
                     }
                   }
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => new DetailedPayment(
-                          [_companyName, index, _titulos, _dadosAdc])));
+                  waitApproval(
+                      context, _companyName, index, _titulos, _dadosAdc);
                 },
                 title:
                     Text(_titulos[index][1], style: AppTextStyles.title15Black),
@@ -126,6 +149,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                         context, _scaffoldKey, _dadosAdc[index][34]);
                   },
                   child: Container(
+                    color: Colors.white,
                     height: 50,
                     width: 50,
                     child: getInfo(

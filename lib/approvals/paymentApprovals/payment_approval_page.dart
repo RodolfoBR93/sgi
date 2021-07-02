@@ -99,9 +99,12 @@ class PaymentApprovalState extends State<PaymentApproval>
       });
 
       return <Widget>[
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'G', 'gerente'),
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'S', 'super'),
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'D', 'diretor')
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'G', 'gerente', 'Gerente'),
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'S', 'super', 'Superintendente'),
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'D', 'diretor', 'Diretoria'),
       ];
     } else if (gerente != "nok" && superi != "nok" && diretor == "nok") {
       setState(() {
@@ -111,8 +114,10 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'G', 'gerente'),
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'S', 'super')
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'G', 'gerente', 'Gerente'),
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'S', 'super', 'Superintendente')
       ];
     } else if (gerente != "nok" && superi == "nok" && diretor != "nok") {
       setState(() {
@@ -122,8 +127,10 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'G', 'gerente'),
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'D', 'diretor')
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'G', 'gerente', 'Gerente'),
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'D', 'diretor', 'Diretoria')
       ];
     } else if (gerente == "nok" && superi != "nok" && diretor != "nok") {
       setState(() {
@@ -133,8 +140,10 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'S', 'super'),
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'D', 'diretor')
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'S', 'super', 'Superintendente'),
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'D', 'diretor', 'Diretoria')
       ];
     } else if (gerente != "nok" && superi == "nok" && diretor == "nok") {
       setState(() {
@@ -144,7 +153,8 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'G', 'gerente')
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'G', 'gerente', 'Gerente')
       ];
     } else if (gerente == "nok" && superi != "nok" && diretor == "nok") {
       setState(() {
@@ -154,7 +164,8 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'S', 'super')
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'S', 'super', 'Superintendente')
       ];
     } else if (gerente == "nok" && superi == "nok" && diretor != "nok") {
       setState(() {
@@ -164,7 +175,8 @@ class PaymentApprovalState extends State<PaymentApproval>
         }
       });
       return <Widget>[
-        new PaymentApprovalWidget(_codigoUsuario, empresas, 'D', 'diretor')
+        new PaymentApprovalWidget(
+            _codigoUsuario, empresas, 'D', 'diretor', 'Diretoria')
       ];
     }
 
