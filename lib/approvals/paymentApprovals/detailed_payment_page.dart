@@ -1,5 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/core/app_colors.dart';
+import 'package:sgi/core/app_text_styles.dart';
+import 'package:sgi/core/uteis.dart';
+import 'view_attachment_page.dart';
 
 class DetailedPayment extends StatefulWidget {
   final List _dadosTitulo;
@@ -12,7 +16,11 @@ class DetailedPayment extends StatefulWidget {
 class _DetailedPaymentState extends State<DetailedPayment> {
   final List _dadosTitulo;
   _DetailedPaymentState(this._dadosTitulo);
-
+  final _formKey = GlobalKey<FormState>();
+  List _retorno = [];
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  Endereco endereco = new Endereco();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _onBackPressed = true;
 
   @override
@@ -22,6 +30,7 @@ class _DetailedPaymentState extends State<DetailedPayment> {
         return _onBackPressed;
       },
       child: new Scaffold(
+        key: _scaffoldKey,
         appBar: new AppBar(
           backgroundColor: Colors.blue,
           title: new Text(
@@ -40,6 +49,21 @@ class _DetailedPaymentState extends State<DetailedPayment> {
               ),
             ),
           ),
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () {
+                visualizarAnexo(
+                    context,
+                    _dadosTitulo[1],
+                    _dadosTitulo[2][_dadosTitulo[1]][5],
+                    _dadosTitulo[2][_dadosTitulo[1]][0]);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Icon(Icons.attach_file),
+              ),
+            ),
+          ],
         ),
         backgroundColor: AppColors.white, //Color.fromRGBO(235, 235, 235, 1),
         body: SingleChildScrollView(
@@ -47,6 +71,11 @@ class _DetailedPaymentState extends State<DetailedPayment> {
             padding: const EdgeInsets.only(top: 8.0),
             child: new Column(
               children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child:
+                      Text(_dadosTitulo[4], style: AppTextStyles.title15Black),
+                ),
                 Container(
                   width: double.infinity,
                   alignment: Alignment.centerLeft,
@@ -526,5 +555,100 @@ class _DetailedPaymentState extends State<DetailedPayment> {
         ),
       ),
     );
+  }
+
+  void visualizarAnexo(
+      BuildContext context, int index, String company, String recno) async {
+    WidgetsUteis.showLoadingDialog(context, _keyLoader, "Baixando anexos...");
+    _retorno = await _BuscaAnexos(recno, company);
+    Navigator.of(context).pop();
+    selecionaAnexo(context, index, _formKey, _retorno);
+  }
+
+  Future<List> _BuscaAnexos(String _arecno, String _empresa) async {
+    int nQtdAnexos = 0;
+    String anexos = "";
+    try {
+      Response response;
+      Dio dio = new Dio();
+      List dados = []; //_empresa, _recno, usuario, autcomo
+      response = await dio.post("${endereco.getEndereco}anexos",
+          data: {"empresa": _empresa, "arecno": _arecno});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.data);
+        nQtdAnexos = response.data["qtdanexos"];
+        for (int i = 0; i < nQtdAnexos; i++) {
+          anexos = response.data["anexos"][i]["anexos${i + 1}"];
+          //anexos = anexos.substring(31, anexos.length);
+          dados.add(anexos);
+        }
+        if (dados.length == 0) {
+          final snackBar =
+              SnackBar(content: Text('Não existe documento anexado!'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+        return dados;
+      } else {
+        WidgetsUteis.exibeSnackBar(
+            context, _scaffoldKey, "Não foi possível conectar");
+      }
+      return dados;
+    } catch (e) {
+      WidgetsUteis.exibeSnackBar(
+          context, _scaffoldKey, "Não foi possível conectar");
+      print(e);
+    }
+  }
+
+  buscaAnexo(String recno, String empresa, String anexo) async {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => new ViewAttachment(
+            '${endereco.getEndereco}getanexo?empresa=$empresa&anexo=$anexo&arecno=$recno')));
+  }
+
+  Future selecionaAnexo(BuildContext context, int index,
+      GlobalKey<FormState> _formKey, List anexos) {
+    int recno = index;
+
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+              onWillPop: () {},
+              child: AlertDialog(
+                title: Text('Anexos', style: TextStyle(fontSize: 16.9)),
+                content: Container(
+                  //color: Colors.grey,
+                  width: double.maxFinite,
+                  height: 300.0,
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(top: 10.0),
+                    itemCount: anexos.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        color: Colors.white70,
+                        child: ListTile(
+                          //leading: Icon(Icons.attach_file),
+                          trailing: Icon(Icons.keyboard_arrow_right),
+                          title: Text(anexos[index]),
+                          onTap: () => buscaAnexo(
+                              _dadosTitulo[2][_dadosTitulo[1]][0],
+                              _dadosTitulo[2][_dadosTitulo[1]][5],
+                              anexos[index]),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Fechar"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ));
+        });
   }
 }

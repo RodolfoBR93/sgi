@@ -107,7 +107,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
       BuildContext context, _companyName, index, _titulos, _dadosAdc) async {
     final result = await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) =>
-            new DetailedPayment([_companyName, index, _titulos, _dadosAdc])));
+            new DetailedPayment([_companyName, index, _titulos, _dadosAdc, _occupationT])));
 
     if (result != null) {
       if (result == '1') {
