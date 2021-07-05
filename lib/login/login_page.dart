@@ -28,11 +28,13 @@ class _LoginState extends State<Login> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   bool _obscureText = true;
   double screenHeight;
+  double screenWidth;
   final UserDao _dao = UserDao();
 
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -193,11 +195,11 @@ class _LoginState extends State<Login> {
     FocusScope.of(context).unfocus();
     if (_usuarioController.text.length <= 3) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Insira um usuário válido!");
+          context, _scaffoldKey, "Insira um usuário válido!", screenWidth);
       await new Future.delayed(const Duration(seconds: 2));
     } else if (_passwordController.text.length <= 3) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Insira uma senha válida!");
+          context, _scaffoldKey, "Insira uma senha válida!", screenWidth);
       await new Future.delayed(const Duration(seconds: 2));
     } else {
       await getLogin(_usuarioController.text, _passwordController.text);
@@ -215,8 +217,11 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         Navigator.of(context).pop();
         if (response.data["status"] == 'FFF') {
-          WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
-              "Primeiro acesso, será necessário conectar suas contas!");
+          WidgetsUteis.exibeSnackBar(
+              context,
+              _scaffoldKey,
+              "Primeiro acesso, será necessário conectar suas contas!",
+              screenWidth);
           await new Future.delayed(const Duration(seconds: 3));
           Navigator.push(
             context,
@@ -224,10 +229,10 @@ class _LoginState extends State<Login> {
           );
         } else if (response.data["status"] == 'F') {
           WidgetsUteis.exibeSnackBar(
-              context, _scaffoldKey, "Usuário não encontrado!");
+              context, _scaffoldKey, "Usuário não encontrado!", screenWidth);
         } else if (response.data["status"] == 'FF') {
-          WidgetsUteis.exibeSnackBar(
-              context, _scaffoldKey, "Senha incorreta para este usuário!");
+          WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+              "Senha incorreta para este usuário!", screenWidth);
         } else {
           _dao.delete();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -237,14 +242,14 @@ class _LoginState extends State<Login> {
       } else {
         Navigator.of(context).pop();
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       }
 
       return response.statusCode;
     } catch (e) {
       Navigator.of(context).pop();
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       print(e);
     }
     return 0;

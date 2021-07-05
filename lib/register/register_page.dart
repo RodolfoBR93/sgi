@@ -26,8 +26,10 @@ class _RegisterState extends State<Register> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   bool _obscureTextPassword = true;
   bool _obscureTextConfirmPassword = true;
+  double screenWidth;
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -224,15 +226,17 @@ class _RegisterState extends State<Register> {
     List retorno;
     if (_usuarioController.text.trim().length < 4) {
       WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
-          'Usuário deve possuir no mínimo 4 caracteres!');
+          'Usuário deve possuir no mínimo 4 caracteres!', screenWidth);
     } else if (!EmailValidator.validate(_emailController.text.trim())) {
-      WidgetsUteis.exibeSnackBar(context, _scaffoldKey, 'E-mail inválido!');
-    } else if (_passwordController.text.trim().length < 4) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, 'Senha deve possuir no mínimo 4 caracteres!');
+          context, _scaffoldKey, 'E-mail inválido!', screenWidth);
+    } else if (_passwordController.text.trim().length < 4) {
+      WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+          'Senha deve possuir no mínimo 4 caracteres!', screenWidth);
     } else if (_passwordController.text.trim() !=
         _passwordConfirmController.text.trim()) {
-      WidgetsUteis.exibeSnackBar(context, _scaffoldKey, 'Senhas não conferem!');
+      WidgetsUteis.exibeSnackBar(
+          context, _scaffoldKey, 'Senhas não conferem!', screenWidth);
     } else {
       WidgetsUteis.showLoadingDialog(context, _keyLoader, 'Aguarde...');
       await new Future.delayed(const Duration(seconds: 1));
@@ -247,13 +251,14 @@ class _RegisterState extends State<Register> {
         if (response.statusCode == 200 || response.statusCode == 201) {
           Navigator.of(context).pop();
           WidgetsUteis.exibeSnackBar(
-              context, _scaffoldKey, response.data['mensagem']);
+              context, _scaffoldKey, response.data['mensagem'], screenWidth);
 
           if (response.data['id'] == 1) {
             await new Future.delayed(const Duration(seconds: 2));
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => SendMail(_usuarioController.text.trim(),_emailController.text.trim())),
+                  builder: (context) => SendMail(_usuarioController.text.trim(),
+                      _emailController.text.trim())),
             );
           }
           return retorno;
@@ -263,7 +268,7 @@ class _RegisterState extends State<Register> {
         }
       } catch (e) {
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
         print(e);
       }
     }

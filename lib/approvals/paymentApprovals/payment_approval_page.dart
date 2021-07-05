@@ -37,6 +37,7 @@ class PaymentApprovalState extends State<PaymentApproval>
   List _listaEmpresas = [];
   final UserDao _dao = UserDao();
   String _itemSelecionado;
+  double screenWidth;
 
   List<DropdownMenuItem<String>> constroiMenuSuspenso(List itens) {
     List<DropdownMenuItem<String>> items = [];
@@ -86,6 +87,7 @@ class PaymentApprovalState extends State<PaymentApproval>
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
     return criaTela(context);
   }
 
@@ -348,7 +350,7 @@ class PaymentApprovalState extends State<PaymentApproval>
       }
     } catch (e) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       print(e);
     }
     return retorno;

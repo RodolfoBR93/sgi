@@ -29,10 +29,12 @@ class _ManageAccessState extends State<ManageAccess> {
   bool _obscureTextPasswordProtheus = true;
   bool _obscureTextConfirmPasswordGDI = true;
   final UserDao _dao = UserDao();
+  double screenWidth;
   _ManageAccessState(this.user);
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -271,11 +273,11 @@ class _ManageAccessState extends State<ManageAccess> {
         }
       } else {
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       }
     } catch (e) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       print(e);
     }
   }
@@ -332,8 +334,11 @@ class _ManageAccessState extends State<ManageAccess> {
                     } else {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
-                      WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+                      WidgetsUteis.exibeSnackBar(
+                          context,
+                          _scaffoldKey,
                           'Ao menos um sistema deve ser sincronizado para continuar!',
+                          screenWidth,
                           duracao: 3);
                     }
                   },
@@ -360,7 +365,8 @@ class _ManageAccessState extends State<ManageAccess> {
         "senhaGdi": passwordGdi,
       });
       if (response.statusCode == 200 || response.statusCode == 201) {
-        WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Usuário ativado!",
+        WidgetsUteis.exibeSnackBar(
+            context, _scaffoldKey, "Usuário ativado!", screenWidth,
             duracao: 2);
         if (response.data["id"] == 1) {
           _dao.delete();
@@ -372,12 +378,12 @@ class _ManageAccessState extends State<ManageAccess> {
         }
       } else {
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar",
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth,
             duracao: 2);
       }
     } catch (e) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar",
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth,
           duracao: 2);
       print(e);
     }

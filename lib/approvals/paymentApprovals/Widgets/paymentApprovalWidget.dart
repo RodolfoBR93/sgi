@@ -50,6 +50,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   bool _isLoading = true;
   String _companyName;
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  double screenWidth;
 
   @override
   void initState() {
@@ -73,6 +74,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
     return (_titulos.length == 0 && _dadosAdc.length > 0) || _isLoading
         ? Scaffold(
             body: new Container(
@@ -106,8 +108,8 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   void waitApproval(
       BuildContext context, _companyName, index, _titulos, _dadosAdc) async {
     final result = await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) =>
-            new DetailedPayment([_companyName, index, _titulos, _dadosAdc, _occupationT])));
+        builder: (BuildContext context) => new DetailedPayment(
+            [_companyName, index, _titulos, _dadosAdc, _occupationT])));
 
     if (result != null) {
       if (result == '1') {
@@ -145,8 +147,8 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                     Text(_titulos[index][1], style: AppTextStyles.title15Black),
                 trailing: GestureDetector(
                   onTap: () {
-                    WidgetsUteis.exibeSnackBar(
-                        context, _scaffoldKey, _dadosAdc[index][34]);
+                    WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+                        _dadosAdc[index][34], screenWidth);
                   },
                   child: Container(
                     color: Colors.white,
@@ -338,7 +340,8 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
         buscaTitulos();
       }
     });
-    WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Título rejeitado!");
+    WidgetsUteis.exibeSnackBar(
+        context, _scaffoldKey, "Título rejeitado!", screenWidth);
   }
 
   Future<List> _DiAutorizacao(
@@ -471,11 +474,11 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
         return dados;
       } else {
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       }
     } catch (e) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       print(e);
     }
   }
@@ -509,17 +512,19 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
               buscaTitulos();
             }
           });
-          WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Título aprovado!");
+          WidgetsUteis.exibeSnackBar(
+              context, _scaffoldKey, "Título aprovado!", screenWidth);
         } else {
-          WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "DI incorreta!");
+          WidgetsUteis.exibeSnackBar(
+              context, _scaffoldKey, "DI incorreta!", screenWidth);
         }
       } else {
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       }
     } catch (e) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       print(e);
     }
   }
@@ -542,11 +547,11 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
         return dados;
       } else {
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       }
     } catch (e) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       print(e);
     }
   }
@@ -569,19 +574,18 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
           dados.add(anexos);
         }
         if (dados.length == 0) {
-          final snackBar =
-              SnackBar(content: Text('Não existe documento anexado!'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+              'Não existe documento anexado!', screenWidth);
         }
         return dados;
       } else {
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       }
       return dados;
     } catch (e) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       print(e);
     }
   }

@@ -22,9 +22,11 @@ class _DetailedPaymentState extends State<DetailedPayment> {
   Endereco endereco = new Endereco();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _onBackPressed = true;
+  double screenWidth;
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async {
         return _onBackPressed;
@@ -583,19 +585,18 @@ class _DetailedPaymentState extends State<DetailedPayment> {
           dados.add(anexos);
         }
         if (dados.length == 0) {
-          final snackBar =
-              SnackBar(content: Text('Não existe documento anexado!'));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+              'Não existe documento anexado!', screenWidth);
         }
         return dados;
       } else {
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       }
       return dados;
     } catch (e) {
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       print(e);
     }
   }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sgi/core/app_colors.dart';
+import 'package:sgi/core/app_text_styles.dart';
 
 class Endereco {
   String endereco =
@@ -44,12 +46,28 @@ class WidgetsUteis {
   }
 
   static Future<void> exibeSnackBar(BuildContext context,
-      GlobalKey<ScaffoldState> _scaffoldKey, String mensagem,
+      GlobalKey<ScaffoldState> _scaffoldKey, String mensagem, double _width,
       {int duracao}) async {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
     duracao = duracao == null ? 2 : duracao;
-    return _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: new Text(mensagem),
+    var g = _scaffoldKey.currentContext;
+    final snackBar = SnackBar(
+      content: Text(
+        mensagem,
+        style: AppTextStyles.titleWhite,
+        textAlign: TextAlign.center,
+      ),
       duration: Duration(seconds: duracao),
-    ));
+      behavior: SnackBarBehavior.floating,
+      width: _width * 90 / 100,
+      padding: EdgeInsets.all(15.0),
+      backgroundColor: AppColors.blackSnackBar,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    // return _scaffoldKey.currentState.showSnackBar(SnackBar(
+    //   content: new Text(mensagem),
+    //   duration: Duration(seconds: duracao),
+    // ));
   }
 }

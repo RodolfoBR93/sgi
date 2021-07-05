@@ -30,6 +30,7 @@ class _AccessCodeState extends State<AccessCode> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String user;
   final UserDao _dao = UserDao();
+  double screenWidth;
   _AccessCodeState();
 
   @override
@@ -53,16 +54,14 @@ class _AccessCodeState extends State<AccessCode> {
 
   // snackBar Widget
   snackBar(String message) {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    return WidgetsUteis.exibeSnackBar(
+        context, _scaffoldKey, message, screenWidth,
+        duracao: 2);
   }
 
   @override
   Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBarRegisterWidget(),
@@ -204,8 +203,8 @@ class _AccessCodeState extends State<AccessCode> {
                   ),
                   TextButton(
                       onPressed: () {
-                        WidgetsUteis.exibeSnackBar(
-                            context, _scaffoldKey, "Código reenviado!!",
+                        WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+                            "Código reenviado!!", screenWidth,
                             duracao: 2);
                         //snackBar("Código reenviado!!");
                       },
@@ -305,27 +304,28 @@ class _AccessCodeState extends State<AccessCode> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         Navigator.of(context).pop();
         if (response.data["id"] == 1) {
-          WidgetsUteis.exibeSnackBar(
-              context, _scaffoldKey, "Código verificado com sucesso.");
+          WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
+              "Código verificado com sucesso.", screenWidth);
           await new Future.delayed(const Duration(seconds: 2));
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => ManageAccess(usuario)),
           );
         } else {
-          WidgetsUteis.exibeSnackBar(context, _scaffoldKey, "Código inválido!");
+          WidgetsUteis.exibeSnackBar(
+              context, _scaffoldKey, "Código inválido!", screenWidth);
         }
       } else {
         Navigator.of(context).pop();
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar");
+            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       }
 
       return response.data["id"];
     } catch (e) {
       Navigator.of(context).pop();
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar");
+          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
       print(e);
     }
     return response.data["id"];
