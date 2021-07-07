@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/home/home_page.dart';
+import 'package:sgi/home/home_page2.dart';
 import 'package:sgi/login/widgets/app_bar_login_widget.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
@@ -236,7 +237,7 @@ class _LoginState extends State<Login> {
         } else {
           _dao.delete();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) => new HomePage(
+              builder: (BuildContext context) => new HomePage2(
                   usuario, response.data["usuProt"], response.data["usuGnc"],response.data["acessoGerente"],response.data["acessoSuper"],response.data["acessoDiretor"],
                   response.data["cargoFin"],response.data["gerenteFin"],response.data["diretorFin"],response.data["diretorAdm"],response.data["gerenteTI"],response.data["comprador"])));
         }
