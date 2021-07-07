@@ -36,6 +36,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
       this._occupationAcronym, this._occupation, this._occupationT);
   List _titulos = [];
   List _dadosAdc = [];
+  List _impostos = [];
   List retorno = [];
   List _retorno = [];
   final _formKey = GlobalKey<FormState>();
@@ -64,6 +65,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
       setState(() {
         _titulos = retorno[0];
         _dadosAdc = retorno[1];
+        _impostos = retorno[2];
         if (_dadosAdc.length == 0) {
           _dadosAdc.add("nok");
         }
@@ -109,7 +111,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
       BuildContext context, _companyName, index, _titulos, _dadosAdc) async {
     final result = await Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => new DetailedPayment(
-            [_companyName, index, _titulos, _dadosAdc, _occupationT])));
+            [_companyName, index, _titulos, _dadosAdc, _occupationT,_impostos])));
 
     if (result != null) {
       if (result == '1') {
@@ -151,7 +153,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                         _dadosAdc[index][34], screenWidth);
                   },
                   child: Container(
-                    color: Colors.white,
+                    color: _titulos[index][4] == 'impostos' ? Colors.yellow[100] : Colors.white,
                     height: 50,
                     width: 50,
                     child: getInfo(

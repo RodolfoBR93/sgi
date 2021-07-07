@@ -35,6 +35,7 @@ class _DetailedPaymentState extends State<DetailedPayment> {
         key: _scaffoldKey,
         appBar: new AppBar(
           backgroundColor: Colors.blue,
+          centerTitle: true,
           title: new Text(
             "Autorização de Lançamento",
             style: TextStyle(color: Colors.white),
@@ -51,21 +52,21 @@ class _DetailedPaymentState extends State<DetailedPayment> {
               ),
             ),
           ),
-          actions: <Widget>[
-            GestureDetector(
-              onTap: () {
-                visualizarAnexo(
-                    context,
-                    _dadosTitulo[1],
-                    _dadosTitulo[2][_dadosTitulo[1]][5],
-                    _dadosTitulo[2][_dadosTitulo[1]][0]);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Icon(Icons.attach_file),
-              ),
-            ),
-          ],
+          // actions: <Widget>[
+          //   GestureDetector(
+          //     onTap: () {
+          //       visualizarAnexo(
+          //           context,
+          //           _dadosTitulo[1],
+          //           _dadosTitulo[2][_dadosTitulo[1]][5],
+          //           _dadosTitulo[2][_dadosTitulo[1]][0]);
+          //     },
+          //     child: Padding(
+          //       padding: const EdgeInsets.only(right: 16.0),
+          //       child: Icon(Icons.attach_file),
+          //     ),
+          //   ),
+          // ],
         ),
         backgroundColor: AppColors.white, //Color.fromRGBO(235, 235, 235, 1),
         body: SingleChildScrollView(
@@ -555,8 +556,64 @@ class _DetailedPaymentState extends State<DetailedPayment> {
             ),
           ),
         ),
+        bottomNavigationBar: new BottomNavigationBar(
+          fixedColor: AppColors.black,
+          unselectedItemColor: AppColors.black,
+          selectedFontSize: 14,
+          unselectedFontSize: 14,
+          selectedLabelStyle: AppTextStyles.title15Black,
+          unselectedLabelStyle: AppTextStyles.title15Black,
+          onTap: onTabTapped,
+          items: [
+            new BottomNavigationBarItem(
+                icon: new Icon(
+                  Icons.attach_file,
+                ),
+                label: "Anexos"),
+            new BottomNavigationBarItem(
+              icon: new Icon(Icons.attach_money),
+              label: "Impostos",
+            ),
+            new BottomNavigationBarItem(
+              icon: new Icon(Icons.donut_large),
+              label: "Rateio",
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  void onTabTapped(int index) {
+    List impostos = [];
+    setState(() {
+      if (index == 0) {
+        visualizarAnexo(
+            context,
+            _dadosTitulo[1],
+            _dadosTitulo[2][_dadosTitulo[1]][5],
+            _dadosTitulo[2][_dadosTitulo[1]][0]);
+      } else if (index == 1) {
+        if (!_dadosTitulo[5].isEmpty) {
+          for (int i = 0; i < _dadosTitulo[5].length; i++) {
+            if (_dadosTitulo[5][i][0] == _dadosTitulo[3][_dadosTitulo[1]][36]) {
+              impostos.add([_dadosTitulo[5][i][1], _dadosTitulo[5][i][2]]);
+            }
+          }
+          getImpostos(impostos);
+        } else {
+          WidgetsUteis.exibeSnackBar(
+              context, _scaffoldKey, "Título não possui impostos", screenWidth);
+        }
+      } else if (index == 2) {
+        if (!_dadosTitulo[3][_dadosTitulo[1]][37].isEmpty) {
+          getRateio(_dadosTitulo[3][_dadosTitulo[1]][37]);
+        } else {
+          WidgetsUteis.exibeSnackBar(
+              context, _scaffoldKey, "Título não possui rateio", screenWidth);
+        }
+      }
+    });
   }
 
   void visualizarAnexo(
@@ -636,6 +693,94 @@ class _DetailedPaymentState extends State<DetailedPayment> {
                               _dadosTitulo[2][_dadosTitulo[1]][0],
                               _dadosTitulo[2][_dadosTitulo[1]][5],
                               anexos[index]),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Fechar"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ));
+        });
+  }
+
+  Future getImpostos(List impostos) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+              onWillPop: () {},
+              child: AlertDialog(
+                title: Text('Impostos', style: TextStyle(fontSize: 16.9)),
+                content: Container(
+                  //color: Colors.grey,
+                  width: double.maxFinite,
+                  height: 300.0,
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(top: 10.0),
+                    itemCount: impostos.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        color: Colors.white,
+                        child: ListTile(
+                          //leading: Icon(Icons.attach_file),
+                          //trailing: Icon(Icons.keyboard_arrow_right),
+                          title: Text(impostos[index][0]),
+                          subtitle: Text(impostos[index][1]),
+                          // onTap: () => buscaAnexo(
+                          //     _dadosTitulo[2][_dadosTitulo[1]][0],
+                          //     _dadosTitulo[2][_dadosTitulo[1]][5],
+                          //     anexos[index]),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Fechar"),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ));
+        });
+  }
+
+  Future getRateio(List rateio) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return new WillPopScope(
+              onWillPop: () {},
+              child: AlertDialog(
+                title: Text('Rateio', style: TextStyle(fontSize: 16.9)),
+                content: Container(
+                  //color: Colors.grey,
+                  width: double.maxFinite,
+                  height: 300.0,
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(top: 10.0),
+                    itemCount: rateio.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        color: Colors.white,
+                        child: ListTile(
+                          //leading: Icon(Icons.attach_file),
+                          //trailing: Icon(Icons.keyboard_arrow_right),
+                          title: Text(rateio[index][0]),
+                          subtitle: Text(rateio[index][2]),
+                          // onTap: () => buscaAnexo(
+                          //     _dadosTitulo[2][_dadosTitulo[1]][0],
+                          //     _dadosTitulo[2][_dadosTitulo[1]][5],
+                          //     anexos[index]),
                         ),
                       );
                     },

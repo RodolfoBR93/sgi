@@ -3,12 +3,34 @@ class User {
   final String user;
   final String userProtheus;
   final String userGdi;
+  final String acessoGerente;
+  final String acessoSuper;
+  final String acessoDiretor;
+  final String cargoFin;
+  final String gerenteFin;
+  final String diretorFin;
+  final String diretorAdm;
+  final String gerenteTI;
+  final String comprador;
 
-  User(this.id, this.user, this.userProtheus, this.userGdi);
+  User(
+      this.id,
+      this.user,
+      this.userProtheus,
+      this.userGdi,
+      this.acessoGerente,
+      this.acessoSuper,
+      this.acessoDiretor,
+      this.cargoFin,
+      this.gerenteFin,
+      this.diretorFin,
+      this.diretorAdm,
+      this.gerenteTI,
+      this.comprador);
 
   @override
   String toString() {
-    return 'User{id: $id,user: $user, userProtheus: $userProtheus, userGdi: $userGdi}';
+    return 'User{id: $id,user: $user, userProtheus: $userProtheus, userGdi: $userGdi, acessoGerente: $acessoGerente, acessoSuper: $acessoSuper, acessoDiretor: $acessoDiretor,cargoFin: $cargoFin, gerenteFin: $gerenteFin, diretorFin: $diretorFin, diretorAdm: $diretorAdm, gerenteTI: $gerenteTI, comprador: $comprador}';
   }
 
   String get getUser {
@@ -21,6 +43,42 @@ class User {
 
   String get getuserGdi {
     return userGdi;
+  }
+
+  String get getacessoGerente {
+    return acessoGerente;
+  }
+
+  String get getacessoSuper {
+    return acessoSuper;
+  }
+
+  String get getacessoDiretor {
+    return acessoDiretor;
+  }
+
+  String get getCargoFin {
+    return cargoFin;
+  }
+
+  String get getGerenteFin {
+    return gerenteFin;
+  }
+
+  String get getDiretorFin {
+    return diretorFin;
+  }
+
+  String get getDiretorAdm {
+    return diretorAdm;
+  }
+
+  String get getGerenteTi {
+    return gerenteTI;
+  }
+
+  String get getComprador {
+    return comprador;
   }
 }
 

@@ -7,13 +7,31 @@ class UserDao {
       '$_id INTEGER PRIMARY KEY, '
       '$_user TEXT, '
       '$_userProtheus TEXT,'
-      '$_userGdi TEXT)';
+      '$_acessoGerente TEXT,'
+      '$_acessoSuper TEXT,'
+      '$_userGdi TEXT,'
+      '$_acessoDiretor TEXT,'
+      '$_cargoFin TEXT,'
+      '$_gerenteFin TEXT,'
+      '$_diretorFin TEXT,'
+      '$_diretorAdm TEXT,'
+      '$_gerenteTI TEXT,'
+      '$_comprador TEXT )';
 
   static const String _tableName = 'user';
   static const String _id = 'id';
   static const String _user = 'user';
   static const String _userProtheus = 'userProtheus';
   static const String _userGdi = 'userGdi';
+  static const String _acessoGerente = 'acessoGerente';
+  static const String _acessoSuper = 'acessoSuper';
+  static const String _acessoDiretor = 'acessoDiretor';
+  static const String _cargoFin = 'cargoFin';
+  static const String _gerenteFin = 'gerenteFin';
+  static const String _diretorFin = 'diretorFin';
+  static const String _diretorAdm = 'diretorAdm';
+  static const String _gerenteTI = 'gerenteTI';
+  static const String _comprador = 'comprador';
 
   Future<int> save(User user) async {
     final Database db = await getDatabase();
@@ -39,6 +57,15 @@ class UserDao {
     userMap[_user] = user.user;
     userMap[_userProtheus] = user.userProtheus;
     userMap[_userGdi] = user.userGdi;
+    userMap[_acessoGerente] = user.acessoGerente;
+    userMap[_acessoSuper] = user.acessoSuper;
+    userMap[_acessoDiretor] = user.acessoDiretor;
+    userMap[_cargoFin] = user.cargoFin;
+    userMap[_gerenteFin] = user.gerenteFin;
+    userMap[_diretorFin] = user.diretorFin;
+    userMap[_diretorAdm] = user.diretorAdm;
+    userMap[_gerenteTI] = user.gerenteTI;
+    userMap[_comprador] = user.comprador;
     return userMap;
   }
 
@@ -50,6 +77,15 @@ class UserDao {
         row[_user],
         row[_userProtheus],
         row[_userGdi],
+        row[_acessoGerente],
+        row[_acessoSuper],
+        row[_acessoDiretor],
+        row[_cargoFin],
+        row[_gerenteFin],
+        row[_diretorFin],
+        row[_diretorAdm],
+        row[_gerenteTI],
+        row[_comprador],
       );
       users.add(user);
     }

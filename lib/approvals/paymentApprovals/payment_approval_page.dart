@@ -62,13 +62,13 @@ class PaymentApprovalState extends State<PaymentApproval>
 
   void getDireitos() async {
     List<User> user = await _dao.findAll();
-    List direitos = await getRights(user[0].getuserProtheus.toString());
+    //List direitos = await getRights(user[0].getuserProtheus.toString());
     empresas = await getEmpresas(user[0].getuserProtheus.toString());
     setState(() {
-      gerente = direitos[0];
-      superi = direitos[1];
-      diretor = direitos[2];
-      cargoFin = direitos[3];
+      gerente = user[0].getacessoGerente.toString() == '' ? 'nok' : user[0].getacessoGerente.toString();
+      superi = user[0].getacessoSuper.toString() == '' ? 'nok' : user[0].getacessoSuper.toString();
+      diretor = user[0].getacessoDiretor.toString() == '' ? 'nok' : user[0].getacessoDiretor.toString();
+      cargoFin = user[0].getCargoFin.toString() == '' ? 'nok' : user[0].getCargoFin.toString();
       nomeGer = 'Gerente';
       nomeSup = 'Super.';
       nomeDir = 'Diretor';
@@ -360,10 +360,11 @@ class PaymentApprovalState extends State<PaymentApproval>
     return _codigoUsuario == ''
         ? new Scaffold(
             appBar: new AppBar(
+              centerTitle: true,
               backgroundColor: AppColors.blue,
               title: new Text(
                 "Aprovação de Títulos",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white), textAlign: TextAlign.center,
               ),
               // actions: <Widget>[
               //   dropdownWidget(),
@@ -387,9 +388,10 @@ class PaymentApprovalState extends State<PaymentApproval>
         : new Scaffold(
             appBar: new AppBar(
               backgroundColor: AppColors.blue,
+              centerTitle: true,
               title: new Text(
                 "Aprovação de Títulos",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white), textAlign: TextAlign.center,
               ),
               // actions: <Widget>[
               //   dropdownWidget(),

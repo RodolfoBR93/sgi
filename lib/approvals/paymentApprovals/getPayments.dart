@@ -4,9 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:money2/money2.dart';
 import 'package:intl/intl.dart';
+import 'package:sgi/database/dao/user_dao.dart';
+import 'package:sgi/models/user.dart';
 
 Future<List> getPayments(String usuario, String cargo, String autocomo,
     String bPendente, List empresa) async {
+  final UserDao _dao = UserDao();
   Response response;
   Dio dio = new Dio();
   List acessos = [];
@@ -54,13 +57,24 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
   List impostos = [];
   List dadosAdicionais = [];
   List retorno = [];
+  List rateio;
   Endereco endereco = new Endereco();
   try {
-    response =
-        await dio.post("${endereco.getEndereco}cc", data: {"usuario": usuario});
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      acessos.add(response.data["$cargo"]);
-      acessos.add(response.data["cargofin"]);
+    // response =
+    //     await dio.post("${endereco.getEndereco}cc", data: {"usuario": usuario});
+    //if (response.statusCode == 200 || response.statusCode == 201) {
+      List<User> user = await _dao.findAll();
+      if(autocomo=='G'){
+        acessos.add(user[0].getacessoGerente.toString());
+        acessos.add(user[0].getCargoFin.toString());
+      }else if(autocomo=='S'){
+        acessos.add(user[0].getacessoSuper.toString());
+        acessos.add(user[0].getCargoFin.toString());
+      }else if(autocomo=='D'){
+        acessos.add(user[0].getacessoDiretor.toString());
+        acessos.add(user[0].getCargoFin.toString());
+      }
+      
       for (int i = 0; i < empresa.length; i++) {
         response = await dio.post("${endereco.getEndereco}titulos", data: {
           "usuario": usuario,
@@ -141,6 +155,12 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
             quantdir = response.data["titulos"][i]["quantdir"];
             quantgerfin = response.data["titulos"][i]["quantgerfin"];
             quantsupfin = response.data["titulos"][i]["quantsupfin"];
+            rateio=[];
+            for(int rat = 0; rat < response.data["titulos"][i]["rateio"].length; rat++){
+              if(response.data["titulos"][i]["rateio"][rat].length>0){
+                rateio.add([response.data["titulos"][i]["rateio"][rat]["cc"],response.data["titulos"][i]["rateio"][rat]["percentual"],"R\$ " + formatMoney("${response.data["titulos"][i]["rateio"][rat]["valor"]}")]);
+              }
+            }
             if (cgc.length == 0) {
               // cgc = 'CNPJ: 19.219.981/0001-90';
               // ie = 'IE: 248565257';
@@ -223,14 +243,16 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
                 response.data["titulos"][i]["statusVenc"],
                 response.data["titulos"][i]["statusMensagem"],
                 response.data["titulos"][i]["diasVenc"],
+                prefixo+numero+parcela+tipo+fornece + loja,
+                rateio
               ]);
             } else {
-              impostos.add(titpai);
+              impostos.add([titpai,prefixo+numero+parcela+tipo," R\$ " +formatMoney("${response.data["titulos"][i]["saldo"]}")]);
             }
           }
           for (int i = 0; i < impostos.length; i++) {
             for (int j = 0; j < titulos.length; j++) {
-              if (impostos[i] == titulos[j][4]) {
+              if (impostos[i][0] == titulos[j][4]) {
                 titulos[j][4] = "impostos";
               } else {
                 //debugPrint(impostos[i]);
@@ -244,11 +266,12 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
       }
       retorno.add(titulos);
       retorno.add(dadosAdicionais);
+      retorno.add(impostos);
       return retorno;
-    } else {
+    //} else {
       //If that response was not OK, throw an error.
-      debugPrint('Failed to load post');
-    }
+    //  debugPrint('Failed to load post');
+   // }
   } catch (e) {
     print("Falha ao conectar");
     //titulos.add("nok");
@@ -258,30 +281,30 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
   }
 }
 
-Future<List> getRights(String usuario) async {
-  Endereco endereco = new Endereco();
-  List dados = [];
-  try {
-    Response response;
-    Dio dio = new Dio();
+// Future<List> getRights(String usuario) async {
+//   Endereco endereco = new Endereco();
+//   List dados = [];
+//   try {
+//     Response response;
+//     Dio dio = new Dio();
 
-    response =
-        await dio.post("${endereco.getEndereco}cc", data: {"usuario": usuario});
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      dados.add(response.data["gerente"]);
-      dados.add(response.data["super"]);
-      dados.add(response.data["diretor"]);
-      dados.add(response.data["cargofin"]);
-      return dados;
-    } else {
-      //If that response was not OK, throw an error.
-      return dados;
-    }
-  } catch (e) {
-    print(e);
-  }
-  return dados;
-}
+//     response =
+//         await dio.post("${endereco.getEndereco}cc", data: {"usuario": usuario});
+//     if (response.statusCode == 200 || response.statusCode == 201) {
+//       dados.add(response.data["gerente"]);
+//       dados.add(response.data["super"]);
+//       dados.add(response.data["diretor"]);
+//       dados.add(response.data["cargofin"]);
+//       return dados;
+//     } else {
+//       //If that response was not OK, throw an error.
+//       return dados;
+//     }
+//   } catch (e) {
+//     print(e);
+//   }
+//   return dados;
+// }
 
 String formatMoney(String val) {
   double saldo = double.parse(val);

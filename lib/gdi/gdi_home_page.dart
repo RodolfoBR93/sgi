@@ -12,12 +12,12 @@ class _GdiState extends State<Gdi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
+        centerTitle: true,
         title: new Text(
           "Gerenciador de Demandas Internas",
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.blue,
-        centerTitle: true,
       ),
       backgroundColor: Colors.white,
       body: Center(

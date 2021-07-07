@@ -368,12 +368,24 @@ class _ManageAccessState extends State<ManageAccess> {
         WidgetsUteis.exibeSnackBar(
             context, _scaffoldKey, "Usuário ativado!", screenWidth,
             duracao: 2);
+
         if (response.data["id"] == 1) {
           _dao.delete();
           setState(() {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (BuildContext context) =>
-                    new HomePage(user, userProtheus, userGdi)));
+                builder: (BuildContext context) => new HomePage(
+                    user,
+                    userProtheus,
+                    userGdi,
+                    response.data["acessoGerente"],
+                    response.data["acessoSuper"],
+                    response.data["acessoDiretor"],
+                    response.data["cargoFin"],
+                    response.data["gerenteFin"],
+                    response.data["diretorFin"],
+                    response.data["diretorAdm"],
+                    response.data["gerenteTI"],
+                    response.data["comprador"])));
           });
         }
       } else {

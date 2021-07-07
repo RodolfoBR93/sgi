@@ -102,7 +102,7 @@ class _SendMailState extends State<SendMail> {
   }
 
   _onWillPop(String _user) {
-    final User newUser = User(0, _user, '', '');
+    final User newUser = User(0, _user, '', '','','','','','','','','','');
     _dao.save(newUser);
     Navigator.of(context)
         .pushNamedAndRemoveUntil('/accescode', (Route<dynamic> route) => false);

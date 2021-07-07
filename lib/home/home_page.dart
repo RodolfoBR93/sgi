@@ -12,24 +12,46 @@ class HomePage extends StatefulWidget {
   final String _user;
   final String _usuProt;
   final String _usuGnc;
-  HomePage(this._user, this._usuProt, this._usuGnc);
+  final String _acessoGerente;
+  final String _acessoSuper;
+  final String _acessoDiretor;
+
+  final String _cargoFin;
+  final String _gerenteFin;
+  final String _diretorFin;
+  final String _diretorAdm;
+  final String _gerenteTI;
+  final String _comprador;
+  HomePage(this._user, this._usuProt, this._usuGnc,this._acessoGerente,this._acessoSuper,this._acessoDiretor,
+  this._cargoFin,this._gerenteFin,this._diretorFin,this._diretorAdm,this._gerenteTI,this._comprador);
   @override
-  HomePageState createState() => new HomePageState(_user, _usuProt, _usuGnc);
+  HomePageState createState() => new HomePageState(_user, _usuProt, _usuGnc,_acessoGerente,_acessoSuper,_acessoDiretor,
+  _cargoFin,_gerenteFin,_diretorFin,_diretorAdm,_gerenteTI,_comprador);
 }
 
 class HomePageState extends State<HomePage> {
   final String _user;
   final String _usuProt;
   final String _usuGnc;
+  final String _acessoGerente;
+  final String _acessoSuper;
+  final String _acessoDiretor;
+  final String _cargoFin;
+  final String _gerenteFin;
+  final String _diretorFin;
+  final String _diretorAdm;
+  final String _gerenteTI;
+  final String _comprador;
   Endereco endereco = new Endereco();
   String retAprovacao;
   String retGnc;
   final UserDao _dao = UserDao();
-  HomePageState(this._user, this._usuProt, this._usuGnc);
+  HomePageState(this._user, this._usuProt, this._usuGnc, this._acessoGerente,this._acessoSuper,this._acessoDiretor,
+  this._cargoFin,this._gerenteFin,this._diretorFin,this._diretorAdm,this._gerenteTI,this._comprador);
 
   @override
   void initState() {
-    final User newUser = User(0, _user, _usuProt, _usuGnc);
+    final User newUser = User(0, _user, _usuProt, _usuGnc,_acessoGerente,_acessoSuper,_acessoDiretor,_cargoFin,_gerenteFin,_diretorFin,_diretorAdm,_gerenteTI,_comprador);
     _dao.save(newUser);
     super.initState();
   }
@@ -107,12 +129,12 @@ class HomePageState extends State<HomePage> {
         onWillPop: _onWillPop,
         child: Scaffold(
           appBar: new AppBar(
+            centerTitle: true,
             title: new Text(
               "Sistema de Gestão Integrada",
               style: TextStyle(color: Colors.white),
             ),
             backgroundColor: AppColors.blue,
-            centerTitle: true,
             flexibleSpace: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
