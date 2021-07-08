@@ -8,7 +8,7 @@ import 'package:sgi/core/app_colors.dart';
 import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/app_text_styles.dart';
 import 'package:sgi/core/uteis.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '../detailed_payment_page.dart';
 import '../getPayments.dart';
 import '../view_attachment_page.dart';
@@ -59,18 +59,20 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   }
 
   void buscaTitulos() async {
-    retorno = await getPayments(
-        _user, _occupation, _occupationAcronym, "1", _companies);
-    if (this.mounted) {
-      setState(() {
-        _titulos = retorno[0];
-        _dadosAdc = retorno[1];
-        _impostos = retorno[2];
-        if (_dadosAdc.length == 0) {
-          _dadosAdc.add("nok");
-        }
-        _isLoading = false;
-      });
+    if (!kIsWeb) {
+      retorno = await getPayments(
+          _user, _occupation, _occupationAcronym, "1", _companies);
+      if (this.mounted) {
+        setState(() {
+          _titulos = retorno[0];
+          _dadosAdc = retorno[1];
+          _impostos = retorno[2];
+          if (_dadosAdc.length == 0) {
+            _dadosAdc.add("nok");
+          }
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -110,8 +112,14 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   void waitApproval(
       BuildContext context, _companyName, index, _titulos, _dadosAdc) async {
     final result = await Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => new DetailedPayment(
-            [_companyName, index, _titulos, _dadosAdc, _occupationT,_impostos])));
+        builder: (BuildContext context) => new DetailedPayment([
+              _companyName,
+              index,
+              _titulos,
+              _dadosAdc,
+              _occupationT,
+              _impostos
+            ])));
 
     if (result != null) {
       if (result == '1') {
@@ -153,7 +161,9 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
                         _dadosAdc[index][34], screenWidth);
                   },
                   child: Container(
-                    color: _titulos[index][4] == 'impostos' ? Colors.yellow[100] : Colors.white,
+                    color: _titulos[index][4] == 'impostos'
+                        ? Colors.yellow[100]
+                        : Colors.white,
                     height: 50,
                     width: 50,
                     child: getInfo(

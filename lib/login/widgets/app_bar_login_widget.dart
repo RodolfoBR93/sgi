@@ -29,7 +29,7 @@ class AppBarLoginWidget extends PreferredSize {
                     children: [
                       Expanded(
                           flex: 2,
-                          child: screenWidth > 600
+                          child: screenWidth > 610
                               ? Container(
                                   alignment: Alignment.topRight,
                                   child: Image.asset(

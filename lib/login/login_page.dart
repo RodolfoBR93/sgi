@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/database/dao/user_dao.dart';
+import 'package:sgi/database/dao/user_web._dao.dart';
+import 'package:sgi/database/dao/web_database.dart';
 import 'package:sgi/home/home_page.dart';
 import 'package:sgi/home/home_page2.dart';
 import 'package:sgi/login/widgets/app_bar_login_widget.dart';
@@ -9,9 +11,10 @@ import 'package:sgi/core/uteis.dart';
 import 'package:sgi/manage_access/manage_access_page.dart';
 import 'package:sgi/models/user.dart';
 import 'package:sgi/register/register_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:sembast_web/sembast_web.dart';
+import 'package:sembast/sembast.dart';
 import 'access_code_page.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Login extends StatefulWidget {
   static const String routeName = "/login";
@@ -31,6 +34,7 @@ class _LoginState extends State<Login> {
   double screenHeight;
   double screenWidth;
   final UserDao _dao = UserDao();
+  UserWebDao userWebDao = UserWebDao();
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +239,10 @@ class _LoginState extends State<Login> {
           WidgetsUteis.exibeSnackBar(context, _scaffoldKey,
               "Senha incorreta para este usuário!", screenWidth);
         } else {
-          _dao.delete();
+          if (!kIsWeb) {
+            _dao.delete();
+          }
+
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) => new HomePage2(
                   usuario,

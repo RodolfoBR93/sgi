@@ -8,7 +8,9 @@ import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/app_text_styles.dart';
 
 class AppBarRegisterWidget extends PreferredSize {
-  AppBarRegisterWidget()
+
+
+  AppBarRegisterWidget(double screenHeight, double screenWidth)
       : super(
           preferredSize: Size.fromHeight(250),
           child: Container(
@@ -37,7 +39,7 @@ class AppBarRegisterWidget extends PreferredSize {
                 ),
                 Positioned(
                   top: 40,
-                  left: 70,
+                  left: (screenWidth/2)-120,
                   child: Container(
                     child: Image.asset(
                       AppImages.logoBranca,
@@ -47,7 +49,7 @@ class AppBarRegisterWidget extends PreferredSize {
                 ),
                 Positioned(
                   top: 50,
-                  left: 190,
+                  left: screenWidth/2,
                   child: Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

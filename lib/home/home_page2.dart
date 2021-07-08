@@ -5,9 +5,13 @@ import 'package:sgi/approvals/paymentApprovals/payment_approval_page.dart';
 import 'package:sgi/core/app_colors.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
+import 'package:sgi/database/dao/user_web._dao.dart';
 import 'package:sgi/gdi/gdi_home_page.dart';
 import 'package:sgi/home/widgets/app_bar_home_widget.dart';
 import 'package:sgi/models/user.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:sembast_web/sembast_web.dart';
+import 'package:sembast/sembast.dart';
 
 class HomePage2 extends StatefulWidget {
   final String _user;
@@ -68,7 +72,11 @@ class HomePage2State extends State<HomePage2> {
   Endereco endereco = new Endereco();
   String retAprovacao;
   String retGnc;
+  double screenHeight;
+  double screenWidth;
   final UserDao _dao = UserDao();
+  UserWebDao _userWebDao = UserWebDao();
+  String teste;
   HomePage2State(
       this._user,
       this._usuProt,
@@ -99,8 +107,27 @@ class HomePage2State extends State<HomePage2> {
         _diretorAdm,
         _gerenteTI,
         _comprador);
-    _dao.save(newUser);
+    if (!kIsWeb) {
+      _dao.save(newUser);
+    } else {
+      teste = persistWeb(newUser).toString();
+    }
     super.initState();
+  }
+
+  Future persistWeb(User user) async {
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryWeb;
+    var db = await factory.openDatabase('sgi');
+    var finder = Finder(filter: Filter.equals('id', 0));
+    var record = await store.findFirst(db, finder: finder);
+    if(record==null){
+      var key = await store.add(db, user.toMap());
+      record = await store.findFirst(db, finder: finder);
+      print(record);
+    }
+    
+    await db.close();
   }
 
   void acesso(int id) async {
@@ -172,11 +199,13 @@ class HomePage2State extends State<HomePage2> {
 
   @override
   Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
           //appBar: AppBar(),
-          appBar: AppBarRegisterWidget(),
+          appBar: AppBarRegisterWidget(screenHeight, screenWidth),
           backgroundColor: Colors.white,
           body: new Container(
             child: new Center(

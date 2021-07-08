@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 class User {
   final int id;
   final String user;
@@ -32,6 +33,9 @@ class User {
   String toString() {
     return 'User{id: $id,user: $user, userProtheus: $userProtheus, userGdi: $userGdi, acessoGerente: $acessoGerente, acessoSuper: $acessoSuper, acessoDiretor: $acessoDiretor,cargoFin: $cargoFin, gerenteFin: $gerenteFin, diretorFin: $diretorFin, diretorAdm: $diretorAdm, gerenteTI: $gerenteTI, comprador: $comprador}';
   }
+
+
+
 
   String get getUser {
     return user;
@@ -79,6 +83,47 @@ class User {
 
   String get getComprador {
     return comprador;
+  }
+
+  Map<String, dynamic> toMap() {
+    //instanciando o mapa
+    var mapa = new Map<String, dynamic>();
+    // agora iremos fazer o inverso do anterior, iremos colocar o conteúdo
+    // dos atributos no mapa, ficará como se fosse um json
+    mapa["id"] = id;
+    mapa["user"] = user;
+    mapa["userProtheus"] = userProtheus;
+    mapa["userGdi"] = userGdi;
+    mapa["acessoGerente"] = acessoGerente;
+    mapa["acessoSuper"] = acessoSuper;
+    mapa["acessoDiretor"] = acessoDiretor;
+    mapa["cargoFin"] = cargoFin;
+    mapa["gerenteFin"] = gerenteFin;
+    mapa["diretorFin"] = diretorFin;
+    mapa["diretorAdm"] = diretorAdm;
+    mapa["gerenteTI"] = gerenteTI;
+    mapa["comprador"] = comprador;
+    debugPrint(mapa.toString());
+    debugPrint("dentro do user.tomap");
+    return mapa;
+  }
+
+  static User fromMap(Map<String, dynamic> map) {
+    return User(
+      map["id"],
+      map["user"],
+      map["userProtheus"],
+      map["userGdi"],
+      map["acessoGerente"],
+      map["acessoSuper"],
+      map["acessoDiretor"],
+      map["cargoFin"],
+      map["gerenteFin"],
+      map["diretorFin"],
+      map["diretorAdm"],
+      map["gerenteTI"],
+      map["comprador"],
+    );
   }
 }
 

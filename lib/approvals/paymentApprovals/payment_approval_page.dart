@@ -4,7 +4,11 @@ import 'package:sgi/approvals/paymentApprovals/Widgets/paymentApprovalWidget.dar
 import 'package:sgi/core/app_colors.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
+import 'package:sgi/database/dao/user_web._dao.dart';
 import 'package:sgi/models/user.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:sembast_web/sembast_web.dart';
+import 'package:sembast/sembast.dart';
 
 import 'getPayments.dart';
 
@@ -36,8 +40,10 @@ class PaymentApprovalState extends State<PaymentApproval>
   var tabsWidgets = [];
   List _listaEmpresas = [];
   final UserDao _dao = UserDao();
+  UserWebDao _userWebDao = UserWebDao();
   String _itemSelecionado;
   double screenWidth;
+  UserWebDao userWebDao = UserWebDao();
 
   List<DropdownMenuItem<String>> constroiMenuSuspenso(List itens) {
     List<DropdownMenuItem<String>> items = [];
@@ -61,22 +67,58 @@ class PaymentApprovalState extends State<PaymentApproval>
   }
 
   void getDireitos() async {
-    List<User> user = await _dao.findAll();
-    //List direitos = await getRights(user[0].getuserProtheus.toString());
-    empresas = await getEmpresas(user[0].getuserProtheus.toString());
-    setState(() {
-      gerente = user[0].getacessoGerente.toString() == '' ? 'nok' : user[0].getacessoGerente.toString();
-      superi = user[0].getacessoSuper.toString() == '' ? 'nok' : user[0].getacessoSuper.toString();
-      diretor = user[0].getacessoDiretor.toString() == '' ? 'nok' : user[0].getacessoDiretor.toString();
-      cargoFin = user[0].getCargoFin.toString() == '' ? 'nok' : user[0].getCargoFin.toString();
-      nomeGer = 'Gerente';
-      nomeSup = 'Super.';
-      nomeDir = 'Diretor';
-      _codigoUsuario = user[0].getuserProtheus.toString();
-      for (int i = 0; i < empresas.length; i++) {
-        _listaEmpresas.add(empresas[i][1]);
-      }
-    });
+    if (!kIsWeb) {
+      List<User> user = await _dao.findAll();
+      empresas = await getEmpresas(user[0].getuserProtheus.toString());
+      setState(() {
+        gerente = user[0].getacessoGerente.toString() == ''
+            ? 'nok'
+            : user[0].getacessoGerente.toString();
+        superi = user[0].getacessoSuper.toString() == ''
+            ? 'nok'
+            : user[0].getacessoSuper.toString();
+        diretor = user[0].getacessoDiretor.toString() == ''
+            ? 'nok'
+            : user[0].getacessoDiretor.toString();
+        cargoFin = user[0].getCargoFin.toString() == ''
+            ? 'nok'
+            : user[0].getCargoFin.toString();
+
+        nomeGer = 'Gerente';
+        nomeSup = 'Super.';
+        nomeDir = 'Diretor';
+        _codigoUsuario = user[0].getuserProtheus.toString();
+        for (int i = 0; i < empresas.length; i++) {
+          _listaEmpresas.add(empresas[i][1]);
+        }
+      });
+    } else {
+      var store = intMapStoreFactory.store();
+      var factory = databaseFactoryWeb;
+      var db = await factory.openDatabase('sgi');
+      var finder = Finder(filter: Filter.equals('id', 0));
+      var user = await store.findFirst(db, finder: finder);
+      print(user);
+      print(user["getuserProtheus"]);
+      empresas = await getEmpresas(user["getuserProtheus"]);
+      setState(() {
+        gerente =
+            user["getacessoGerente"] == '' ? 'nok' : user["getacessoGerente"];
+        superi = user["getacessoSuper"] == '' ? 'nok' : user["getacessoSuper"];
+        diretor =
+            user["getacessoDiretor"] == '' ? 'nok' : user["getacessoDiretor"];
+        cargoFin = user["getCargoFin"] == '' ? 'nok' : user["getCargoFin"];
+
+        nomeGer = 'Gerente';
+        nomeSup = 'Super.';
+        nomeDir = 'Diretor';
+        _codigoUsuario = user["getuserProtheus"];
+        for (int i = 0; i < empresas.length; i++) {
+          _listaEmpresas.add(empresas[i][1]);
+        }
+      });
+      await db.close();
+    }
   }
 
   @override
@@ -364,7 +406,8 @@ class PaymentApprovalState extends State<PaymentApproval>
               backgroundColor: AppColors.blue,
               title: new Text(
                 "Aprovação de Títulos",
-                style: TextStyle(color: Colors.white), textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
               ),
               // actions: <Widget>[
               //   dropdownWidget(),
@@ -391,7 +434,8 @@ class PaymentApprovalState extends State<PaymentApproval>
               centerTitle: true,
               title: new Text(
                 "Aprovação de Títulos",
-                style: TextStyle(color: Colors.white), textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+                textAlign: TextAlign.center,
               ),
               // actions: <Widget>[
               //   dropdownWidget(),
