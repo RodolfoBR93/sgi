@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
-      appBar: AppBarLoginWidget(screenHeight),
+      appBar: AppBarLoginWidget(screenHeight, screenWidth),
       body: Container(
         alignment: Alignment.center,
         child: Column(
@@ -238,8 +238,18 @@ class _LoginState extends State<Login> {
           _dao.delete();
           Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (BuildContext context) => new HomePage2(
-                  usuario, response.data["usuProt"], response.data["usuGnc"],response.data["acessoGerente"],response.data["acessoSuper"],response.data["acessoDiretor"],
-                  response.data["cargoFin"],response.data["gerenteFin"],response.data["diretorFin"],response.data["diretorAdm"],response.data["gerenteTI"],response.data["comprador"])));
+                  usuario,
+                  response.data["usuProt"],
+                  response.data["usuGnc"],
+                  response.data["acessoGerente"],
+                  response.data["acessoSuper"],
+                  response.data["acessoDiretor"],
+                  response.data["cargoFin"],
+                  response.data["gerenteFin"],
+                  response.data["diretorFin"],
+                  response.data["diretorAdm"],
+                  response.data["gerenteTI"],
+                  response.data["comprador"])));
         }
       } else {
         Navigator.of(context).pop();

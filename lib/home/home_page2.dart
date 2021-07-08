@@ -175,12 +175,14 @@ class HomePage2State extends State<HomePage2> {
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
+          //appBar: AppBar(),
           appBar: AppBarRegisterWidget(),
           backgroundColor: Colors.white,
           body: new Container(
-              child: new Center(
-            child: new Text("Tela Principal"),
-          )),
+            child: new Center(
+              child: new Text("Tela Principal"),
+            ),
+          ),
           drawer: getNavDrawer(context),
         ));
   }

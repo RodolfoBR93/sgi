@@ -5,7 +5,7 @@ import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/app_text_styles.dart';
 
 class AppBarLoginWidget extends PreferredSize {
-  AppBarLoginWidget(double screenHeight)
+  AppBarLoginWidget(double screenHeight, double screenWidth)
       : super(
           preferredSize: Size.fromHeight(screenHeight * 30 / 100),
           child: SafeArea(
@@ -28,13 +28,21 @@ class AppBarLoginWidget extends PreferredSize {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        flex: 2,
-                        child: Container(
-                          child: Image.asset(
-                            AppImages.logoColorida,
-                          ),
-                        ),
-                      ),
+                          flex: 2,
+                          child: screenWidth > 600
+                              ? Container(
+                                  alignment: Alignment.topRight,
+                                  child: Image.asset(
+                                    AppImages.logoColorida,
+                                    width: 80,
+                                    height: 100,
+                                  ),
+                                )
+                              : Container(
+                                  child: Image.asset(
+                                    AppImages.logoColorida,
+                                  ),
+                                )),
                       Expanded(
                         flex: 2,
                         child: Container(
