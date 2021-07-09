@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/models/user.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:sembast_web/sembast_web.dart';
+import 'package:sembast/sembast.dart';
 
 Future<List> getPayments(String usuario, String cargo, String autocomo,
     String bPendente, List empresa) async {
@@ -72,6 +74,22 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
       } else if (autocomo == 'D') {
         acessos.add(user[0].getacessoDiretor.toString());
         acessos.add(user[0].getCargoFin.toString());
+      }
+    } else {
+      var store = intMapStoreFactory.store();
+      var factory = databaseFactoryWeb;
+      var db = await factory.openDatabase('sgi');
+      var finder = Finder(filter: Filter.equals('id', 0));
+      var user = await store.findFirst(db, finder: finder);
+      if (autocomo == 'G') {
+        acessos.add(user["acessoGerente"]);
+        acessos.add(user["cargoFin"]);
+      } else if (autocomo == 'S') {
+        acessos.add(user["acessoSuper"]);
+        acessos.add(user["cargoFin"]);
+      } else if (autocomo == 'D') {
+        acessos.add(user["acessoDiretor"]);
+        acessos.add(user["cargoFin"]);
       }
     }
 

@@ -99,20 +99,18 @@ class PaymentApprovalState extends State<PaymentApproval>
       var finder = Finder(filter: Filter.equals('id', 0));
       var user = await store.findFirst(db, finder: finder);
       print(user);
-      print(user["getuserProtheus"]);
-      empresas = await getEmpresas(user["getuserProtheus"]);
+      print(user["userProtheus"]);
+      empresas = await getEmpresas(user["userProtheus"]);
       setState(() {
-        gerente =
-            user["getacessoGerente"] == '' ? 'nok' : user["getacessoGerente"];
-        superi = user["getacessoSuper"] == '' ? 'nok' : user["getacessoSuper"];
-        diretor =
-            user["getacessoDiretor"] == '' ? 'nok' : user["getacessoDiretor"];
-        cargoFin = user["getCargoFin"] == '' ? 'nok' : user["getCargoFin"];
+        gerente = user["acessoGerente"] == '' ? 'nok' : user["acessoGerente"];
+        superi = user["acessoSuper"] == '' ? 'nok' : user["acessoSuper"];
+        diretor = user["acessoDiretor"] == '' ? 'nok' : user["acessoDiretor"];
+        cargoFin = user["cargoFin"] == '' ? 'nok' : user["cargoFin"];
 
         nomeGer = 'Gerente';
         nomeSup = 'Super.';
         nomeDir = 'Diretor';
-        _codigoUsuario = user["getuserProtheus"];
+        _codigoUsuario = user["userProtheus"];
         for (int i = 0; i < empresas.length; i++) {
           _listaEmpresas.add(empresas[i][1]);
         }

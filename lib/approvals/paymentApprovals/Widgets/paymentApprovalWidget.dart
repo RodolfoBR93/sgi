@@ -59,20 +59,18 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   }
 
   void buscaTitulos() async {
-    if (!kIsWeb) {
-      retorno = await getPayments(
-          _user, _occupation, _occupationAcronym, "1", _companies);
-      if (this.mounted) {
-        setState(() {
-          _titulos = retorno[0];
-          _dadosAdc = retorno[1];
-          _impostos = retorno[2];
-          if (_dadosAdc.length == 0) {
-            _dadosAdc.add("nok");
-          }
-          _isLoading = false;
-        });
-      }
+    retorno = await getPayments(
+        _user, _occupation, _occupationAcronym, "1", _companies);
+    if (this.mounted) {
+      setState(() {
+        _titulos = retorno[0];
+        _dadosAdc = retorno[1];
+        _impostos = retorno[2];
+        if (_dadosAdc.length == 0) {
+          _dadosAdc.add("nok");
+        }
+        _isLoading = false;
+      });
     }
   }
 
