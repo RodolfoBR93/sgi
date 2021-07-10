@@ -4,8 +4,8 @@ import 'package:sgi/core/app_text_styles.dart';
 
 class Endereco {
   String endereco =
-      'http://192.168.1.241:8088/html-protheus/rest/WEB_ASABRANCA/';
-  String enderecoIni = '192.168.1.241:8088';
+      'http://186.235.158.182:8088/html-protheus/rest/WEB_ASABRANCA/';
+  String enderecoIni = '186.235.158.182:8088';
   String rota = '/html-protheus/rest/WEB_ASABRANCA/';
   String get getEndereco => endereco;
   String get getEnderecoIni => enderecoIni;

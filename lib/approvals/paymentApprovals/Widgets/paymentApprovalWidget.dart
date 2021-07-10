@@ -19,11 +19,29 @@ class PaymentApprovalWidget extends StatefulWidget {
   final String _occupation;
   final String _occupationT;
   final String _occupationAcronym;
-  PaymentApprovalWidget(this._user, this._companies, this._occupationAcronym,
-      this._occupation, this._occupationT);
+  final String _financialmanager;
+  final String _cfo;
+  final String _managerDirector;
+  PaymentApprovalWidget(
+      this._user,
+      this._companies,
+      this._occupationAcronym,
+      this._occupation,
+      this._occupationT,
+      this._financialmanager,
+      this._cfo,
+      this._managerDirector);
   @override
   PaymentApprovalWidgetState createState() => new PaymentApprovalWidgetState(
-      _user, _companies, _occupationAcronym, _occupation, _occupationT);
+        _user,
+        _companies,
+        _occupationAcronym,
+        _occupation,
+        _occupationT,
+        _financialmanager,
+        _cfo,
+        _managerDirector,
+      );
 }
 
 class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
@@ -32,8 +50,19 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
   final String _occupation;
   final String _occupationT;
   final String _occupationAcronym;
-  PaymentApprovalWidgetState(this._user, this._companies,
-      this._occupationAcronym, this._occupation, this._occupationT);
+  final String _financialmanager;
+  final String _cfo;
+  final String _managerDirector;
+  PaymentApprovalWidgetState(
+    this._user,
+    this._companies,
+    this._occupationAcronym,
+    this._occupation,
+    this._occupationT,
+    this._financialmanager,
+    this._cfo,
+    this._managerDirector,
+  );
   List _titulos = [];
   List _dadosAdc = [];
   List _impostos = [];
@@ -307,7 +336,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
         WidgetsUteis.showLoadingDialog(
             context, _keyLoader, "Concluindo aprovação...");
         _retorno = await _AprovaTitulo("${_titulos[index][0]}", _user,
-            _occupationAcronym, "${_titulos[index][5]}");
+            _occupationAcronym, "${_titulos[index][5]}", '');
 
         setState(() {
           _titulos.removeAt(index);
@@ -318,18 +347,14 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
           }
         });
         Navigator.of(context).pop();
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: new Text(mensagem),
-          duration: Duration(seconds: 1),
-        ));
+
+        WidgetsUteis.exibeSnackBar(
+            context, _scaffoldKey, mensagem, screenWidth);
       }
     } else {
       mensagem = 'Título não possui anexo!';
       Navigator.of(context).pop();
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: new Text(mensagem),
-        duration: Duration(seconds: 1),
-      ));
+      WidgetsUteis.exibeSnackBar(context, _scaffoldKey, mensagem, screenWidth);
     }
     //_retorno[0] == 1
   }
@@ -466,8 +491,8 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
             '${endereco.getEndereco}getanexo?empresa=$empresa&anexo=$anexo&arecno=$recno')));
   }
 
-  Future<List> _AprovaTitulo(
-      String _recno, String _usuario, String _autcomo, String empresa) async {
+  Future<List> _AprovaTitulo(String _recno, String _usuario, String _autcomo,
+      String empresa, String diFDPR) async {
     Response response;
     Dio dio = new Dio();
     List dados = []; //_empresa, _recno, usuario, autcomo
@@ -476,7 +501,11 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
         "empresa": empresa,
         "arecno": _recno,
         "usuario": _usuario,
-        "autocomo": _autcomo
+        "autocomo": _autcomo,
+        "di_fora_do_prazo": diFDPR,
+        "gerenteFin": _financialmanager,
+        "diretorFin": _cfo,
+        "diretorAdm": _managerDirector,
       });
       if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.data);
@@ -512,7 +541,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
           WidgetsUteis.showLoadingDialog(
               context, _keyLoader, "Concluindo aprovação...");
           _retorno = await _AprovaTitulo("${_titulos[index][0]}", _user,
-              _occupationAcronym, "${_titulos[index][5]}");
+              _occupationAcronym, "${_titulos[index][5]}", numeroDI);
           Navigator.of(context).pop();
           setState(() {
             _titulos.removeAt(index);
