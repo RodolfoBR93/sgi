@@ -29,6 +29,9 @@ dependencies:
   intl: ^0.17.0
   idb_sqflite: ^1.0.0
   sembast_web: ^2.0.0+2
+  native_pdf_view: ^4.1.0
+  native_pdf_renderer: ^3.1.0
+  syncfusion_flutter_pdfviewer: ^19.2.47-beta
 dev_dependencies:
   flutter_test:
     sdk: flutter

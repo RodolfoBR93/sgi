@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sgi/core/app_images.dart';
-import 'package:sgi/core/core.dart';
+import 'package:sgi/core/app_text_styles.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/models/user.dart';
 

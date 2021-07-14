@@ -68,12 +68,21 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
       if (autocomo == 'G') {
         acessos.add(user[0].getacessoGerente.toString());
         acessos.add(user[0].getCargoFin.toString());
+        acessos.add(user[0].getGerenteFin.toString());
+        acessos.add(user[0].getDiretorFin.toString());
+        acessos.add(user[0].getDiretorAdm.toString());
       } else if (autocomo == 'S') {
         acessos.add(user[0].getacessoSuper.toString());
         acessos.add(user[0].getCargoFin.toString());
+        acessos.add(user[0].getGerenteFin.toString());
+        acessos.add(user[0].getDiretorFin.toString());
+        acessos.add(user[0].getDiretorAdm.toString());
       } else if (autocomo == 'D') {
         acessos.add(user[0].getacessoDiretor.toString());
         acessos.add(user[0].getCargoFin.toString());
+        acessos.add(user[0].getGerenteFin.toString());
+        acessos.add(user[0].getDiretorFin.toString());
+        acessos.add(user[0].getDiretorAdm.toString());
       }
     } else {
       var store = intMapStoreFactory.store();
@@ -84,12 +93,21 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
       if (autocomo == 'G') {
         acessos.add(user["acessoGerente"]);
         acessos.add(user["cargoFin"]);
+        acessos.add(user["gerenteFin"]);
+        acessos.add(user["diretorFin"]);
+        acessos.add(user["diretorAdm"]);
       } else if (autocomo == 'S') {
         acessos.add(user["acessoSuper"]);
         acessos.add(user["cargoFin"]);
+        acessos.add(user["gerenteFin"]);
+        acessos.add(user["diretorFin"]);
+        acessos.add(user["diretorAdm"]);
       } else if (autocomo == 'D') {
         acessos.add(user["acessoDiretor"]);
         acessos.add(user["cargoFin"]);
+        acessos.add(user["gerenteFin"]);
+        acessos.add(user["diretorFin"]);
+        acessos.add(user["diretorAdm"]);
       }
     }
 
@@ -101,7 +119,7 @@ Future<List> getPayments(String usuario, String cargo, String autocomo,
         "astatcc": acessos[0],
         "bpendente": bPendente,
         "empresa": empresa[i][0],
-        "diradm": '1' //deve trazer no array acessos
+        "diradm":acessos[4]//deve trazer no array acessos
       });
       if (response.statusCode == 200 || response.statusCode == 201) {
         nQtdTit = response.data["qtdtit"];

@@ -2,17 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/database/dao/user_web._dao.dart';
-import 'package:sgi/database/dao/web_database.dart';
 import 'package:sgi/home/home_page.dart';
-import 'package:sgi/home/home_page2.dart';
 import 'package:sgi/login/widgets/app_bar_login_widget.dart';
 import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
-import 'package:sgi/manage_access/manage_access_page.dart';
-import 'package:sgi/models/user.dart';
 import 'package:sgi/register/register_page.dart';
-import 'package:sembast_web/sembast_web.dart';
-import 'package:sembast/sembast.dart';
 import 'access_code_page.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -244,7 +238,7 @@ class _LoginState extends State<Login> {
           }
 
           Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (BuildContext context) => new HomePage2(
+              builder: (BuildContext context) => new HomePage(
                   usuario,
                   response.data["usuProt"],
                   response.data["usuGnc"],
@@ -261,14 +255,14 @@ class _LoginState extends State<Login> {
       } else {
         Navigator.of(context).pop();
         WidgetsUteis.exibeSnackBar(
-            context, _scaffoldKey, "Não foi possível conectar", screenWidth);
+            context, _scaffoldKey, 'Falha ao conectar!', screenWidth);
       }
 
       return response.statusCode;
     } catch (e) {
       Navigator.of(context).pop();
       WidgetsUteis.exibeSnackBar(
-          context, _scaffoldKey, "Não foi possível conectar", screenWidth);
+          context, _scaffoldKey, 'Falha ao conectar!', screenWidth);
       print(e);
     }
     return 0;

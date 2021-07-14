@@ -5,8 +5,14 @@ import 'package:sgi/approvals/paymentApprovals/payment_approval_page.dart';
 import 'package:sgi/core/app_colors.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
+import 'package:sgi/database/dao/user_web._dao.dart';
 import 'package:sgi/gdi/gdi_home_page.dart';
+import 'package:sgi/home/widgets/app_bar_home_widget.dart';
+import 'package:sgi/home/widgets/value_per_branch.dart';
 import 'package:sgi/models/user.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:sembast_web/sembast_web.dart';
+import 'package:sembast/sembast.dart';
 
 class HomePage extends StatefulWidget {
   final String _user;
@@ -22,11 +28,33 @@ class HomePage extends StatefulWidget {
   final String _diretorAdm;
   final String _gerenteTI;
   final String _comprador;
-  HomePage(this._user, this._usuProt, this._usuGnc,this._acessoGerente,this._acessoSuper,this._acessoDiretor,
-  this._cargoFin,this._gerenteFin,this._diretorFin,this._diretorAdm,this._gerenteTI,this._comprador);
+  HomePage(
+      this._user,
+      this._usuProt,
+      this._usuGnc,
+      this._acessoGerente,
+      this._acessoSuper,
+      this._acessoDiretor,
+      this._cargoFin,
+      this._gerenteFin,
+      this._diretorFin,
+      this._diretorAdm,
+      this._gerenteTI,
+      this._comprador);
   @override
-  HomePageState createState() => new HomePageState(_user, _usuProt, _usuGnc,_acessoGerente,_acessoSuper,_acessoDiretor,
-  _cargoFin,_gerenteFin,_diretorFin,_diretorAdm,_gerenteTI,_comprador);
+  HomePageState createState() => new HomePageState(
+      _user,
+      _usuProt,
+      _usuGnc,
+      _acessoGerente,
+      _acessoSuper,
+      _acessoDiretor,
+      _cargoFin,
+      _gerenteFin,
+      _diretorFin,
+      _diretorAdm,
+      _gerenteTI,
+      _comprador);
 }
 
 class HomePageState extends State<HomePage> {
@@ -45,15 +73,65 @@ class HomePageState extends State<HomePage> {
   Endereco endereco = new Endereco();
   String retAprovacao;
   String retGnc;
+  double screenHeight;
+  double screenWidth;
   final UserDao _dao = UserDao();
-  HomePageState(this._user, this._usuProt, this._usuGnc, this._acessoGerente,this._acessoSuper,this._acessoDiretor,
-  this._cargoFin,this._gerenteFin,this._diretorFin,this._diretorAdm,this._gerenteTI,this._comprador);
+  UserWebDao _userWebDao = UserWebDao();
+  String teste;
+  List captacao;
+  bool _isLoading = true;
+  HomePageState(
+      this._user,
+      this._usuProt,
+      this._usuGnc,
+      this._acessoGerente,
+      this._acessoSuper,
+      this._acessoDiretor,
+      this._cargoFin,
+      this._gerenteFin,
+      this._diretorFin,
+      this._diretorAdm,
+      this._gerenteTI,
+      this._comprador);
 
   @override
   void initState() {
-    final User newUser = User(0, _user, _usuProt, _usuGnc,_acessoGerente,_acessoSuper,_acessoDiretor,_cargoFin,_gerenteFin,_diretorFin,_diretorAdm,_gerenteTI,_comprador);
-    _dao.save(newUser);
+    final User newUser = User(
+        0,
+        _user,
+        _usuProt,
+        _usuGnc,
+        _acessoGerente,
+        _acessoSuper,
+        _acessoDiretor,
+        _cargoFin,
+        _gerenteFin,
+        _diretorFin,
+        _diretorAdm,
+        _gerenteTI,
+        _comprador);
+    if (!kIsWeb) {
+      _dao.save(newUser);
+    } else {
+      teste = persistWeb(newUser).toString();
+    }
+    pedidosporfilial(_user);
     super.initState();
+  }
+
+  Future persistWeb(User user) async {
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryWeb;
+    var db = await factory.openDatabase('sgi');
+    var finder = Finder(filter: Filter.equals('id', 0));
+    var record = await store.findFirst(db, finder: finder);
+    if (record == null) {
+      var key = await store.add(db, user.toMap());
+      record = await store.findFirst(db, finder: finder);
+      print(record);
+    }
+
+    await db.close();
   }
 
   void acesso(int id) async {
@@ -123,36 +201,63 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
-          appBar: new AppBar(
-            centerTitle: true,
-            title: new Text(
-              "Sistema de Gestão Integrada",
-              style: TextStyle(color: Colors.white),
-            ),
-            backgroundColor: AppColors.blue,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: <Color>[
-                    Color(0xFF4FACFE),
-                    Color(0xFF00F2FE),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          backgroundColor: Colors.white,
+          appBar: AppBarRegisterWidget(screenHeight,screenWidth ),
+          backgroundColor: Colors.grey[200],
           body: new Container(
-              child: new Center(
-            child: new Text("Tela Principal"),
-          )),
+            child: _isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Padding(
+                    padding:
+                        const EdgeInsets.only(top: 80.0, left: 16, right: 16),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: GridView.count(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 8,
+                            childAspectRatio: 1.7,
+                            children: [
+                              ValuePerBranch(
+                                  captacao[0]["descricao"],
+                                  captacao[0]["valor"] +
+                                      captacao[0]["mascara"]),
+                              ValuePerBranch(
+                                  captacao[1]["descricao"],
+                                  captacao[1]["valor"] +
+                                      captacao[1]["mascara"]),
+                              ValuePerBranch(
+                                  captacao[2]["descricao"],
+                                  captacao[2]["valor"] +
+                                      captacao[2]["mascara"]),
+                              ValuePerBranch(
+                                  captacao[3]["descricao"],
+                                  captacao[3]["valor"] +
+                                      captacao[3]["mascara"]),
+                              ValuePerBranch(
+                                  captacao[4]["descricao"],
+                                  captacao[4]["valor"] +
+                                      captacao[4]["mascara"]),
+                              ValuePerBranch(
+                                  captacao[5]["descricao"],
+                                  captacao[5]["valor"] +
+                                      captacao[5]["mascara"]),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+          ),
           drawer: getNavDrawer(context),
         ));
   }
@@ -195,8 +300,8 @@ class HomePageState extends State<HomePage> {
     return (await showDialog(
           context: context,
           builder: (context) => new AlertDialog(
-            title: new Text('Você tem certeza?'),
-            content: new Text('Você quer fechar aplicativo?'),
+            title: new Text('Gostaria de sair?'),
+            content: new Text('O aplicativo será encerrado.'),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
@@ -210,5 +315,25 @@ class HomePageState extends State<HomePage> {
           ),
         )) ??
         false;
+  }
+
+  Future<void> pedidosporfilial(String usuario) async {
+    try {
+      Response response;
+      Dio dio = new Dio();
+      response = await dio.post("${endereco.getEndereco}pedidosporfilial",
+          data: {"usuario": usuario});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        captacao = response.data["empresas"];
+      } else {
+        captacao = [];
+      }
+    } catch (e) {
+      print(e);
+      captacao = [];
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

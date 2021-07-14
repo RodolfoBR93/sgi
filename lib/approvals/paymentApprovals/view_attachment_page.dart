@@ -1,5 +1,7 @@
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ViewAttachment extends StatefulWidget {
   final String endereco;
@@ -23,8 +25,9 @@ class _ViewAttachmentState extends State<ViewAttachment> {
   }
 
   loadDocument() async {
-    document = await PDFDocument.fromURL(endereco);
-
+    if (!kIsWeb) {
+      document = await PDFDocument.fromURL(endereco);
+    }
     setState(() => _isLoading = false);
   }
 
@@ -35,12 +38,20 @@ class _ViewAttachmentState extends State<ViewAttachment> {
         child: Center(
           child: _isLoading
               ? Center(child: CircularProgressIndicator())
-              : PDFViewer(
-                  document: document,
-                  zoomSteps: 1,
-                ),
+              : viewPdf(),
         ),
       ),
     );
+  }
+
+  Widget viewPdf() {
+    if (!kIsWeb) {
+      return PDFViewer(
+        document: document,
+        zoomSteps: 1,
+      );
+    } else {
+      return SfPdfViewer.network(endereco);
+    }
   }
 }

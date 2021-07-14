@@ -15,6 +15,13 @@ class AppTextStyles {
     fontSize: 16,
     fontWeight: FontWeight.w500,
   );
+
+  static final TextStyle titleGray16 = GoogleFonts.roboto(
+    color: AppColors.lightGrey,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
+
   static final TextStyle forgotPassword = GoogleFonts.notoSans(
     color: AppColors.blue,
     fontSize: 15,
@@ -79,6 +86,13 @@ class AppTextStyles {
     fontSize: 24,
     fontWeight: FontWeight.w700,
   );
+
+    static final TextStyle lato24Blue = GoogleFonts.lato(
+    color: AppColors.blue,
+    fontSize: 24,
+    fontWeight: FontWeight.w900,
+  );
+
 
   static final TextStyle body20Blue = GoogleFonts.roboto(
     color: AppColors.blue,
