@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:charcode/ascii.dart';
 import 'package:flutter/Material.dart';
 import 'package:sgi/core/app_colors.dart';
@@ -8,9 +7,8 @@ import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/app_text_styles.dart';
 
 class AppBarRegisterWidget extends PreferredSize {
-
-
-  AppBarRegisterWidget(double screenHeight, double screenWidth)
+  AppBarRegisterWidget(
+      double screenHeight, double screenWidth, VoidCallback onTapUpdate, String initials)
       : super(
           preferredSize: Size.fromHeight(250),
           child: Container(
@@ -19,10 +17,6 @@ class AppBarRegisterWidget extends PreferredSize {
               children: [
                 AppBar(
                   centerTitle: true,
-                  // title: new Text(
-                  //   "Sistema de Gestão Integrada",
-                  //   style: TextStyle(color: Colors.white),
-                  // ),
                   backgroundColor: AppColors.blue,
                   flexibleSpace: Container(
                     decoration: BoxDecoration(
@@ -39,7 +33,7 @@ class AppBarRegisterWidget extends PreferredSize {
                 ),
                 Positioned(
                   top: 40,
-                  left: (screenWidth/2)-120,
+                  left: (screenWidth / 2) - 120,
                   child: Container(
                     child: Image.asset(
                       AppImages.logoBranca,
@@ -49,7 +43,7 @@ class AppBarRegisterWidget extends PreferredSize {
                 ),
                 Positioned(
                   top: 50,
-                  left: screenWidth/2,
+                  left: screenWidth / 2,
                   child: Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -67,25 +61,15 @@ class AppBarRegisterWidget extends PreferredSize {
                 Positioned(
                   top: 60,
                   right: 40,
-                  child: Icon(
-                    Icons.update,
-                    size: 40,
-                    color: AppColors.white,
+                  child: GestureDetector(
+                    onTap: onTapUpdate,
+                    child: Icon(
+                      Icons.update,
+                      size: 40,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
-                // Positioned(
-                //   top: 115,
-                //   left: 20,
-                //   child: Text.rich(TextSpan(
-                //       text: "Olá, ",
-                //       style: AppTextStyles.titleWhite,
-                //       children: [
-                //         TextSpan(
-                //           text: "Rodolfo",
-                //           style: AppTextStyles.titleWhite,
-                //         )
-                //       ])),
-                // ),
                 Align(
                   alignment: Alignment(0.0, 2.0),
                   child: Container(
@@ -94,9 +78,18 @@ class AppBarRegisterWidget extends PreferredSize {
                     decoration: BoxDecoration(
                         border: Border.all(width: 5, color: AppColors.white),
                         borderRadius: BorderRadius.circular(100),
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                'https://p2.trrsf.com/image/fget/cf/460/0/images.terra.com/2021/06/06/111474860-loki-vote.jpg'))),
+                        color: Colors.white
+                        // image: DecorationImage(
+                        //   image: NetworkImage(
+                        //       'https://p2.trrsf.com/image/fget/cf/460/0/images.terra.com/2021/06/06/111474860-loki-vote.jpg'),
+                        // ),
+                        ),
+                    child: Center(
+                      child: Text(
+                        initials,
+                        style: AppTextStyles.body24Blue,
+                      ),
+                    ),
                   ),
                 ),
               ],

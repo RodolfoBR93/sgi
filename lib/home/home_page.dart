@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +29,7 @@ class HomePage extends StatefulWidget {
   final String _diretorAdm;
   final String _gerenteTI;
   final String _comprador;
+  final String _iniciais;
   HomePage(
       this._user,
       this._usuProt,
@@ -40,7 +42,8 @@ class HomePage extends StatefulWidget {
       this._diretorFin,
       this._diretorAdm,
       this._gerenteTI,
-      this._comprador);
+      this._comprador, 
+      this._iniciais,);
   @override
   HomePageState createState() => new HomePageState(
       _user,
@@ -54,7 +57,8 @@ class HomePage extends StatefulWidget {
       _diretorFin,
       _diretorAdm,
       _gerenteTI,
-      _comprador);
+      _comprador,
+      _iniciais,);
 }
 
 class HomePageState extends State<HomePage> {
@@ -70,6 +74,7 @@ class HomePageState extends State<HomePage> {
   final String _diretorAdm;
   final String _gerenteTI;
   final String _comprador;
+  final String _iniciais;
   Endereco endereco = new Endereco();
   String retAprovacao;
   String retGnc;
@@ -79,7 +84,16 @@ class HomePageState extends State<HomePage> {
   UserWebDao _userWebDao = UserWebDao();
   String teste;
   List captacao;
+  String totalCaptacao;
   bool _isLoading = true;
+  bool _isLoadingUpdate = false;
+  var myDynamicAspectRatio = 1000 / 1;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  static const durationUpdate = const Duration(seconds: 1);
+  int secondsPassed = 0;
+  bool isActive = true;
+  Timer timer;
+  int seconds, minutes, hours;
   HomePageState(
       this._user,
       this._usuProt,
@@ -92,7 +106,8 @@ class HomePageState extends State<HomePage> {
       this._diretorFin,
       this._diretorAdm,
       this._gerenteTI,
-      this._comprador);
+      this._comprador,
+      this._iniciais);
 
   @override
   void initState() {
@@ -116,7 +131,27 @@ class HomePageState extends State<HomePage> {
       teste = persistWeb(newUser).toString();
     }
     pedidosporfilial(_user);
+     if (timer == null){
+      timer = Timer.periodic(durationUpdate, (Timer t) {
+        handleTick();
+      });
+     
+  }
     super.initState();
+  }
+
+  
+
+  void handleTick() {
+    if (isActive) {
+      setState(() {
+        secondsPassed = secondsPassed + 1;
+        if(secondsPassed==30){
+          secondsPassed=0;
+          pedidosporfilial(_user);
+        }
+      });
+    }
   }
 
   Future persistWeb(User user) async {
@@ -201,7 +236,6 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
@@ -209,54 +243,78 @@ class HomePageState extends State<HomePage> {
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
-          appBar: AppBarRegisterWidget(screenHeight,screenWidth ),
+          appBar: AppBarRegisterWidget(
+              screenHeight, screenWidth, pedidosporfilialUpdate,_iniciais),
           backgroundColor: Colors.grey[200],
           body: new Container(
-            child: _isLoading
+            child: _isLoading || _isLoadingUpdate 
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : Padding(
-                    padding:
-                        const EdgeInsets.only(top: 80.0, left: 16, right: 16),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: GridView.count(
+                : SingleChildScrollView(
+                  child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: 80.0, left: 0, right: 0, bottom: 0),
+                      child: Column(
+                        children: [
+                          GridView.count(
+                            shrinkWrap: true,
+                            physics: ClampingScrollPhysics(),
                             crossAxisCount: 2,
                             crossAxisSpacing: 8,
-                            childAspectRatio: 1.7,
+                            childAspectRatio: screenWidth < 400 ? 1.6 : 1.7,
                             children: [
                               ValuePerBranch(
-                                  captacao[0]["descricao"],
-                                  captacao[0]["valor"] +
-                                      captacao[0]["mascara"]),
+                                captacao[0]["descricao"],
+                                captacao[0]["valor"] + captacao[0]["mascara"],
+                                0,
+                                16,
+                              ),
                               ValuePerBranch(
-                                  captacao[1]["descricao"],
-                                  captacao[1]["valor"] +
-                                      captacao[1]["mascara"]),
+                                captacao[1]["descricao"],
+                                captacao[1]["valor"] + captacao[1]["mascara"],
+                                16,
+                                0,
+                              ),
                               ValuePerBranch(
-                                  captacao[2]["descricao"],
-                                  captacao[2]["valor"] +
-                                      captacao[2]["mascara"]),
+                                captacao[2]["descricao"],
+                                captacao[2]["valor"] + captacao[2]["mascara"],
+                                0,
+                                16,
+                              ),
                               ValuePerBranch(
-                                  captacao[3]["descricao"],
-                                  captacao[3]["valor"] +
-                                      captacao[3]["mascara"]),
+                                captacao[3]["descricao"],
+                                captacao[3]["valor"] + captacao[3]["mascara"],
+                                16,
+                                0,
+                              ),
                               ValuePerBranch(
-                                  captacao[4]["descricao"],
-                                  captacao[4]["valor"] +
-                                      captacao[4]["mascara"]),
+                                captacao[4]["descricao"],
+                                captacao[4]["valor"] + captacao[4]["mascara"],
+                                0,
+                                16,
+                              ),
                               ValuePerBranch(
-                                  captacao[5]["descricao"],
-                                  captacao[5]["valor"] +
-                                      captacao[5]["mascara"]),
+                                captacao[5]["descricao"],
+                                captacao[5]["valor"] + captacao[5]["mascara"],
+                                16,
+                                0,
+                              ),
                             ],
                           ),
-                        )
-                      ],
+                          Container(
+                            width: double.infinity,
+                            child: ValuePerBranch(
+                              "Total",
+                              totalCaptacao,
+                              16,
+                              16,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                ),
           ),
           drawer: getNavDrawer(context),
         ));
@@ -317,6 +375,17 @@ class HomePageState extends State<HomePage> {
         false;
   }
 
+  Future<void> pedidosporfilialUpdate() async {
+    setState(() {
+            _isLoadingUpdate = true;          
+        });
+    
+    //WidgetsUteis.showLoadingDialog(context, _keyLoader, "Atualizando...");
+    pedidosporfilial(_user);
+    //await new Future.delayed(const Duration(seconds: 1));
+    //Navigator.of(context).pop();
+  }
+
   Future<void> pedidosporfilial(String usuario) async {
     try {
       Response response;
@@ -325,6 +394,8 @@ class HomePageState extends State<HomePage> {
           data: {"usuario": usuario});
       if (response.statusCode == 200 || response.statusCode == 201) {
         captacao = response.data["empresas"];
+        totalCaptacao =
+            response.data["total"].toString() + response.data["ctotal"];
       } else {
         captacao = [];
       }
@@ -334,6 +405,7 @@ class HomePageState extends State<HomePage> {
     }
     setState(() {
       _isLoading = false;
+      _isLoadingUpdate = false; 
     });
   }
 }

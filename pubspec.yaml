@@ -32,6 +32,8 @@ dependencies:
   native_pdf_view: ^4.1.0
   native_pdf_renderer: ^3.1.0
   syncfusion_flutter_pdfviewer: ^19.2.47-beta
+  circular_profile_avatar: ^0.1.5
+  cached_network_image: ^3.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

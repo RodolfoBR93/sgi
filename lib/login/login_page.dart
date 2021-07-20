@@ -224,7 +224,7 @@ class _LoginState extends State<Login> {
           await new Future.delayed(const Duration(seconds: 3));
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => AccessCode()),
+            MaterialPageRoute(builder: (context) => AccessCode(usuario)),
           );
         } else if (response.data["status"] == 'F') {
           WidgetsUteis.exibeSnackBar(
@@ -250,7 +250,8 @@ class _LoginState extends State<Login> {
                   response.data["diretorFin"],
                   response.data["diretorAdm"],
                   response.data["gerenteTI"],
-                  response.data["comprador"])));
+                  response.data["comprador"],
+                  response.data["iniciais"])));
         }
       } else {
         Navigator.of(context).pop();

@@ -8,7 +8,6 @@ import 'package:sgi/core/app_colors.dart';
 import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/app_text_styles.dart';
 import 'package:sgi/core/uteis.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import '../detailed_payment_page.dart';
 import '../getPayments.dart';
 import '../view_attachment_page.dart';

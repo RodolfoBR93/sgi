@@ -6,6 +6,7 @@ import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/home/home_page.dart';
 import 'package:sgi/models/user.dart';
 import 'package:sgi/register/Widgets/app_bar_register_widget.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ManageAccess extends StatefulWidget {
   final String user;
@@ -30,6 +31,7 @@ class _ManageAccessState extends State<ManageAccess> {
   bool _obscureTextConfirmPasswordGDI = true;
   final UserDao _dao = UserDao();
   double screenWidth;
+  VoidCallback onCountSelected;
   _ManageAccessState(this.user);
 
   @override
@@ -370,7 +372,9 @@ class _ManageAccessState extends State<ManageAccess> {
             duracao: 2);
 
         if (response.data["id"] == 1) {
-          _dao.delete();
+          if (!kIsWeb) {
+            _dao.delete();
+          }
           setState(() {
             Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (BuildContext context) => new HomePage(
@@ -385,7 +389,8 @@ class _ManageAccessState extends State<ManageAccess> {
                     response.data["diretorFin"],
                     response.data["diretorAdm"],
                     response.data["gerenteTI"],
-                    response.data["comprador"])));
+                    response.data["comprador"],
+                    response.data["iniciais"])));
           });
         }
       } else {

@@ -12,11 +12,11 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 class AccessCode extends StatefulWidget {
   static const String routeName = "/accescode";
-  //String user;
-  AccessCode();
+  final String user;
+  AccessCode(this.user);
 
   @override
-  _AccessCodeState createState() => _AccessCodeState();
+  _AccessCodeState createState() => _AccessCodeState(user);
 }
 
 class _AccessCodeState extends State<AccessCode> {
@@ -28,22 +28,22 @@ class _AccessCodeState extends State<AccessCode> {
   String currentText = "";
   final formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String user;
+  final String user;
   final UserDao _dao = UserDao();
   double screenWidth;
-  _AccessCodeState();
+  _AccessCodeState(this.user);
 
   @override
   void initState() {
-    getUser();
+    //getUser();
     errorController = StreamController<ErrorAnimationType>();
     super.initState();
   }
 
-  void getUser() async {
-    List<User> users = await _dao.findAll();
-    user = users[0].getUser.toString();
-  }
+  // void getUser() async {
+  //   List<User> users = await _dao.findAll();
+  //   user = users[0].getUser.toString();
+  // }
 
   @override
   void dispose() {

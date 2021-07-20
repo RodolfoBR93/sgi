@@ -1,13 +1,11 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/core.dart';
-import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/models/user.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'Widgets/app_bar_register_widget.dart';
+import 'package:sgi/login/access_code_page.dart';
 
 class SendMail extends StatefulWidget {
   final String user;
@@ -23,12 +21,13 @@ class _SendMailState extends State<SendMail> {
   final String email;
   final UserDao _dao = UserDao();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   _SendMailState(this.user, this.email);
 
   @override
   void initState() {
-    _dao.delete();
+    if (!kIsWeb) {
+      _dao.delete();
+    }
     super.initState();
   }
 
@@ -102,9 +101,13 @@ class _SendMailState extends State<SendMail> {
   }
 
   _onWillPop(String _user) {
-    final User newUser = User(0, _user, '', '','','','','','','','','','');
-    _dao.save(newUser);
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/accescode', (Route<dynamic> route) => false);
+    //final User newUser = User(0, _user, '', '','','','','','','','','','');
+    //_dao.save(newUser);
+    // Navigator.of(context)
+    //     .pushNamedAndRemoveUntil('/accescode', (Route<dynamic> route) => false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AccessCode(_user)),
+    );
   }
 }
