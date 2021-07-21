@@ -10,6 +10,7 @@ class AppImages {
       "assets/images/LogoCircular_MaceioDistribuidora.png";
   static String get mslog_circular => "assets/images/LogoCircular_MsLog.png";
   static String get cose_circular => "assets/images/LogoCircular_Cose.png";
+  static String get gentileza_circular => "assets/images/LogoCircular_Gentileza.png";
 
   // static String get logoAsa => asa_circular;
   // static String get logoMcd => mcd_circular;
@@ -46,7 +47,7 @@ class AppImages {
         break;
       case '16':
         {
-          image = asa_circular;
+          image = gentileza_circular;
         }
         break;
     }

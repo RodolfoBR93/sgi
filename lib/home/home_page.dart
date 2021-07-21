@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sgi/approvals/paymentApprovals/payment_approval_page.dart';
 import 'package:sgi/core/app_colors.dart';
+import 'package:sgi/core/app_images.dart';
+import 'package:sgi/core/core.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/database/dao/user_web._dao.dart';
@@ -31,34 +33,36 @@ class HomePage extends StatefulWidget {
   final String _comprador;
   final String _iniciais;
   HomePage(
-      this._user,
-      this._usuProt,
-      this._usuGnc,
-      this._acessoGerente,
-      this._acessoSuper,
-      this._acessoDiretor,
-      this._cargoFin,
-      this._gerenteFin,
-      this._diretorFin,
-      this._diretorAdm,
-      this._gerenteTI,
-      this._comprador, 
-      this._iniciais,);
+    this._user,
+    this._usuProt,
+    this._usuGnc,
+    this._acessoGerente,
+    this._acessoSuper,
+    this._acessoDiretor,
+    this._cargoFin,
+    this._gerenteFin,
+    this._diretorFin,
+    this._diretorAdm,
+    this._gerenteTI,
+    this._comprador,
+    this._iniciais,
+  );
   @override
   HomePageState createState() => new HomePageState(
-      _user,
-      _usuProt,
-      _usuGnc,
-      _acessoGerente,
-      _acessoSuper,
-      _acessoDiretor,
-      _cargoFin,
-      _gerenteFin,
-      _diretorFin,
-      _diretorAdm,
-      _gerenteTI,
-      _comprador,
-      _iniciais,);
+        _user,
+        _usuProt,
+        _usuGnc,
+        _acessoGerente,
+        _acessoSuper,
+        _acessoDiretor,
+        _cargoFin,
+        _gerenteFin,
+        _diretorFin,
+        _diretorAdm,
+        _gerenteTI,
+        _comprador,
+        _iniciais,
+      );
 }
 
 class HomePageState extends State<HomePage> {
@@ -93,7 +97,7 @@ class HomePageState extends State<HomePage> {
   int secondsPassed = 0;
   bool isActive = true;
   Timer timer;
-  int seconds, minutes, hours;
+  ScrollController _scrollController = new ScrollController();
   HomePageState(
       this._user,
       this._usuProt,
@@ -131,23 +135,20 @@ class HomePageState extends State<HomePage> {
       teste = persistWeb(newUser).toString();
     }
     pedidosporfilial(_user);
-     if (timer == null){
+    if (timer == null) {
       timer = Timer.periodic(durationUpdate, (Timer t) {
         handleTick();
       });
-     
-  }
+    }
     super.initState();
   }
-
-  
 
   void handleTick() {
     if (isActive) {
       setState(() {
         secondsPassed = secondsPassed + 1;
-        if(secondsPassed==30){
-          secondsPassed=0;
+        if (secondsPassed == 30) {
+          secondsPassed = 0;
           pedidosporfilial(_user);
         }
       });
@@ -185,11 +186,22 @@ class HomePageState extends State<HomePage> {
 
   Drawer getNavDrawer(BuildContext context) {
     var cabecalho = new DrawerHeader(
-      child: new Text("Menu"),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        image: DecorationImage(
+          image: AssetImage(
+            AppImages.logoColorida,
+          ),
+          fit: BoxFit.scaleDown,
+        ),
+      ),
     );
     List<StatelessWidget> itens = [];
     var sobre = new AboutListTile(
-      child: new Text("Sobre"),
+      child: new Text(
+        "Sobre",
+        style: AppTextStyles.title16Black,
+      ),
       applicationName: "SGI",
       applicationVersion: "v2.0.0",
       applicationIcon: new Icon(Icons.adb),
@@ -199,7 +211,10 @@ class HomePageState extends State<HomePage> {
     ListTile getNavItem(var icon, String s, String routeName) {
       return new ListTile(
         leading: new Icon(icon),
-        title: new Text(s),
+        title: new Text(
+          s,
+          style: AppTextStyles.title16Black,
+        ),
         onTap: () {
           setState(() {
             Navigator.of(context).pop();
@@ -223,7 +238,7 @@ class HomePageState extends State<HomePage> {
     }
 
     if (retGnc == 'T') {
-      itens.add(getNavItem(Icons.message, "Não Conformidades", Gdi.routeName));
+      itens.add(getNavItem(Icons.message, "Demandas Internas", Gdi.routeName));
     }
 
     //itens.add(getNavItem(Icons.autorenew, "Sincronizar", Cadastro.routeName));
@@ -241,18 +256,21 @@ class HomePageState extends State<HomePage> {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
     return new WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          appBar: AppBarRegisterWidget(
-              screenHeight, screenWidth, pedidosporfilialUpdate,_iniciais),
-          backgroundColor: Colors.grey[200],
-          body: new Container(
-            child: _isLoading || _isLoadingUpdate 
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : SingleChildScrollView(
-                  child: Padding(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBarRegisterWidget(
+            screenHeight, screenWidth, pedidosporfilialUpdate, _iniciais),
+        backgroundColor: Colors.grey[200],
+        body: new Container(
+          child: _isLoading || _isLoadingUpdate
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView(
+                  physics: const AlwaysScrollableScrollPhysics(), // new
+                  controller: _scrollController,
+                  children: [
+                    Padding(
                       padding: const EdgeInsets.only(
                           top: 80.0, left: 0, right: 0, bottom: 0),
                       child: Column(
@@ -314,10 +332,18 @@ class HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
+                  ],
                 ),
+        ),
+        drawer: Theme(
+          data: Theme.of(context).copyWith(
+            canvasColor: AppColors.white,
+            //accentColor: AppColors.blue
           ),
-          drawer: getNavDrawer(context),
-        ));
+          child: getNavDrawer(context),
+        ),
+      ),
+    );
   }
 
   Future<String> acessoAprovacao(String usuario) async {
@@ -377,9 +403,9 @@ class HomePageState extends State<HomePage> {
 
   Future<void> pedidosporfilialUpdate() async {
     setState(() {
-            _isLoadingUpdate = true;          
-        });
-    
+      _isLoadingUpdate = true;
+    });
+
     //WidgetsUteis.showLoadingDialog(context, _keyLoader, "Atualizando...");
     pedidosporfilial(_user);
     //await new Future.delayed(const Duration(seconds: 1));
@@ -405,7 +431,7 @@ class HomePageState extends State<HomePage> {
     }
     setState(() {
       _isLoading = false;
-      _isLoadingUpdate = false; 
+      _isLoadingUpdate = false;
     });
   }
 }

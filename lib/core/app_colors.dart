@@ -10,6 +10,7 @@ class AppColors {
   static final Color orange = Color(0XFFFF6D00);
   static final Color darkGreen = Color(0XFF00C853);
   static final Color blackSnackBar = Color(0XFF0F0F0F);
+  static final Color purpleAccent = Colors.purpleAccent;
 
   // static final Color purple = Color(0xFF8257E5);
   // static final Color white = Color(0xFFFFFFFF);

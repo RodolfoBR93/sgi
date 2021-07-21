@@ -7,12 +7,12 @@ import 'package:sgi/core/app_images.dart';
 import 'package:sgi/core/app_text_styles.dart';
 
 class AppBarRegisterWidget extends PreferredSize {
-  AppBarRegisterWidget(
-      double screenHeight, double screenWidth, VoidCallback onTapUpdate, String initials)
+  AppBarRegisterWidget(double screenHeight, double screenWidth,
+      VoidCallback onTapUpdate, String initials)
       : super(
-          preferredSize: Size.fromHeight(250),
+          preferredSize: Size.fromHeight((screenHeight * 30) / 100),
           child: Container(
-            height: 250,
+            height: (screenHeight * 30) / 100,
             child: Stack(
               children: [
                 AppBar(
@@ -32,7 +32,9 @@ class AppBarRegisterWidget extends PreferredSize {
                   ),
                 ),
                 Positioned(
-                  top: 40,
+                  top: screenHeight < 800
+                      ? (screenHeight * 2) / 100
+                      : (screenHeight * 5) / 100,
                   left: (screenWidth / 2) - 120,
                   child: Container(
                     child: Image.asset(
@@ -42,7 +44,9 @@ class AppBarRegisterWidget extends PreferredSize {
                   ),
                 ),
                 Positioned(
-                  top: 50,
+                  top: screenHeight < 800
+                      ? (screenHeight * 3) / 100
+                      : (screenHeight * 6) / 100,
                   left: screenWidth / 2,
                   child: Container(
                     child: Column(
@@ -59,8 +63,12 @@ class AppBarRegisterWidget extends PreferredSize {
                   ),
                 ),
                 Positioned(
-                  top: 60,
-                  right: 40,
+                  top: screenHeight < 800
+                      ? (screenHeight * 4) / 100
+                      : (screenHeight * 7) / 100,
+                  right: screenHeight < 800
+                      ? (screenHeight * 3) / 100
+                      : (screenHeight * 4) / 100,
                   child: GestureDetector(
                     onTap: onTapUpdate,
                     child: Icon(
@@ -71,14 +79,14 @@ class AppBarRegisterWidget extends PreferredSize {
                   ),
                 ),
                 Align(
-                  alignment: Alignment(0.0, 2.0),
+                  alignment: Alignment(0.0, screenHeight < 600 ? 2.5 : 2.0),
                   child: Container(
-                    height: 130,
-                    width: 130,
+                    height:  screenHeight < 600 ? 100 : 130,
+                    width: screenHeight < 600 ? 100 : 130,
                     decoration: BoxDecoration(
                         border: Border.all(width: 5, color: AppColors.white),
                         borderRadius: BorderRadius.circular(100),
-                        color: Colors.white
+                        color: AppColors.orange,
                         // image: DecorationImage(
                         //   image: NetworkImage(
                         //       'https://p2.trrsf.com/image/fget/cf/460/0/images.terra.com/2021/06/06/111474860-loki-vote.jpg'),
@@ -87,7 +95,7 @@ class AppBarRegisterWidget extends PreferredSize {
                     child: Center(
                       child: Text(
                         initials,
-                        style: AppTextStyles.body24Blue,
+                        style: AppTextStyles.text30White,
                       ),
                     ),
                   ),

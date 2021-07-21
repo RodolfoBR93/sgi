@@ -50,10 +50,10 @@ class AppBarLoginWidget extends PreferredSize {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "SISTEMA DE",
+                                "SISTEMA",
                                 style: AppTextStyles.title,
                               ),
-                              Text("GESTÃO", style: AppTextStyles.title),
+                              Text("DE GESTÃO", style: AppTextStyles.title),
                               Text("INTEGRADA", style: AppTextStyles.title),
                             ],
                           ),

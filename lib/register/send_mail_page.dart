@@ -42,40 +42,37 @@ class _SendMailState extends State<SendMail> {
           width: MediaQuery.of(context).size.width,
           child: ListView(
             children: <Widget>[
-              Expanded(
-                flex: 3,
-                child: Container(
-                  //height: MediaQuery.of(context).size.height / 4,
+              //Expanded(
+              //  flex: 2,
+              //  child: 
+              Container(
+                  height: MediaQuery.of(context).size.height *40/100,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
                     child: Image.asset(AppImages.email_sent),
                   ),
                 ),
-              ),
-              Expanded(
-                flex: 1,
-                child: RichText(
+              //),
+              Container(
+                  height: MediaQuery.of(context).size.height *5/100,
+                  child:RichText(
                   text: TextSpan(
                       text: "Código de verificação enviado para o E-mail:",
                       style: TextStyle(color: Colors.black54, fontSize: 15)),
                   textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: RichText(
+                ),),
+              Container(
+                  height: MediaQuery.of(context).size.height *5/100,
+                  child:RichText(
                   text: TextSpan(
                       text: email,
                       style: TextStyle(color: Colors.black54, fontSize: 15)),
                   textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 30, 16, 0),
+                ),),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 30, 16, 20),
                   child: SizedBox(
-                    //height: 55, //height of button
+                    height: MediaQuery.of(context).size.height *5/100,
                     width: double.infinity, //width of button
                     child: ElevatedButton(
                       onPressed: () {
@@ -94,7 +91,6 @@ class _SendMailState extends State<SendMail> {
                     ),
                   ),
                 ),
-              ),
             ],
           )),
     );

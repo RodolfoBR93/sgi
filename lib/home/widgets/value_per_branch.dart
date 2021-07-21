@@ -19,10 +19,8 @@ class ValuePerBranch extends StatelessWidget {
         color: Colors.white,
         elevation: 6,
         borderRadius: BorderRadius.circular(10),
-        child: ListView(
-          shrinkWrap : true,
-          children: <Widget>[
-            Container(
+        child: Container(
+            alignment: Alignment.center,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -36,6 +34,7 @@ class ValuePerBranch extends StatelessWidget {
                       child: Text(
                         descricao,
                         style: AppTextStyles.titleGray16,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                     SizedBox(
@@ -46,15 +45,13 @@ class ValuePerBranch extends StatelessWidget {
                       child: Text(
                         valor,
                         style: AppTextStyles.lato24Blue,
-                        textAlign: TextAlign.left,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          ],
-        ),
       ),
     );
   }

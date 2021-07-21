@@ -34,6 +34,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
   );
 
+  static final TextStyle title16Black = GoogleFonts.workSans(
+    color: AppColors.black,
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
   static final TextStyle title13Grey = GoogleFonts.workSans(
     //color: AppColors.darkGrey,
     fontSize: 14,
@@ -81,18 +87,23 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  static final TextStyle text30White = GoogleFonts.roboto(
+    color: AppColors.white,
+    fontSize: 30,
+    fontWeight: FontWeight.w600,
+  );
+
   static final TextStyle body24Blue = GoogleFonts.roboto(
     color: AppColors.blue,
     fontSize: 24,
     fontWeight: FontWeight.w700,
   );
 
-    static final TextStyle lato24Blue = GoogleFonts.lato(
+  static final TextStyle lato24Blue = GoogleFonts.lato(
     color: AppColors.blue,
     fontSize: 24,
     fontWeight: FontWeight.w900,
   );
-
 
   static final TextStyle body20Blue = GoogleFonts.roboto(
     color: AppColors.blue,

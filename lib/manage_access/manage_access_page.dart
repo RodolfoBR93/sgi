@@ -31,6 +31,7 @@ class _ManageAccessState extends State<ManageAccess> {
   bool _obscureTextConfirmPasswordGDI = true;
   final UserDao _dao = UserDao();
   double screenWidth;
+  ScrollController _scrollController = new ScrollController();
   VoidCallback onCountSelected;
   _ManageAccessState(this.user);
 
@@ -41,179 +42,185 @@ class _ManageAccessState extends State<ManageAccess> {
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBarRegisterWidget(),
-      body: Container(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: ListView(
+        physics: const AlwaysScrollableScrollPhysics(), // new
+        controller: _scrollController,
+        children: [
+          Container(
+            alignment: Alignment.center,
+            child: Column(
               children: [
-                Expanded(
-                  flex: 4,
+                Row(
+                  //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "Gerenciar Acessos",
+                          style: AppTextStyles.body30Black,
+                        ),
+                      ),
+                    ),
+                    // Expanded(
+                    //   flex: 1,
+                    //   child: Text(
+                    //     "Login",
+                    //     style: AppTextStyles.body16Blue,
+                    //   ),
+                    // )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(25, 16, 20, 0),
                   child: Container(
-                    alignment: Alignment.center,
+                    width: double.infinity,
                     child: Text(
-                      "Gerenciar Acessos",
-                      style: AppTextStyles.body30Black,
+                      "Protheus",
+                      style: AppTextStyles.body24Blue,
                     ),
                   ),
                 ),
-                // Expanded(
-                //   flex: 1,
-                //   child: Text(
-                //     "Login",
-                //     style: AppTextStyles.body16Blue,
-                //   ),
-                // )
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
+                  child: TextField(
+                    controller: _userProtheusController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.person_outline,
+                        color: AppColors.black,
+                      ),
+                      hintText: 'Usuário',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    cursorColor: Colors.blue,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    autocorrect: false,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                  child: TextField(
+                    controller: _passwordProtheusController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.lock_outline,
+                        color: AppColors.black,
+                      ),
+                      suffixIcon: GestureDetector(
+                        onTap: displayPasswordProtheus,
+                        child: _obscureTextPasswordProtheus
+                            ? Icon(Icons.visibility)
+                            : Icon(Icons.visibility_off),
+                      ),
+                      hintText: 'Senha',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    cursorColor: Colors.blue,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    obscureText: _obscureTextPasswordProtheus,
+                    autocorrect: false,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(25, 30, 20, 0),
+                  child: Container(
+                    width: double.infinity,
+                    child: Text(
+                      "GDI",
+                      style: AppTextStyles.body24Blue,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
+                  child: TextField(
+                    controller: _userGdiController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.person_outline,
+                        color: AppColors.black,
+                      ),
+                      hintText: 'Usuário',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    cursorColor: Colors.blue,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    autocorrect: false,
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                  child: TextField(
+                    controller: _passwordGdiController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.lock_outline,
+                        color: AppColors.black,
+                      ),
+                      suffixIcon: GestureDetector(
+                        onTap: displayConfirmPasswordGDI,
+                        child: _obscureTextConfirmPasswordGDI
+                            ? Icon(Icons.visibility)
+                            : Icon(Icons.visibility_off),
+                      ),
+                      hintText: 'Senha',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    cursorColor: Colors.blue,
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    obscureText: _obscureTextConfirmPasswordGDI,
+                    autocorrect: false,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 30, 16, 0),
+                  child: SizedBox(
+                    height: 55, //height of button
+                    width: double.infinity, //width of button
+                    child: ElevatedButton(
+                      onPressed: () {
+                        sincronizarAcessos();
+                      },
+                      style: ElevatedButton.styleFrom(
+                          elevation: 3,
+                          primary: AppColors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )),
+                      child: Text(
+                        "Salvar",
+                        style: TextStyle(color: Colors.white, fontSize: 16.9),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25, 16, 20, 0),
-              child: Container(
-                width: double.infinity,
-                child: Text(
-                  "Protheus",
-                  style: AppTextStyles.body24Blue,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
-              child: TextField(
-                controller: _userProtheusController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.person_outline,
-                    color: AppColors.black,
-                  ),
-                  hintText: 'Usuário',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                cursorColor: Colors.blue,
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w700,
-                ),
-                autocorrect: false,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-              child: TextField(
-                controller: _passwordProtheusController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.lock_outline,
-                    color: AppColors.black,
-                  ),
-                  suffixIcon: GestureDetector(
-                    onTap: displayPasswordProtheus,
-                    child: _obscureTextPasswordProtheus
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
-                  ),
-                  hintText: 'Senha',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                cursorColor: Colors.blue,
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w700,
-                ),
-                obscureText: _obscureTextPasswordProtheus,
-                autocorrect: false,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25, 30, 20, 0),
-              child: Container(
-                width: double.infinity,
-                child: Text(
-                  "GDI",
-                  style: AppTextStyles.body24Blue,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
-              child: TextField(
-                controller: _userGdiController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.person_outline,
-                    color: AppColors.black,
-                  ),
-                  hintText: 'Usuário',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                cursorColor: Colors.blue,
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w700,
-                ),
-                autocorrect: false,
-                keyboardType: TextInputType.number,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-              child: TextField(
-                controller: _passwordGdiController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.lock_outline,
-                    color: AppColors.black,
-                  ),
-                  suffixIcon: GestureDetector(
-                    onTap: displayConfirmPasswordGDI,
-                    child: _obscureTextConfirmPasswordGDI
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off),
-                  ),
-                  hintText: 'Senha',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                cursorColor: Colors.blue,
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w700,
-                ),
-                obscureText: _obscureTextConfirmPasswordGDI,
-                autocorrect: false,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 30, 16, 0),
-              child: SizedBox(
-                height: 55, //height of button
-                width: double.infinity, //width of button
-                child: ElevatedButton(
-                  onPressed: () {
-                    sincronizarAcessos();
-                  },
-                  style: ElevatedButton.styleFrom(
-                      elevation: 3,
-                      primary: AppColors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      )),
-                  child: Text(
-                    "Salvar",
-                    style: TextStyle(color: Colors.white, fontSize: 16.9),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
