@@ -22,6 +22,18 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  static final TextStyle titleGreen18 = GoogleFonts.roboto(
+    color: AppColors.darkGreen,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+  );
+
+  static final TextStyle titleOrange18 = GoogleFonts.roboto(
+    color: AppColors.orange,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+  );
+
   static final TextStyle forgotPassword = GoogleFonts.notoSans(
     color: AppColors.blue,
     fontSize: 15,

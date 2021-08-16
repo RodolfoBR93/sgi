@@ -43,6 +43,7 @@ flutter:
   assets:
     - assets/images/face.png
     - assets/images/logo_asa.png
+    - assets/images/LogoCircular_Sgi.png
     - assets/images/marca.png
     - assets/images/CSC1.png
     - assets/images/CSC2.png

@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:charcode/ascii.dart';
 import 'package:flutter/Material.dart';
 import 'package:sgi/core/app_colors.dart';
@@ -8,7 +8,7 @@ import 'package:sgi/core/app_text_styles.dart';
 
 class AppBarRegisterWidget extends PreferredSize {
   AppBarRegisterWidget(double screenHeight, double screenWidth,
-      VoidCallback onTapUpdate, String initials)
+      ui.VoidCallback onTapUpdate, String initials, String expensesS,String expensesM,ui.VoidCallback onTapApproval)
       : super(
           preferredSize: Size.fromHeight((screenHeight * 30) / 100),
           child: Container(
@@ -80,23 +80,45 @@ class AppBarRegisterWidget extends PreferredSize {
                 ),
                 Align(
                   alignment: Alignment(0.0, screenHeight < 600 ? 2.5 : 2.0),
-                  child: Container(
-                    height:  screenHeight < 600 ? 100 : 130,
-                    width: screenHeight < 600 ? 100 : 130,
-                    decoration: BoxDecoration(
-                        border: Border.all(width: 5, color: AppColors.white),
-                        borderRadius: BorderRadius.circular(100),
-                        color: AppColors.orange,
-                        // image: DecorationImage(
-                        //   image: NetworkImage(
-                        //       'https://p2.trrsf.com/image/fget/cf/460/0/images.terra.com/2021/06/06/111474860-loki-vote.jpg'),
-                        // ),
-                        ),
-                    child: Center(
-                      child: Text(
-                        initials,
-                        style: AppTextStyles.text30White,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16.0, right: 16, top: 2),
+                    child: Container(
+                      height: 136,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: AppColors.darkGrey, width: 2),
                       ),
+                      child: Column(children: [Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "Pendências",
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.titleGray16,
+                          ),
+                          
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: GestureDetector(
+                            onTap: onTapApproval,
+                            child: Text(
+                              expensesM,
+                              textAlign: TextAlign.center,
+                              style: (expensesS=='1' ? AppTextStyles.titleOrange18 : AppTextStyles.titleGreen18),
+                            ),
+                          ),
+                          
+                        ),
+                      ),
+                      ],)
                     ),
                   ),
                 ),

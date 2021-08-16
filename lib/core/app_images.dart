@@ -1,6 +1,7 @@
 class AppImages {
   static String get logoColorida => "assets/images/logo_colorida.png";
   static String get logoBranca => "assets/images/logo_branca.png";
+  static String get logoSgi_circular => "assets/images/LogoCircular_Sgi.png";
   static String get verify => "assets/images/verify.png";
   static String get email => "assets/images/email.png";
   static String get email_sent => "assets/images/email_sent2.jpg";

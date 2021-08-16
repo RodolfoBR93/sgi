@@ -20,7 +20,6 @@ void main() async {
       Login.routeName: (BuildContext context) => new Login(),
       Gdi.routeName: (BuildContext context) => new Gdi(),
       Register.routeName: (BuildContext context) => new Register(),
-      //AccessCode.routeName: (BuildContext context) => new AccessCode(),
     },
   ));
 }

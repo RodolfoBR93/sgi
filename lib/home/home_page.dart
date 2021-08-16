@@ -32,6 +32,8 @@ class HomePage extends StatefulWidget {
   final String _gerenteTI;
   final String _comprador;
   final String _iniciais;
+  final String _statusDespesas;
+  final String _mensagemDespesas;
   HomePage(
     this._user,
     this._usuProt,
@@ -46,6 +48,8 @@ class HomePage extends StatefulWidget {
     this._gerenteTI,
     this._comprador,
     this._iniciais,
+    this._statusDespesas,
+    this._mensagemDespesas,
   );
   @override
   HomePageState createState() => new HomePageState(
@@ -62,6 +66,8 @@ class HomePage extends StatefulWidget {
         _gerenteTI,
         _comprador,
         _iniciais,
+        _statusDespesas,
+        _mensagemDespesas,
       );
 }
 
@@ -79,6 +85,8 @@ class HomePageState extends State<HomePage> {
   final String _gerenteTI;
   final String _comprador;
   final String _iniciais;
+  final String _statusDespesas;
+  final String _mensagemDespesas;
   Endereco endereco = new Endereco();
   String retAprovacao;
   String retGnc;
@@ -99,19 +107,22 @@ class HomePageState extends State<HomePage> {
   Timer timer;
   ScrollController _scrollController = new ScrollController();
   HomePageState(
-      this._user,
-      this._usuProt,
-      this._usuGnc,
-      this._acessoGerente,
-      this._acessoSuper,
-      this._acessoDiretor,
-      this._cargoFin,
-      this._gerenteFin,
-      this._diretorFin,
-      this._diretorAdm,
-      this._gerenteTI,
-      this._comprador,
-      this._iniciais);
+    this._user,
+    this._usuProt,
+    this._usuGnc,
+    this._acessoGerente,
+    this._acessoSuper,
+    this._acessoDiretor,
+    this._cargoFin,
+    this._gerenteFin,
+    this._diretorFin,
+    this._diretorAdm,
+    this._gerenteTI,
+    this._comprador,
+    this._iniciais,
+    this._statusDespesas,
+    this._mensagemDespesas,
+  );
 
   @override
   void initState() {
@@ -187,14 +198,26 @@ class HomePageState extends State<HomePage> {
   Drawer getNavDrawer(BuildContext context) {
     var cabecalho = new DrawerHeader(
       decoration: BoxDecoration(
-        color: AppColors.white,
         image: DecorationImage(
-          image: AssetImage(
-            AppImages.logoColorida,
-          ),
-          fit: BoxFit.scaleDown,
+          image: AssetImage(AppImages.logoSgi_circular),
+          fit: BoxFit.fitHeight,
+        ),
+        //shape: BoxShape.circle,
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF4FACFE),
+            Color(0xFF00F2FE),
+          ],
         ),
       ),
+      // child: Container(
+      //   child: Center(
+      //     child: Text(
+      //       _iniciais,
+      //       style: AppTextStyles.text30White,
+      //     ),
+      //   ),
+      // ),
     );
     List<StatelessWidget> itens = [];
     var sobre = new AboutListTile(
@@ -259,7 +282,14 @@ class HomePageState extends State<HomePage> {
       onWillPop: _onWillPop,
       child: Scaffold(
         appBar: AppBarRegisterWidget(
-            screenHeight, screenWidth, pedidosporfilialUpdate, _iniciais),
+          screenHeight,
+          screenWidth,
+          pedidosporfilialUpdate,
+          _iniciais,
+          _statusDespesas,
+          _mensagemDespesas,
+          onTapApproval,
+        ),
         backgroundColor: Colors.grey[200],
         body: new Container(
           child: _isLoading || _isLoadingUpdate
@@ -410,6 +440,10 @@ class HomePageState extends State<HomePage> {
     pedidosporfilial(_user);
     //await new Future.delayed(const Duration(seconds: 1));
     //Navigator.of(context).pop();
+  }
+
+    void onTapApproval()  {
+      Navigator.of(context).pushNamed(PaymentApproval.routeName);
   }
 
   Future<void> pedidosporfilial(String usuario) async {

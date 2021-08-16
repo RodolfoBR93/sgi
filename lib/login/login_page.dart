@@ -251,7 +251,10 @@ class _LoginState extends State<Login> {
                   response.data["diretorAdm"],
                   response.data["gerenteTI"],
                   response.data["comprador"],
-                  response.data["iniciais"])));
+                  response.data["iniciais"],
+                  response.data["statusdespesas"],
+                  response.data["mensagemdespesas"],
+                  )));
         }
       } else {
         Navigator.of(context).pop();

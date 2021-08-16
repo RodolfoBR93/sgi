@@ -88,7 +88,7 @@ class PaymentApprovalWidgetState extends State<PaymentApprovalWidget> {
 
   void buscaTitulos() async {
     retorno = await getPayments(
-        _user, _occupation, _occupationAcronym, "1", _companies);
+        _user, _occupation, _occupationAcronym, "0", _companies);
     if (this.mounted) {
       setState(() {
         _titulos = retorno[0];

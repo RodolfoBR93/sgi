@@ -397,7 +397,10 @@ class _ManageAccessState extends State<ManageAccess> {
                     response.data["diretorAdm"],
                     response.data["gerenteTI"],
                     response.data["comprador"],
-                    response.data["iniciais"])));
+                    response.data["iniciais"],
+                    response.data["statusdespesas"],
+                    response.data["mensagemdespesas"],
+                  )));
           });
         }
       } else {
