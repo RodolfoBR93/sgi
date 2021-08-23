@@ -35,6 +35,32 @@ class _GdiState extends State<Gdi> {
         tooltip: 'Abrir DI',
         child: Icon(Icons.add),
       ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.blue,
+        // shape: CircularNotchedRectangle(),
+        child: IconTheme(
+          data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+          child: Row(
+            children: <Widget>[
+              IconButton(
+                tooltip: "Cadastros",
+                icon: const Icon(Icons.category),
+                onPressed: () {},
+              ),
+              IconButton(
+                tooltip: "Demandas Internas",
+                icon: const Icon(Icons.task),
+                onPressed: () {},
+              ),
+              IconButton(
+                tooltip: "Relatórios",
+                icon: const Icon(Icons.report),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
