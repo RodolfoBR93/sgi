@@ -1,4 +1,9 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:sgi/core/uteis.dart';
+import 'package:sgi/database/dao/user_dao.dart';
+import 'package:sgi/database/dao/user_web._dao.dart';
+import 'package:sgi/models/user.dart';
 
 class Knowledge extends StatefulWidget {
   static const String routeName = "/gdiKnowledge";
@@ -8,7 +13,19 @@ class Knowledge extends StatefulWidget {
 }
 
 class _KnowledgeState extends State<Knowledge> {
-  List _departments;
+  final UserDao _dao = UserDao();
+  UserWebDao _userWebDao = UserWebDao();
+  List _departmentsByUser;
+
+  void getIntDemandsByUser() async {
+    List<User> user = await _dao.findAll();
+    Response response;
+    Dio dio = new Dio();
+    EnderecoGdi endereco = new EnderecoGdi();
+
+    response = await dio.get(
+        "${endereco.getEndereco}getByUser/${user[0].getuserGdi.toString()}");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +46,7 @@ class _KnowledgeState extends State<Knowledge> {
               child: RefreshIndicator(
                 child: ListView.builder(
                   padding: EdgeInsets.only(top: 10.0),
-                  itemCount: _departments.length,
+                  itemCount: _departmentsByUser.length,
                   itemBuilder: buildDept,
                 ),
               ),
