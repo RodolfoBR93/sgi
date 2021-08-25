@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sgi/gdi/knowlegde_page.dart';
 
 class Gdi extends StatefulWidget {
   static const String routeName = "/gdi";
@@ -50,7 +51,10 @@ class _GdiState extends State<Gdi> {
               IconButton(
                 tooltip: "Demandas Internas",
                 icon: const Icon(Icons.task),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Knowledge()));
+                },
               ),
               IconButton(
                 tooltip: "Relatórios",
