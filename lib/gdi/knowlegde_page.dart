@@ -23,47 +23,77 @@ class _KnowledgeState extends State<Knowledge> {
   List _disByDpt = [];
 
   void getIntDemandsByUser() async {
-    if (!kIsWeb) {
-      List<User> user = await _dao.findAll();
-    } else {
-      var factory = databaseFactoryWeb;
-      var db = await factory.openDatabase('sgi');
-      var finder = Finder(filter: Filter.equals('id', 0));
-      // var user = await store.findFirst(db, finder: finder);
-    }
-
+    var user;
     Response response;
     Dio dio = new Dio();
     EnderecoGdi endereco = new EnderecoGdi();
+    if (!kIsWeb) {
+      user = await _dao.findAll();
 
-    response = await dio.get(
-        "${endereco.getEndereco}getByUser/${user[0].getuserGdi.toString()}");
+      response = await dio.get(
+          "${endereco.getEndereco}getByUser/${user[0].getuserGdi.toString()}");
 
-    _departmentsByUser = response.data["Department"];
-    _disByDpt = response.data["InternalDemands"];
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        for (Map dpt in response.data["Department"]) {
+          _departmentsByUser.add(dpt);
+        }
+        for (var intDemand in response.data["InternalDemands"]) {
+          _disByDpt.add(intDemand);
+        }
+        // _departmentsByUser = response.data["Department"];
+        // _disByDpt = response.data["InternalDemands"];
+      }
+    } else {
+      var store = intMapStoreFactory.store();
+      var factory = databaseFactoryWeb;
+      var db = await factory.openDatabase('sgi');
+      var finder = Finder(filter: Filter.equals('id', 0));
+      user = await store.findFirst(db, finder: finder);
+
+      response =
+          await dio.get("${endereco.getEndereco}getByUser/${user["userGdi"]}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        _departmentsByUser = response.data["Department"];
+        _disByDpt = response.data["InternalDemands"];
+      }
+    }
   }
 
   void initState() {
     setState(() {
       getIntDemandsByUser();
-      _isLoading = false;
+      if (_departmentsByUser.length > 0 && _disByDpt.length > 0) {
+        _isLoading = false;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: new AppBar(
-        centerTitle: true,
-        title: new Text(
-          "Ciência de Demandas Internas",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      backgroundColor: Colors.white,
-      body: _isLoading
-          ? CircularProgressIndicator()
-          : new Center(
+    return _isLoading
+        ? new Scaffold(
+            appBar: new AppBar(
+              centerTitle: true,
+              title: new Text(
+                "Ciência de Demandas Internas",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            backgroundColor: Colors.white,
+            body: Center(
+              child: CircularProgressIndicator(),
+            ))
+        : new Scaffold(
+            appBar: new AppBar(
+              centerTitle: true,
+              title: new Text(
+                "Ciência de Demandas Internas",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            backgroundColor: Colors.white,
+            body: new Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -80,7 +110,7 @@ class _KnowledgeState extends State<Knowledge> {
                 ],
               ),
             ),
-    );
+          );
   }
 
   Widget buildItem(context, index) {
