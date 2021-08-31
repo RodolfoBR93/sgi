@@ -1,25 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sembast_web/sembast_web.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
-import 'package:sgi/database/dao/user_web._dao.dart';
 import 'package:sgi/gdi/knowledge_page.dart';
-import 'package:sgi/models/user.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-
-// class Knowledge extends StatelessWidget {
-//   static const String routeName = "/gdiKnowledge";
-
-//   @override
-//   _KnowledgeState createState() => _KnowledgeState();
-// }
 
 class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
   final UserDao _dao = UserDao();
   List _departmentsByUser = [];
-  List _disByDpt = [];
 
   Future<List> getDepartmentsByUser() async {
     var user;
@@ -34,9 +28,7 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         _departmentsByUser = response.data.values.toList()[0].values.toList();
-        //_disByDpt = response.data.values.toList()[1].values.toList();
-
-        //return _departmentsByUser;
+        _saveData();
       }
     } else {
       var store = intMapStoreFactory.store();
@@ -50,16 +42,24 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         _departmentsByUser = response.data.values.toList()[0].values.toList();
-        //_disByDpt = response.data["InternalDemands"];
-
+        _saveData();
       }
     }
     return _departmentsByUser;
   }
 
-  // void initState() {
-  //   getDepartmentsByUser();
-  // }
+  Future<File> _getFile() async {
+    final directory = getApplicationDocumentsDirectory();
+
+    return File("${directory.toString()}/dpts.json");
+  }
+
+  Future<File> _saveData() async {
+    String data = json.encode(_departmentsByUser);
+
+    final file = await _getFile();
+    return file.writeAsString(data);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,11 +118,14 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
   Widget buildItem(context, index) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Knowledge(_departmentsByUser[index])),
-        );
+        if (_departmentsByUser[index]["T04_ATIVO"] != "T") {
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => Knowledge(_departmentsByUser[index])),
+          );
+        }
       },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 1.0),
@@ -130,6 +133,7 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
           title: Text(_departmentsByUser[index]["T04_CODIGO"] +
               " - " +
               _departmentsByUser[index]["T04_DESCRICAO"]),
+          enabled: _departmentsByUser[index]["T04_ATIVO"] == "T" ? true : false,
           focusColor: Colors.grey,
           mouseCursor: MouseCursor.defer,
         ),

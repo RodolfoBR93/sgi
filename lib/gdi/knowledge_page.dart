@@ -54,7 +54,7 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         //_departmentsByUser = response.data.values.toList()[0].values.toList();
-        _disByDpt = response.data.values.toList()[0].values.toList();
+        _disByDpt = response.data;
       }
     }
     return _disByDpt;
@@ -119,18 +119,16 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
   }
 
   Widget buildItem(context, index) {
-    return Expanded(
-      child: InkWell(
-        onTap: () {},
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 1.0),
-          child: ListTile(
-            title: Text(_disByDpt[index]["T09_NUMERO"] +
-                " - " +
-                _disByDpt[index]["T08_RELATOR"]),
-            focusColor: Colors.grey,
-            mouseCursor: MouseCursor.defer,
-          ),
+    return InkWell(
+      onTap: () {},
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 1.0),
+        child: ListTile(
+          title: Text(_disByDpt[index]["T09_NUMERO"] +
+              " - " +
+              _disByDpt[index]["T08_RELATOR"]),
+          focusColor: Colors.grey,
+          mouseCursor: MouseCursor.defer,
         ),
       ),
     );
@@ -140,7 +138,8 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
     await Future.delayed(Duration(seconds: 1));
     getDepartmentsByUser();
     _disByDpt.sort((a, b) {
-      if (int.parse(a["T09_DATENV"]) < int.parse(b["T09_DATENV"])) {
+      if (DateTime.parse(a["T09_DATENV"])
+          .isBefore(DateTime.parse(b["T09_DATENV"]))) {
         return 1;
       } else {
         return 0;
