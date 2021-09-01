@@ -7,28 +7,35 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast_web/sembast_web.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sgi/core/uteis.dart';
+import 'package:sgi/database/dao/department_dao.dart';
 import 'package:sgi/database/dao/user_dao.dart';
+import 'package:sgi/database/dao/web_database.dart';
 import 'package:sgi/gdi/knowledge_page.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
-  final UserDao _dao = UserDao();
+  final UserDao _userDao = UserDao();
+  final DepartmentDao _deptDao = DepartmentDao();
   List _departmentsByUser = [];
 
   Future<List> getDepartmentsByUser() async {
     var user;
+    var department;
     Response response;
     Dio dio = new Dio();
     EnderecoGdi endereco = new EnderecoGdi();
     if (!kIsWeb) {
-      user = await _dao.findAll();
+      user = await _userDao.findAll();
+      department = await _deptDao.findAll();
 
-      response = await dio.get(
-          "${endereco.getEndereco}getByUser/${user[0].getuserGdi.toString()}");
+      if (department.length <= 0) {
+        response = await dio.get(
+            "${endereco.getEndereco}getByUser/${user[0].getuserGdi.toString()}");
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        _departmentsByUser = response.data.values.toList()[0].values.toList();
-        _saveData();
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          //_saveData(response.data.values.toList()[0].values.toList());
+          _departmentsByUser = response.data.values.toList()[0].values.toList();
+        }
       }
     } else {
       var store = intMapStoreFactory.store();
@@ -41,24 +48,23 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
           await dio.get("${endereco.getEndereco}getByUser/${user["userGdi"]}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        //int _ret = await _saveData(response.data);
+        //debugPrint(_ret.toString());
         _departmentsByUser = response.data.values.toList()[0].values.toList();
-        _saveData();
       }
     }
     return _departmentsByUser;
   }
 
   Future<File> _getFile() async {
-    final directory = getApplicationDocumentsDirectory();
-
-    return File("${directory.toString()}/dpts.json");
+    final directory = "./data";
+    return File("${directory}/dpts.json");
   }
 
-  Future<File> _saveData() async {
-    String data = json.encode(_departmentsByUser);
-
-    final file = await _getFile();
-    return file.writeAsString(data);
+  Future<int> _saveData(List dpts) async {
+    for (var dpt in dpts) {}
+    //_deptDao.save(department);
+    return 0;
   }
 
   @override
