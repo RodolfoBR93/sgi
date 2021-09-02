@@ -4,16 +4,17 @@ class Department {
   final int id;
   final String department;
   final String description;
+  final String evaluate;
   final String active;
-  final String idFilial;
+  final int idFilial;
   final String depto;
 
-  Department(this.id, this.department, this.description, this.active,
-      this.idFilial, this.depto);
+  Department(this.id, this.department, this.description, this.evaluate,
+      this.active, this.idFilial, this.depto);
 
   @override
   String toString() {
-    return 'User{id: $id,department: $department, description: $description, active: $active, idFilial: $idFilial, depto: $depto}';
+    return 'User{id: $id,department: $department, description: $description, evaluate: $evaluate, active: $active, idFilial: $idFilial, depto: $depto}';
   }
 
   String get getDepartment {
@@ -28,6 +29,10 @@ class Department {
     return active;
   }
 
+  String get getEvaluate {
+    return evaluate;
+  }
+
   Map<String, dynamic> toMap() {
     //instanciando o mapa
     var mapa = new Map<String, dynamic>();
@@ -36,6 +41,7 @@ class Department {
     mapa["id"] = id;
     mapa["department"] = department;
     mapa["description"] = description;
+    mapa["evaluate"] = evaluate;
     mapa["active"] = active;
     mapa["idFilial"] = idFilial;
     mapa["depto"] = depto;
@@ -49,6 +55,7 @@ class Department {
       map["id"],
       map["department"],
       map["description"],
+      map["evaluate"],
       map["active"],
       map["idFilial"],
       map["depto"],

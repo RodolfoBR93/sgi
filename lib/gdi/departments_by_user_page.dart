@@ -12,6 +12,7 @@ import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/database/dao/web_database.dart';
 import 'package:sgi/gdi/knowledge_page.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:sgi/models/gdi/department.dart';
 
 class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
   final UserDao _userDao = UserDao();
@@ -33,7 +34,7 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
             "${endereco.getEndereco}getByUser/${user[0].getuserGdi.toString()}");
 
         if (response.statusCode == 200 || response.statusCode == 201) {
-          //_saveData(response.data.values.toList()[0].values.toList());
+          _saveData(response.data.values.toList()[0].values.toList());
           _departmentsByUser = response.data.values.toList()[0].values.toList();
         }
       }
@@ -44,32 +45,77 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
       var finder = Finder(filter: Filter.equals('id', 0));
       user = await store.findFirst(db, finder: finder);
 
-      response =
-          await dio.get("${endereco.getEndereco}getByUser/${user["userGdi"]}");
+      _departmentsByUser = [];
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        //int _ret = await _saveData(response.data);
-        //debugPrint(_ret.toString());
-        _departmentsByUser = response.data.values.toList()[0].values.toList();
+      _departmentsByUser = await _loadData();
+
+      if (_departmentsByUser.length <= 0) {
+        response = await dio
+            .get("${endereco.getEndereco}getByUser/${user["userGdi"]}");
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          //int _ret = await _saveData(response.data);
+          //debugPrint(_ret.toString());
+          _saveData(response.data.values.toList()[0].values.toList());
+          _departmentsByUser = response.data.values.toList()[0].values.toList();
+        }
       }
     }
     return _departmentsByUser;
   }
 
-  Future<File> _getFile() async {
-    final directory = "./data";
-    return File("${directory}/dpts.json");
+  Future<List> _loadData() async {
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryWeb;
+    var db = await factory.openDatabase('sgi');
+    var finder = Finder(filter: Filter.greaterThan('id', 0));
+
+    var dpts = await store.find(db, finder: finder);
+    List deptos = [];
+
+    for (var dpt in dpts) {
+      deptos.add(dpt.value.values.toList());
+    }
+
+    return deptos;
   }
 
   Future<int> _saveData(List dpts) async {
-    for (var dpt in dpts) {}
+    var store = intMapStoreFactory.store();
+    var factory = databaseFactoryWeb;
+    var db = await factory.openDatabase('sgi');
+
+    for (var dpt in dpts) {
+      Department depto = new Department(
+          dpts.indexOf(dpt) + 1,
+          dpt["T04_CODIGO"],
+          dpt["T04_DESCRICAO"],
+          dpt["T04_AVALIA"],
+          dpt["T04_ATIVO"],
+          dpt["T04_ID_FILIAL"],
+          dpt["DEPTO"]);
+
+      var finder =
+          Finder(filter: Filter.equals('department', dpt["T04_CODIGO"]));
+      var record = await store.findFirst(db, finder: finder);
+      if (record == null) {
+        var key = await store.add(db, depto.toMap());
+      }
+      // else if record{
+      //   var key = await store.update(db, depto.toMap());
+      // }
+
+      //debugPrint(key.toString());
+    }
+    await db.close();
     //_deptDao.save(department);
+
     return 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    getDepartmentsByUser();
+    //getDepartmentsByUser();
     return new Scaffold(
       appBar: new AppBar(
         centerTitle: true,

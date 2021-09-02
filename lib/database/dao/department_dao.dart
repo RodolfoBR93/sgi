@@ -8,6 +8,7 @@ class DepartmentDao {
       '$_id INTEGER PRIMARY KEY, '
       '$_department TEXT, '
       '$_description TEXT,'
+      '$_evaluate TEXT,'
       '$_idFilial TEXT,'
       '$_depto TEXT,'
       '$_active TEXT,';
@@ -16,6 +17,7 @@ class DepartmentDao {
   static const String _id = 'id';
   static const String _department = 'department';
   static const String _description = 'description';
+  static const String _evaluate = 'evaluate';
   static const String _active = 'active';
   static const String _idFilial = 'idFilial';
   static const String _depto = '_Depto';
@@ -43,6 +45,7 @@ class DepartmentDao {
     final Map<String, dynamic> departmentMap = Map();
     departmentMap[_department] = department.department;
     departmentMap[_description] = department.description;
+    departmentMap[_evaluate] = department.evaluate;
     departmentMap[_active] = department.active;
     departmentMap[_idFilial] = department.idFilial;
     departmentMap[_depto] = department.depto;
@@ -55,6 +58,7 @@ class DepartmentDao {
       final Department department = Department(
         row[_id],
         row[_department],
+        row[_evaluate],
         row[_description],
         row[_active],
         row[_idFilial],
