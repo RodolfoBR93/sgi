@@ -18,6 +18,7 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
   final UserDao _userDao = UserDao();
   final DepartmentDao _deptDao = DepartmentDao();
   List _departmentsByUser = [];
+  int _key;
 
   Future<List> getDepartmentsByUser() async {
     var user;
@@ -68,13 +69,25 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryWeb;
     var db = await factory.openDatabase('sgi');
-    var finder = Finder(filter: Filter.greaterThan('id', 0));
-
-    var dpts = await store.find(db, finder: finder);
+    var dpts;
+    Map<String, Map<String, dynamic>> deps = new Map();
     List deptos = [];
+    if (_key != null) {
+      dpts = await store.record(_key).get(db);
+      dpts = dpts.values.toList();
+      for (var dpt in dpts) {
+        Department depto = new Department(
+            dpt["id"],
+            dpt["T04_CODIGO"],
+            dpt["T04_DESCRICAO"],
+            dpt["T04_AVALIA"],
+            dpt["T04_ATIVO"],
+            dpt["T04_ID_FILIAL"],
+            dpt["DEPTO"]);
+        deps[dpt["T04_CODIGO"]] = depto.toMap();
+      }
 
-    for (var dpt in dpts) {
-      deptos.add(dpt.value.values.toList());
+      deptos = deps.values.toList();
     }
 
     return deptos;
@@ -84,6 +97,8 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
     var store = intMapStoreFactory.store();
     var factory = databaseFactoryWeb;
     var db = await factory.openDatabase('sgi');
+    Map<String, Map<String, dynamic>> deps = new Map();
+    var record;
 
     for (var dpt in dpts) {
       Department depto = new Department(
@@ -94,21 +109,16 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
           dpt["T04_ATIVO"],
           dpt["T04_ID_FILIAL"],
           dpt["DEPTO"]);
+      deps[dpt["T04_CODIGO"]] = depto.toMap();
+    }
+    if (_key != null) {
+      record = await store.record(_key);
+    }
 
-      var finder =
-          Finder(filter: Filter.equals('department', dpt["T04_CODIGO"]));
-      var record = await store.findFirst(db, finder: finder);
-      if (record == null) {
-        var key = await store.add(db, depto.toMap());
-      }
-      // else if record{
-      //   var key = await store.update(db, depto.toMap());
-      // }
-
-      //debugPrint(key.toString());
+    if (record == null) {
+      _key = await store.add(db, deps);
     }
     await db.close();
-    //_deptDao.save(department);
 
     return 0;
   }
@@ -197,8 +207,10 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
     await Future.delayed(Duration(seconds: 1));
     getDepartmentsByUser();
     _departmentsByUser.sort((a, b) {
-      if (int.parse(a["T04_CODIGO"]) < int.parse(b["T04_CODIGO"])) {
+      if (int.parse(a["T04_CODIGO"]) > int.parse(b["T04_CODIGO"])) {
         return 1;
+      } else if (int.parse(a["T04_CODIGO"]) < int.parse(b["T04_CODIGO"])) {
+        return -1;
       } else {
         return 0;
       }

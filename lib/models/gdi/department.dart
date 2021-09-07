@@ -39,12 +39,12 @@ class Department {
     // agora iremos fazer o inverso do anterior, iremos colocar o conteúdo
     // dos atributos no mapa, ficará como se fosse um json
     mapa["id"] = id;
-    mapa["department"] = department;
-    mapa["description"] = description;
-    mapa["evaluate"] = evaluate;
-    mapa["active"] = active;
-    mapa["idFilial"] = idFilial;
-    mapa["depto"] = depto;
+    mapa["T04_CODIGO"] = department;
+    mapa["T04_DESCRICAO"] = description;
+    mapa["T04_AVALIA"] = evaluate;
+    mapa["T04_ATIVO"] = active;
+    mapa["T04_ID_FILIAL"] = idFilial;
+    mapa["DEPTO"] = depto;
     debugPrint(mapa.toString());
     debugPrint("dentro do department.tomap");
     return mapa;
@@ -53,12 +53,12 @@ class Department {
   static Department fromMap(Map<String, dynamic> map) {
     return Department(
       map["id"],
-      map["department"],
-      map["description"],
-      map["evaluate"],
-      map["active"],
-      map["idFilial"],
-      map["depto"],
+      map["T04_CODIGO"],
+      map["T04_DESCRICAO"],
+      map["T04_AVALIA"],
+      map["T04_ATIVO"],
+      map["T04_ID_FILIAL"],
+      map["DEPTO"],
     );
   }
 }
