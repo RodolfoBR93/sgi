@@ -5,6 +5,7 @@ import 'package:sembast/sembast.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/database/dao/user_web._dao.dart';
+import 'package:sgi/gdi/internaldemand_page.dart';
 import 'package:sgi/models/user.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -17,7 +18,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
   final UserDao _dao = UserDao();
-  //List _departmentsByUser = [];
   List _disByDpt = [];
   Map _actualDepartment = new Map();
 
@@ -25,7 +25,7 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
     this._actualDepartment = actualDepartment;
   }
 
-  Future<List> getDepartmentsByUser() async {
+  Future<List> getInternalDemandsByUser() async {
     var user;
     Response response;
     Dio dio = new Dio();
@@ -66,7 +66,6 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
 
   @override
   Widget build(BuildContext context) {
-    getDepartmentsByUser();
     return new Scaffold(
       appBar: new AppBar(
         centerTitle: true,
@@ -83,7 +82,7 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
             Expanded(
               child: RefreshIndicator(
                 child: FutureBuilder<List>(
-                  future: getDepartmentsByUser(),
+                  future: getInternalDemandsByUser(),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
@@ -120,7 +119,15 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
 
   Widget buildItem(context, index) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => InternalDemandWidget(
+                  _disByDpt[index]["T09_NUMERO"],
+                  _disByDpt[index]["T09_DESTINO"])),
+        );
+      },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 1.0),
         child: ListTile(
@@ -136,7 +143,7 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
 
   Future<Null> _refresh() async {
     await Future.delayed(Duration(seconds: 1));
-    getDepartmentsByUser();
+    getInternalDemandsByUser();
     _disByDpt.sort((a, b) {
       if (DateTime.parse(a["T09_DATENV"])
           .isBefore(DateTime.parse(b["T09_DATENV"]))) {
