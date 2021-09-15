@@ -5,9 +5,10 @@ import 'package:sembast/sembast.dart';
 import 'package:sgi/core/uteis.dart';
 import 'package:sgi/database/dao/user_dao.dart';
 import 'package:sgi/database/dao/user_web._dao.dart';
-import 'package:sgi/gdi/internaldemand_page.dart';
 import 'package:sgi/models/user.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+
+import 'internalDemand_page.dart';
 
 // class Knowledge extends StatelessWidget {
 //   static const String routeName = "/gdiKnowledge";
@@ -125,7 +126,8 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
           MaterialPageRoute(
               builder: (context) => InternalDemandWidget(
                   _disByDpt[index]["T09_NUMERO"],
-                  _disByDpt[index]["T09_DESTINO"])),
+                  _disByDpt[index]["T09_DESTINO"],
+                  _actualDepartment["T04_CODIGO"])),
         );
       },
       child: Padding(
