@@ -102,11 +102,14 @@ class InternalDemandWidget extends StatelessWidget {
   }
 
   Widget buildMessagesList() {
-    return ListView.builder(
-      padding: EdgeInsets.all(10.0),
-      shrinkWrap: true,
-      itemCount: _messages.length,
-      itemBuilder: buildItem,
+    return Container(
+      height: _screenHeight * 0.88,
+      child: ListView.builder(
+        padding: EdgeInsets.all(10.0),
+        shrinkWrap: true,
+        itemCount: _messages.length,
+        itemBuilder: buildItem,
+      ),
     );
   }
 
@@ -128,23 +131,34 @@ class InternalDemandWidget extends StatelessWidget {
             ),
             padding: EdgeInsets.all(16.0),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        _messages[index]["T09_DPTORI"],
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                      _messages[index]["T09_DPTORI"],
-                      style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold),
+                      _messages[index]["T09_RELATO"],
+                      style: TextStyle(fontSize: 15.0),
                       textAlign: TextAlign.left,
                     )
                   ],
                 ),
-                Text(
-                  _messages[index]["T09_RELATO"],
-                  style: TextStyle(fontSize: 15.0),
-                )
               ],
             )),
       ),
@@ -155,7 +169,7 @@ class InternalDemandWidget extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Container(
-        height: _screenHeight * 0.09,
+        height: _screenHeight * 0.075,
         width: _screenWidth,
         color: Colors.white,
         child: ButtonBar(
@@ -163,23 +177,24 @@ class InternalDemandWidget extends StatelessWidget {
           alignment: MainAxisAlignment.center,
           children: <Widget>[
             Material(
-              borderRadius: BorderRadius.circular(25),
+              borderRadius: BorderRadius.circular(30),
               child: InkWell(
                 splashColor: Colors.grey,
                 onTap: () {},
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(30),
                 child: SizedBox(
-                    width: _screenWidth * 0.03,
-                    height: _screenHeight * 0.09,
-                    child: Icon(
-                      Icons.attach_file,
-                      color: Colors.blue,
-                    )),
+                  width: _screenWidth * 0.045,
+                  height: _screenHeight * 0.075,
+                  child: Icon(
+                    Icons.attach_file,
+                    color: Colors.blue,
+                  ),
+                ),
               ),
             ),
             SizedBox(
               width: _screenWidth * 0.85,
-              height: _screenHeight * 0.09,
+              height: _screenHeight * 0.075,
               child: TextField(
                 controller: _messageController,
                 decoration: InputDecoration(
@@ -189,18 +204,19 @@ class InternalDemandWidget extends StatelessWidget {
               ),
             ),
             Material(
-              borderRadius: BorderRadius.circular(25),
+              borderRadius: BorderRadius.circular(30),
               child: InkWell(
                 splashColor: Colors.grey,
                 onTap: () {},
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(30),
                 child: SizedBox(
-                    width: _screenWidth * 0.03,
-                    height: _screenHeight * 0.09,
-                    child: Icon(
-                      Icons.send,
-                      color: Colors.blue,
-                    )),
+                  width: _screenWidth * 0.045,
+                  height: _screenHeight * 0.075,
+                  child: Icon(
+                    Icons.send,
+                    color: Colors.blue,
+                  ),
+                ),
               ),
             ),
           ],
