@@ -2,10 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:intl/intl.dart';
 import 'package:sgi/core/uteis.dart';
 
 class InternalDemandWidget extends StatelessWidget {
   final TextEditingController _messageController = TextEditingController();
+  final DateFormat _dateFormatter = DateFormat("dd/MM/yyyy");
   String _intDemandNumber;
   String _target;
   List _messages = [];
@@ -48,54 +50,56 @@ class InternalDemandWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     _screenWidth = MediaQuery.of(context).size.width;
     _screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: new AppBar(
-        centerTitle: true,
-        title: Text(
-          _intDemandNumber + ' ' + _target,
-          style: TextStyle(
-            color: Colors.white,
+    return SafeArea(
+      child: Scaffold(
+        appBar: new AppBar(
+          centerTitle: true,
+          title: Text(
+            _intDemandNumber + ' ' + _target,
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
         ),
-      ),
-      backgroundColor: Colors.white,
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: RefreshIndicator(
-                child: FutureBuilder<List>(
-                    future: getMessages(),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.none:
-                          return Center(
-                            child: Text("Nenhum dado carregado!"),
-                          );
-                        case ConnectionState.waiting:
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        default:
-                          if (snapshot.hasError) {
+        backgroundColor: Colors.white,
+        body: new Center(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: RefreshIndicator(
+                  child: FutureBuilder<List>(
+                      future: getMessages(),
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.none:
                             return Center(
-                              child: Text("Erro ao carregar os dados."),
+                              child: Text("Nenhum dado carregado!"),
                             );
-                          } else {
-                            return Stack(
-                              children: <Widget>[
-                                buildMessagesList(),
-                                buildInput()
-                              ],
+                          case ConnectionState.waiting:
+                            return Center(
+                              child: CircularProgressIndicator(),
                             );
-                          }
-                      }
-                    }),
-                onRefresh: _refresh,
-              ),
-            )
-          ],
+                          default:
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text("Erro ao carregar os dados."),
+                              );
+                            } else {
+                              return Stack(
+                                children: <Widget>[
+                                  buildMessagesList(),
+                                  buildInput()
+                                ],
+                              );
+                            }
+                        }
+                      }),
+                  onRefresh: _refresh,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -114,55 +118,217 @@ class InternalDemandWidget extends StatelessWidget {
   }
 
   Widget buildItem(context, index) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(14.0, 14.0, 10.0, 10.0),
-      child: Align(
-        alignment: _messages[index]["T09_DPTDES"] == _actDpt
-            ? Alignment.topRight
-            : Alignment.topLeft,
-        child: Container(
-            constraints: BoxConstraints(
-                minWidth: _screenWidth * 0.2, maxWidth: _screenWidth * 0.5),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: _messages[index]["T09_DPTDES"] == _actDpt
-                  ? Colors.blue
-                  : Colors.grey[350],
-            ),
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        _messages[index]["T09_DPTORI"],
-                        style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.left,
-                      ),
+    return _messages[index]["T09_DPTDES"] != _actDpt
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.fromLTRB(14.0, 14.0, 10.0, 10.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    constraints: BoxConstraints(
+                        minWidth: _screenWidth * 0.2,
+                        maxWidth: _screenWidth * 0.5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.grey[350],
                     ),
-                  ],
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                _messages[index]["T09_DPTORI"].trim() + ' ',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                _messages[index]["DPTORI_DESCRICAO"].trim() +
+                                    ' ',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                _messages[index]["T09_DPTDES"],
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 8.0),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    _messages[index]["T09_RELATO"].trim(),
+                                    style: TextStyle(
+                                      fontSize: 15.0,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5.0),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                  _dateFormatter
+                                          .format(DateTime.parse(
+                                              _messages[index]["T09_DATENV"]))
+                                          .toUpperCase() +
+                                      ' ',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                  ),
+                                  textAlign: TextAlign.left),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                      _messages[index]["T09_RELATO"],
-                      style: TextStyle(fontSize: 15.0),
-                      textAlign: TextAlign.left,
+              ),
+              !_messages[index]["T09_ANEXO"].isEmpty
+                  ? Material(
+                      borderRadius: BorderRadius.circular(30),
+                      child: InkWell(
+                        splashColor: Colors.grey,
+                        onTap: () {},
+                        borderRadius: BorderRadius.circular(30),
+                        child: SizedBox(
+                          width: _screenWidth * 0.045,
+                          height: _screenHeight * 0.075,
+                          child: Icon(
+                            Icons.attach_file,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
                     )
-                  ],
+                  : SizedBox.shrink(),
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              !_messages[index]["T09_ANEXO"].isEmpty
+                  ? Material(
+                      borderRadius: BorderRadius.circular(30),
+                      child: InkWell(
+                        splashColor: Colors.grey,
+                        onTap: () {},
+                        borderRadius: BorderRadius.circular(30),
+                        child: SizedBox(
+                          width: _screenWidth * 0.045,
+                          height: _screenHeight * 0.075,
+                          child: Icon(
+                            Icons.attach_file,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              Container(
+                padding: EdgeInsets.fromLTRB(14.0, 14.0, 10.0, 10.0),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    constraints: BoxConstraints(
+                        minWidth: _screenWidth * 0.2,
+                        maxWidth: _screenWidth * 0.5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.blue,
+                    ),
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                _messages[index]["T09_DPTORI"].trim() + ' ',
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                _messages[index]["DPTORI_DESCRICAO"].trim(),
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 8.0),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  _messages[index]["T09_RELATO"].trim(),
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ],
-            )),
-      ),
-    );
+              ),
+            ],
+          );
   }
 
   Widget buildInput() {
@@ -193,7 +359,7 @@ class InternalDemandWidget extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: _screenWidth * 0.85,
+              width: _screenWidth * 0.88,
               height: _screenHeight * 0.075,
               child: TextField(
                 controller: _messageController,
