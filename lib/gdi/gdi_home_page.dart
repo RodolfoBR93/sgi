@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sgi/gdi/departments_by_user_page.dart';
 
 class Gdi extends StatefulWidget {
   static const String routeName = "/gdi";
@@ -34,6 +35,38 @@ class _GdiState extends State<Gdi> {
         onPressed: abriNC,
         tooltip: 'Abrir DI',
         child: Icon(Icons.add),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.blue,
+        // shape: CircularNotchedRectangle(),
+        child: IconTheme(
+          data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+          child: Row(
+            children: <Widget>[
+              IconButton(
+                tooltip: "Cadastros",
+                icon: const Icon(Icons.category),
+                onPressed: () {},
+              ),
+              IconButton(
+                tooltip: "Demandas Internas",
+                icon: const Icon(Icons.task),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DepartmentsByUser()),
+                  );
+                },
+              ),
+              IconButton(
+                tooltip: "Relatórios",
+                icon: const Icon(Icons.report),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -12,6 +12,13 @@ class Endereco {
   String get getRota => rota;
 }
 
+class EnderecoGdi {
+  String endereco = 'http://localhost:8099/';
+  String enderecoIni = 'http://localhost:8099/';
+  String get getEndereco => endereco;
+  String get getEnderecoIni => enderecoIni;
+}
+
 class WidgetsUteis {
   static Future<void> showLoadingDialog(
       BuildContext context, GlobalKey key, String mensagem) async {
