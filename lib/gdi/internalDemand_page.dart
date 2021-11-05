@@ -29,14 +29,14 @@ class InternalDemandWidget extends StatelessWidget {
 
     if (!kIsWeb) {
       response = await dio.get(
-          "${endereco.getEndereco}getByNumber/:diNumberInf/:target?diNumberInf=${_intDemandNumber}&target=${_target}");
+          "${endereco.getEndereco}number/:diNumberInf/:target?diNumberInf=${_intDemandNumber}&target=${_target}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         _messages = response.data.values.toList()[1];
         _cabecalho = response.data.values.toList()[0];
       }
     } else {
       response = await dio.get(
-          "${endereco.getEndereco}getByNumber/:diNumberInf/:target?diNumberInf=${_intDemandNumber}&target=${_target}");
+          "${endereco.getEndereco}number/:diNumberInf/:target?diNumberInf=${_intDemandNumber}&target=${_target}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         _messages = response.data.values.toList()[1];
         _cabecalho = response.data.values.toList()[0];
@@ -54,7 +54,7 @@ class InternalDemandWidget extends StatelessWidget {
       child: Scaffold(
         appBar: new AppBar(
           centerTitle: true,
-          title: Text(
+          title: SelectableText(
             _intDemandNumber + ' ' + _target,
             style: TextStyle(
               color: Colors.white,
@@ -74,7 +74,7 @@ class InternalDemandWidget extends StatelessWidget {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:
                             return Center(
-                              child: Text("Nenhum dado carregado!"),
+                              child: SelectableText("Nenhum dado carregado!"),
                             );
                           case ConnectionState.waiting:
                             return Center(
@@ -83,7 +83,8 @@ class InternalDemandWidget extends StatelessWidget {
                           default:
                             if (snapshot.hasError) {
                               return Center(
-                                child: Text("Erro ao carregar os dados."),
+                                child: SelectableText(
+                                    "Erro ao carregar os dados."),
                               );
                             } else {
                               return Stack(
@@ -143,7 +144,7 @@ class InternalDemandWidget extends StatelessWidget {
                           children: <Widget>[
                             Align(
                               alignment: Alignment.topLeft,
-                              child: Text(
+                              child: SelectableText(
                                 _messages[index]["T09_DPTORI"].trim() + ' ',
                                 style: TextStyle(
                                     fontSize: 11,
@@ -154,7 +155,7 @@ class InternalDemandWidget extends StatelessWidget {
                             ),
                             Align(
                               alignment: Alignment.topCenter,
-                              child: Text(
+                              child: SelectableText(
                                 _messages[index]["DPTORI_DESCRICAO"].trim() +
                                     ' ',
                                 style: TextStyle(
@@ -166,7 +167,7 @@ class InternalDemandWidget extends StatelessWidget {
                             ),
                             Align(
                               alignment: Alignment.topCenter,
-                              child: Text(
+                              child: SelectableText(
                                 _messages[index]["T09_DPTDES"],
                                 style: TextStyle(
                                     fontSize: 11,
@@ -185,8 +186,8 @@ class InternalDemandWidget extends StatelessWidget {
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
+                                  fit: BoxFit.contain,
+                                  child: SelectableText(
                                     _messages[index]["T09_RELATO"].trim(),
                                     style: TextStyle(
                                       fontSize: 15.0,
@@ -202,7 +203,7 @@ class InternalDemandWidget extends StatelessWidget {
                           padding: EdgeInsets.only(top: 5.0),
                           child: Row(
                             children: <Widget>[
-                              Text(
+                              SelectableText(
                                   _dateFormatter
                                           .format(DateTime.parse(
                                               _messages[index]["T09_DATENV"]))
@@ -282,7 +283,7 @@ class InternalDemandWidget extends StatelessWidget {
                           children: <Widget>[
                             Align(
                               alignment: Alignment.topLeft,
-                              child: Text(
+                              child: SelectableText(
                                 _messages[index]["T09_DPTORI"].trim() + ' ',
                                 style: TextStyle(
                                     fontSize: 11,
@@ -293,7 +294,7 @@ class InternalDemandWidget extends StatelessWidget {
                             ),
                             Align(
                               alignment: Alignment.topCenter,
-                              child: Text(
+                              child: SelectableText(
                                 _messages[index]["DPTORI_DESCRICAO"].trim(),
                                 style: TextStyle(
                                     fontSize: 11,
@@ -311,7 +312,7 @@ class InternalDemandWidget extends StatelessWidget {
                               padding: EdgeInsets.only(top: 8.0),
                               child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text(
+                                child: SelectableText(
                                   _messages[index]["T09_RELATO"].trim(),
                                   style: TextStyle(
                                     fontSize: 15.0,

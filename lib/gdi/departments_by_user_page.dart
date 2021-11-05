@@ -32,7 +32,7 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
 
       if (department.length <= 0) {
         response = await dio.get(
-            "${endereco.getEndereco}getByUser/${user[0].getuserGdi.toString()}");
+            "${endereco.getEndereco}user/:userCod?userCod=${user[0].getuserGdi.toString()}");
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           _saveData(response.data.values.toList()[0].values.toList());
@@ -51,8 +51,8 @@ class DepartmentsByUser extends StatelessWidget /*State<Knowledge>*/ {
       _departmentsByUser = await _loadData();
 
       if (_departmentsByUser.length <= 0) {
-        response = await dio
-            .get("${endereco.getEndereco}getByUser/${user["userGdi"]}");
+        response = await dio.get(
+            "${endereco.getEndereco}user/:userCod?userCod=${user["userGdi"]}");
 
         if (response.statusCode == 200 || response.statusCode == 201) {
           //int _ret = await _saveData(response.data);

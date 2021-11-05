@@ -35,7 +35,7 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
       user = await _dao.findAll();
 
       response = await dio.get(
-          "${endereco.getEndereco}getByDpt/${_actualDepartment["T04_CODIGO"]}");
+          "${endereco.getEndereco}department/:dptCod?dptCod=${_actualDepartment["T04_CODIGO"]}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         //_departmentsByUser = response.data.values.toList()[0].values.toList();
@@ -51,7 +51,7 @@ class Knowledge extends StatelessWidget /*State<Knowledge>*/ {
       user = await store.findFirst(db, finder: finder);
 
       response = await dio.get(
-          "${endereco.getEndereco}getByDpt/${_actualDepartment["T04_CODIGO"]}");
+          "${endereco.getEndereco}department/:dptCod?dptCod=${_actualDepartment["T04_CODIGO"]}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         //_departmentsByUser = response.data.values.toList()[0].values.toList();
